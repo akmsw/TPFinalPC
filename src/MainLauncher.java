@@ -11,7 +11,7 @@ import Jama.Matrix;
 public class MainLauncher {
 
     public static void main(String args[]) {
-        //Petri net data
+        //Given Petri net combined incidence matrix.
         double[][] i = {{-1, 0,-1, 0, 1},
                         { 1,-1, 0, 0, 0},
                         { 0, 0, 1,-1, 0},
