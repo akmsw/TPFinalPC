@@ -35,14 +35,17 @@ public class PetriNet {
         return incidence;
     }
 
-    public Matrix getinitialMarkingingVector() {
+    /**
+     * @return The Petri net initial marking vector.
+     */
+    public Matrix getInitialMarkingingVector() {
         return initialMarking;
     }
 
     /**
      * @return The Petri net current marking vector.
      */
-    public Matrix getcurrentMarkingingVector() {
+    public Matrix getCurrentMarkingingVector() {
         return currentMarking;
     }
 
@@ -66,7 +69,7 @@ public class PetriNet {
     /**
      * @param currentMarking The Petri net current marking vector.
      */
-    public void setcurrentMarkingingVector(Matrix currentMarking) {
+    public void setCurrentMarkingingVector(Matrix currentMarking) {
         this.currentMarking = currentMarking;
     }
 }
