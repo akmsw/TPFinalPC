@@ -1,0 +1,72 @@
+/**
+ * @author Luna, Lihué Leandro
+ * @author Coronati, Federico Joaquín
+ * @author Merino, Mateo
+ * @author Bonino, Francisco Ignacio
+ * @since 01/07/2020
+ */
+
+import Jama.Matrix;
+
+public class PetriNet {
+
+    //Private class fields
+    private Matrix incidence, initialMarking, currentMarking, enabledTransitions;
+    
+    //Constructor
+    /**
+     * @param incidence The Petri net incidence matrix.
+     * @param initialMarking The Petri net initial marking vector.
+     */
+    public PetriNet(Matrix incidence, Matrix initialMarking) {
+        this.incidence = incidence;
+        this.initialMarking = initialMarking;
+
+        setcurrentMarkingingVector(initialMarking);
+    }
+
+    //----------------------------------------Public methods---------------------------------
+
+    //----------------------------------------Getters----------------------------------------
+    /**
+     * @return The Petri net incidence matrix.
+     */
+    public Matrix getIncidenceMatrix() {
+        return incidence;
+    }
+
+    public Matrix getinitialMarkingingVector() {
+        return initialMarking;
+    }
+
+    /**
+     * @return The Petri net current marking vector.
+     */
+    public Matrix getcurrentMarkingingVector() {
+        return currentMarking;
+    }
+
+    /**
+     * @return The current enabled transitions.
+     */
+    public Matrix getEnabledTransitions() {
+        //TODO
+        return enabledTransitions;
+    }
+
+    /**
+     * @param firingVector The current thread firing vector.
+     * @return The Petri net state equation result (the new Petri net marking vector).
+     */
+    public Matrix getNextMarkingVector(Matrix firingVector) {
+        //TODO
+    }
+
+    //----------------------------------------Setters----------------------------------------
+    /**
+     * @param currentMarking The Petri net current marking vector.
+     */
+    public void setcurrentMarkingingVector(Matrix currentMarking) {
+        this.currentMarking = currentMarking;
+    }
+}
