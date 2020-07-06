@@ -22,7 +22,7 @@ public class PetriNet {
         this.incidence = incidence;
         this.initialMarking = initialMarking;
 
-        setcurrentMarkingingVector(initialMarking);
+        setCurrentMarkingingVector(initialMarking);
     }
 
     //----------------------------------------Public methods---------------------------------
@@ -63,6 +63,7 @@ public class PetriNet {
      */
     public Matrix getNextMarkingVector(Matrix firingVector) {
         //TODO
+        return currentMarking;
     }
 
     //----------------------------------------Setters----------------------------------------
