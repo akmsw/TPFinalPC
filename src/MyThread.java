@@ -34,7 +34,7 @@ public class MyThread implements Runnable {
                 System.out.println("Guacho hay bardo para entrar al monitor");
             }
 
-            //Pal general case: elegir transition para firing
+            //Pal general case: elegir transition para firing (and & election)
             
             monitor.tryFiring(firingVector);
         }

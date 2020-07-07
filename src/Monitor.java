@@ -39,8 +39,6 @@ public class Monitor {
         catch (Exception e) {
             System.out.println("LOG ERROR");
         }
-        
-        //TODO
     }
     
     //----------------------------------------Métodos públicos---------------------------------
@@ -56,7 +54,7 @@ public class Monitor {
     /**
      * @param vector Vector donde se buscará el índice de la transición a disparar.
      */
-    public int getQueue(Matrix vector) {    //El vector contiene la transicion que se intentó disparar y convierto ese indice en un entero
+    public int getQueue(Matrix vector) {
         int queue = 0;
         
         for(int i=0; i<vector.getColumnDimension(); i++) {
@@ -72,14 +70,21 @@ public class Monitor {
      */
     public synchronized void tryFiring(Matrix firingVector) {
         if(pNet.stateEquationTest(firingVector)) {
-            System.out.println("Succ ess ful firing");
-            //aca se cambia la transition del firingvector del hilo
+            System.out.println("Succ eggs full firing");
+            
+            //Acá se cambia la transition del firingvector del hilo
+            //hay que fijarse quienes se sensibilizaron
+            //si hay uno solo, el hilo que esta aca tiene que despertar al de la ass si es que hay alguien
+            //si hay mas de una sensibilizada hay que fijarse donde hay pipol encolada y despertar segun diga Poul
+            //
+            
             exitMonitor();
         } else {
+            exitMonitor();
             try {
                 conditionQueues.get(getQueue(firingVector)).acquire();
             }
-            catch (Exception e) {
+            catch(Exception e) {
                 System.out.println("rompió");
             }
         }

@@ -11,6 +11,7 @@ import Jama.Matrix;
 public class PetriNet {
 
     //Campos privados
+    private int transitionsFired;
     private Matrix incidence, initialMarking, currentMarking, enabledTransitions, placesInvariants;
     
     //Constructor
@@ -22,13 +23,15 @@ public class PetriNet {
         this.incidence = incidence;
         this.initialMarking = initialMarking;
         this.placesInvariants = placesInvariants;
+        this.transitionsFired = 0;
 
         setCurrentMarkingingVector(initialMarking);
     }
 
-    //----------------------------------------Public methods---------------------------------
+    //----------------------------------------Métodos públicos---------------------------------
 
-    //----------------------------------------Getters----------------------------------------
+    //----------------------------------------Getters------------------------------------------
+
     /**
      * @return La matriz de incidencia de la red de Petri.
      */
@@ -63,7 +66,8 @@ public class PetriNet {
      * @return Si el resultado de la ecuación de estado fue correcto y se pudo asignar el nuevo vector de estado de la red.
      */
     public boolean stateEquationTest(Matrix firingVector) {
-        double[] auxVector = {};        
+        double[] auxVector = {};
+
         Matrix aux = new Matrix(auxVector,1);
 
         aux = currentMarking.plus(incidence.times(firingVector)); // Ecuación de estado.
@@ -74,15 +78,17 @@ public class PetriNet {
             }
         }
         
-        setCurrentMarkingingVector(aux); //Si todo salió bien, cambio el vector de marcado y devolvemos 'true'.
+        setCurrentMarkingingVector(aux); //Si todo salió bien, cambiamos el vector de marcado y devolvemos 'true'.
+        
+        transitionsFired++;
 
         return true;
     }
 
-    //----------------------------------------Setters----------------------------------------
+    //----------------------------------------Setters------------------------------------------
 
     /**
-     * @param currentMarking Vectror de marcado actual de la red de Petri.
+     * @param currentMarking Vector de marcado actual de la red de Petri.
      */
     public void setCurrentMarkingingVector(Matrix currentMarking) {
         this.currentMarking = currentMarking;

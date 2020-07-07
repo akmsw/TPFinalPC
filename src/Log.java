@@ -14,7 +14,7 @@ import java.util.logging.SimpleFormatter;
 import java.io.File;
 import java.io.IOException;
 
-public class Log extends Thread{
+public class Log extends Thread {
 
 	//Campos privados
 	private File f;
@@ -32,8 +32,10 @@ public class Log extends Thread{
 			f.createNewFile();
 		}
 		
-		FH = new FileHandler(fileName,true);		
+		FH = new FileHandler(fileName,true);
+		
 		SimpleFormatter formatter = new SimpleFormatter();		
+		
 		FH.setFormatter(formatter);
 	}
 
