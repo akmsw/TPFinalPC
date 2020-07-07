@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class MyExecutor {
 
-    //Private class fields
+    //Campos privados
     private ThreadPoolExecutor executor;
 
     //Constructor

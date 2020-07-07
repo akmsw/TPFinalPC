@@ -10,13 +10,13 @@ import Jama.Matrix;
 
 public class PetriNet {
 
-    //Private class fields
+    //Campos privados
     private Matrix incidence, initialMarking, currentMarking, enabledTransitions, placesInvariants;
     
     //Constructor
     /**
-     * @param incidence The Petri net incidence matrix.
-     * @param initialMarking The Petri net initial marking vector.
+     * @param incidence La matriz de incidencia de la red de Petri.
+     * @param initialMarking El vector de marcado inicial de la red de Petri.
      */
     public PetriNet(Matrix incidence, Matrix initialMarking, Matrix placesInvariants) {
         this.incidence = incidence;
@@ -30,28 +30,28 @@ public class PetriNet {
 
     //----------------------------------------Getters----------------------------------------
     /**
-     * @return The Petri net incidence matrix.
+     * @return La matriz de incidencia de la red de Petri.
      */
     public Matrix getIncidenceMatrix() {
         return incidence;
     }
 
     /**
-     * @return The Petri net initial marking vector.
+     * @return El vector de marcado inicial de la red de Petri.
      */
     public Matrix getInitialMarkingingVector() {
         return initialMarking;
     }
 
     /**
-     * @return The Petri net current marking vector.
+     * @return El vector de marcado actual de la red de Petri.
      */
     public Matrix getCurrentMarkingingVector() {
         return currentMarking;
     }
 
     /**
-     * @return The current enabled transitions.
+     * @return Transiciones sensibilizadas en este momento.
      */
     public Matrix getEnabledTransitions() {
         //TODO
@@ -59,16 +59,34 @@ public class PetriNet {
     }
 
     /**
-     * @param firingVector The current thread firing vector.
-     * @return The Petri net state equation result (the new Petri net marking vector).
+     * @param firingVector El vector de firing actual del vector.
+     * @return Si el resultado de la ecuación de estado fue correcto y se pudo asignar el nuevo vector de estado de la red.
      */
-    public Matrix getNextMarkingVector(Matrix firingVector) {
+    public boolean stateEquationTest(Matrix firingVector) {
         //TODO
-        return currentMarking;
+        double[] test = {};
+        
+        Matrix aux = new Matrix(test,1);
+
+        aux = currentMarking.plus(incidence.times(firingVector)); // Ecuación de estado
+        
+        for(int i=0; i<aux.getColumnDimension(); i++) {
+            if(aux.get(0,i)<0) {
+                return false;
+            }
+        }
+        
+        setCurrentMarkingingVector(aux);
+        
+        return true;
     }
 
     //----------------------------------------Setters----------------------------------------
+
+    //----------------------------------------Setters----------------------------------------
     /**
+Vectror de marcado actual de la red de pPetri     * @param currentMarking The Petri net current marking vector.
+     * @param currentMarking The Petri net current marking vector.
      * @param currentMarking The Petri net current marking vector.
      */
     public void setCurrentMarkingingVector(Matrix currentMarking) {

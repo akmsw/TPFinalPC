@@ -10,13 +10,14 @@ import Jama.Matrix;
 
 public class MyThread implements Runnable {
 
-    //Private class fields
-    private Matrix firingVector;
+    //Campos privados
+    private Matrix firingVector;    //Este vector indica la transicion que se disparará o que se intentó disparar. FJC
     private Monitor monitor;
+    private Matrix myTransitions;   //Este vector tiene las transiciones que puede disparar el hilo. FJC
 
     //Constructor
     /**
-     * @param firingVector Vector de transiciones asociadas al hilo a crear.
+     * @param firingVector Vector de transiciones asociadas al hilo.
      * @param monitor Referencia al monitor que controla la red de Petri.
      */
     public MyThread(Matrix firingVector, Monitor monitor) {
@@ -24,8 +25,14 @@ public class MyThread implements Runnable {
         this.monitor = monitor;
     }
 
+    @Override
     public void run() {
-        
-
+        while(true) {
+            try {
+                monitor.catchMonitor();
+            } catch(InterruptedException e) {
+                System.out.println("Guacho hay bardo para entrar al monitor");
+            }
+        }
     }
 }

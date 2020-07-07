@@ -11,7 +11,7 @@ import Jama.Matrix;
 public class MainLauncher {
 
     public static void main(String args[]) {
-        //Given Petri net combined incidence matrix.
+        //Matriz de incidencia de la red de Petri dada.
         double[][] i = {{-1, 0,-1, 0, 1},
                         { 1,-1, 0, 0, 0},
                         { 0, 0, 1,-1, 0},
@@ -29,6 +29,6 @@ public class MainLauncher {
         Matrix initialMarking = new Matrix(iMark,1);
         Matrix placesInvariants = new Matrix(pInvariants);
         PetriNet pNet = new PetriNet(incidence, initialMarking, placesInvariants);
-        Monitor monitor = new Monitor(pNet);    //Initializing the monitor
+        Monitor monitor = new Monitor(pNet);
     }
-}
+}       
