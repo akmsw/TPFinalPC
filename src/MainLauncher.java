@@ -20,9 +20,16 @@ public class MainLauncher {
         
         double[] iMark = {2, 0, 0, 0, 1};
 
+        double[][] pInvariants = {
+            {2, 2, 2, 2, 0},
+            {0, 1, 1, 0, 1}        
+        };
+
         Matrix incidence = new Matrix(i);
 
         Matrix initialMarking = new Matrix(iMark,1);
+
+        Matrix placesInvariants = new Matrix(pInvariants);
 
         PetriNet pNet = new PetriNet(incidence,initialMarking);
     }
