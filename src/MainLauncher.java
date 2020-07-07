@@ -28,7 +28,9 @@ public class MainLauncher {
         Matrix incidence = new Matrix(i);
         Matrix initialMarking = new Matrix(iMark,1);
         Matrix placesInvariants = new Matrix(pInvariants);
+        
         PetriNet pNet = new PetriNet(incidence, initialMarking, placesInvariants);
+        
         Monitor monitor = new Monitor(pNet);
     }
 }       

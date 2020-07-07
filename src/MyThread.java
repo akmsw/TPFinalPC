@@ -12,8 +12,8 @@ public class MyThread implements Runnable {
 
     //Campos privados
     private Matrix firingVector;    //Este vector indica la transicion que se disparará o que se intentó disparar. FJC
-    private Monitor monitor;
     private Matrix myTransitions;   //Este vector tiene las transiciones que puede disparar el hilo. FJC
+    private Monitor monitor;
 
     //Constructor
     /**
@@ -33,6 +33,10 @@ public class MyThread implements Runnable {
             } catch(InterruptedException e) {
                 System.out.println("Guacho hay bardo para entrar al monitor");
             }
+
+            //Pal general case: elegir transition para firing
+            
+            monitor.tryFiring(firingVector);
         }
     }
 }

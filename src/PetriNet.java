@@ -63,31 +63,26 @@ public class PetriNet {
      * @return Si el resultado de la ecuación de estado fue correcto y se pudo asignar el nuevo vector de estado de la red.
      */
     public boolean stateEquationTest(Matrix firingVector) {
-        //TODO
-        double[] test = {};
-        
-        Matrix aux = new Matrix(test,1);
+        double[] auxVector = {};        
+        Matrix aux = new Matrix(auxVector,1);
 
-        aux = currentMarking.plus(incidence.times(firingVector)); // Ecuación de estado
+        aux = currentMarking.plus(incidence.times(firingVector)); // Ecuación de estado.
         
-        for(int i=0; i<aux.getColumnDimension(); i++) {
-            if(aux.get(0,i)<0) {
-                return false;
+        for(int i=0; i<aux.getColumnDimension(); i++) { //Si alguno de los índices es menor que cero,
+            if(aux.get(0,i)<0) {                        //la ecuación de estado fue errónea (no se pudo disparar)
+                return false;                           //así que devolvemos 'false'.
             }
         }
         
-        setCurrentMarkingingVector(aux);
-        
+        setCurrentMarkingingVector(aux); //Si todo salió bien, cambio el vector de marcado y devolvemos 'true'.
+
         return true;
     }
 
     //----------------------------------------Setters----------------------------------------
 
-    //----------------------------------------Setters----------------------------------------
     /**
-Vectror de marcado actual de la red de pPetri     * @param currentMarking The Petri net current marking vector.
-     * @param currentMarking The Petri net current marking vector.
-     * @param currentMarking The Petri net current marking vector.
+     * @param currentMarking Vectror de marcado actual de la red de Petri.
      */
     public void setCurrentMarkingingVector(Matrix currentMarking) {
         this.currentMarking = currentMarking;

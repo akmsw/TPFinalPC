@@ -29,7 +29,7 @@ public class Monitor {
         
         conditionQueues = new ArrayList<Semaphore>();
         
-        for(int i=0; i<(pNet.getIncidenceMatrix().getColumnDimension()); i++) { //for para inicializar los semaforos en las colas del monitor
+        for(int i=0; i<(pNet.getIncidenceMatrix().getColumnDimension()); i++) { //Bucle 'for' para inicializar los semáforos en las colas del monitor.
             conditionQueues.add(new Semaphore(0));
         }
 
@@ -54,7 +54,21 @@ public class Monitor {
     }
 
     /**
-     * @param firingVector El vector de firing del thread.
+     * @param vector Vector donde se buscará el índice de la transición a disparar.
+     */
+    public int getQueue(Matrix vector) {    //El vector contiene la transicion que se intentó disparar y convierto ese indice en un entero
+        int queue = 0;
+        
+        for(int i=0; i<vector.getColumnDimension(); i++) {
+            if(vector.get(0,i)==1) break;
+            else queue++;
+        }
+        
+        return queue;
+    }
+
+    /**
+     * @param firingVector Vector de firing del thread.
      */
     public synchronized void tryFiring(Matrix firingVector) {
         if(pNet.stateEquationTest(firingVector)) {
@@ -62,7 +76,12 @@ public class Monitor {
             //aca se cambia la transition del firingvector del hilo
             exitMonitor();
         } else {
-            
+            try {
+                conditionQueues.get(getQueue(firingVector)).acquire();
+            }
+            catch (Exception e) {
+                System.out.println("rompió");
+            }
         }
     }
 }
