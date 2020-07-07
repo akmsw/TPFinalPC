@@ -14,7 +14,7 @@ import java.util.logging.SimpleFormatter;
 import java.io.File;
 import java.io.IOException;
 
-public class Log {
+public class Log extends Thread{
 
 	//Private class fields
 	private File f;
@@ -54,4 +54,11 @@ public class Log {
 
 		System.out.println("");
 	}
+	
+	@Override
+	public void run(){
+
+	}
+
+
 }

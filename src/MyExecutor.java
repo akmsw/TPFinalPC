@@ -8,13 +8,13 @@
 
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class MyThreadExecutor {
+public class MyExecutor {
 
     //Private class fields
     private ThreadPoolExecutor executor;
 
     //Constructor
-    public MyThreadExecutor() {
+    public MyExecutor() {
         //TODO
     }
 }

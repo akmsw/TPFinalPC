@@ -11,16 +11,17 @@ import Jama.Matrix;
 public class PetriNet {
 
     //Private class fields
-    private Matrix incidence, initialMarking, currentMarking, enabledTransitions;
+    private Matrix incidence, initialMarking, currentMarking, enabledTransitions, placesInvariants;
     
     //Constructor
     /**
      * @param incidence The Petri net incidence matrix.
      * @param initialMarking The Petri net initial marking vector.
      */
-    public PetriNet(Matrix incidence, Matrix initialMarking) {
+    public PetriNet(Matrix incidence, Matrix initialMarking, Matrix placesInvariants) {
         this.incidence = incidence;
         this.initialMarking = initialMarking;
+        this.placesInvariants = placesInvariants;
 
         setCurrentMarkingingVector(initialMarking);
     }

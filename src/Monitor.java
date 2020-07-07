@@ -8,6 +8,7 @@
 
 import java.util.concurrent.*;
 import java.util.ArrayList;
+import Jama.Matrix;
 
 public class Monitor {
 
@@ -23,4 +24,7 @@ public class Monitor {
         this.pNet = pNet;
         //TODO
     }
-}
+
+    public void tryFiring(Matrix firingVector){
+
+    }
