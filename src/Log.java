@@ -21,8 +21,9 @@ public class Log extends Thread {
 	private FileHandler FH;
 	private Logger logger;
 
-	//Constructor
 	/**
+	 * Constructor.
+	 * 
 	 * @param fileName nombre del archivo log.
 	 */
 	public Log(String fileName) throws SecurityException, IOException {
@@ -57,6 +58,6 @@ public class Log extends Thread {
 	
 	@Override
 	public void run() {
-		//TODO
+		//TODO: Contar cosas del monitor y escribirlas en el archivo txt
 	}
 }

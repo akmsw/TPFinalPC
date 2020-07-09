@@ -11,21 +11,22 @@ import Jama.Matrix;
 public class PetriNet {
 
     //Campos privados
-    private int transitionsFired;
-    private Matrix incidence, initialMarking, currentMarking, enabledTransitions, placesInvariants;
+    private Matrix incidence, incidenceBackwards, initialMarking, currentMarking, enabledTransitions, placesInvariants, aux;
     
-    //Constructor
     /**
+	 * Constructor.
+	 * 
      * @param incidence La matriz de incidencia de la red de Petri.
      * @param initialMarking El vector de marcado inicial de la red de Petri.
      */
-    public PetriNet(Matrix incidence, Matrix initialMarking, Matrix placesInvariants) {
+    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants) {
         this.incidence = incidence;
+        this.incidenceBackwards = incidenceBackwards;
         this.initialMarking = initialMarking;
         this.placesInvariants = placesInvariants;
-        this.transitionsFired = 0;
+        this.enabledTransitions = new Matrix(incidence.getRowDimension(), 1); //Inicializo el vector E de transiciones sensibilizadas con todos 0, del tamaño del vector de marcado, con 1 sola fila. FJC
 
-        setCurrentMarkingingVector(initialMarking);
+        setCurrentMarkingVector(initialMarking); //Inicializamos el vector de marcado actual igual al vector de marcado inicial
     }
 
     //----------------------------------------Métodos públicos---------------------------------
@@ -42,24 +43,57 @@ public class PetriNet {
     /**
      * @return El vector de marcado inicial de la red de Petri.
      */
-    public Matrix getInitialMarkingingVector() {
+    public Matrix getInitialMarkingVector() {
         return initialMarking;
     }
 
     /**
      * @return El vector de marcado actual de la red de Petri.
      */
-    public Matrix getCurrentMarkingingVector() {
+    public Matrix getCurrentMarkingVector() {
         return currentMarking;
     }
 
     /**
-     * @return Transiciones sensibilizadas en este momento.
+     * @return Vector de transiciones sensibilizadas.
      */
     public Matrix getEnabledTransitions() {
-        //TODO
         return enabledTransitions;
     }
+
+    //----------------------------------------Setters------------------------------------------
+
+    /**
+     * @param currentMarking Vector de marcado actual de la red de Petri.
+     */
+    public void setCurrentMarkingVector(Matrix currentMarking) {
+        this.currentMarking = currentMarking;
+    }
+
+    /**
+     * Este método recorre la matriz de incidencia 'backwards' chequeando si
+     * la columna (transición) está sensibilizada (el peso de cada arco es menor
+     * o igual a la cantidad de tokens de la plaza). Seteamos en '1' la transición
+     * sensibilizada en el vector 'enabledTransitions'.
+     */
+    public void setEnabledTransitions() {
+        boolean currentTransitionEnabled;
+
+        for(int j=0; j<incidenceBackwards.getColumnDimension(); j++) { //Itero columnas es decir Transiciones
+            currentTransitionEnabled = true;
+            
+            for(int i=0; i<incidenceBackwards.getRowDimension(); i++) //Itero filas es decir Plazas
+                if(incidenceBackwards.get(i,j)>currentMarking.get(0,i)) { //Si el peso del arco es mayor a la cantidad de tokens en la plaza que conecta a esa transicion j
+                    currentTransitionEnabled = false;
+                    break;
+                }
+
+            if(currentTransitionEnabled) enabledTransitions.set(0,j,1); //Si la transicion se detectó como sensibilizada, escribo un 1 en la posicion j del arreglo enabledTransicions. FJC
+            else enabledTransitions.set(0,j,0); //Si la transicion se detectó como no sensibilizada, escribo un 0 en la posicion j del arreglo enabledTransicions. FJC
+        }
+    }
+
+    //----------------------------------------Otros------------------------------------------
 
     /**
      * @param firingVector El vector de firing actual del vector.
@@ -68,29 +102,21 @@ public class PetriNet {
     public boolean stateEquationTest(Matrix firingVector) {
         double[] auxVector = {};
 
-        Matrix aux = new Matrix(auxVector,1);
+        aux = new Matrix(auxVector,1);
 
-        aux = currentMarking.plus(incidence.times(firingVector)); // Ecuación de estado.
+        aux = currentMarking.plus(incidence.times(firingVector)); //Ecuación de estado.
         
-        for(int i=0; i<aux.getColumnDimension(); i++) { //Si alguno de los índices es menor que cero,
-            if(aux.get(0,i)<0) {                        //la ecuación de estado fue errónea (no se pudo disparar)
-                return false;                           //así que devolvemos 'false'.
-            }
-        }
+        for(int i=0; i<aux.getColumnDimension(); i++) //Si alguno de los índices es menor que cero,
+            if(aux.get(0,i)<0) return false;          //la ecuación de estado fue errónea (no se pudo disparar) así que devolvemos 'false'.
         
-        setCurrentMarkingingVector(aux); //Si todo salió bien, cambiamos el vector de marcado y devolvemos 'true'.
-        
-        transitionsFired++;
-
         return true;
     }
 
-    //----------------------------------------Setters------------------------------------------
-
     /**
-     * @param currentMarking Vector de marcado actual de la red de Petri.
+     * Si todo salió bien en el testeo de la ecuación de estado,
+     * cambiamos el vector de marcado y devolvemos 'true'.
      */
-    public void setCurrentMarkingingVector(Matrix currentMarking) {
-        this.currentMarking = currentMarking;
+    public void fireTransition() {
+        setCurrentMarkingVector(aux);
     }
 }
