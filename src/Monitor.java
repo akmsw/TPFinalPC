@@ -117,7 +117,7 @@ public class Monitor {
                 exitMonitor();
             }
             else exitMonitor(); //Si no hay ninguna, me voy y no hago nada.
-            
+            //TODO: IMPORTANTEEEEEE hay que ver como trabajamos con el mutex para darle prioridad a los que estan waiting en lugar de permitir nuevos hilos de la cola de entrada.
         } else {
             exitMonitor();
 

@@ -55,6 +55,8 @@ public class Log extends Thread {
 
 		System.out.println("");
 	}
+
+	//----------------------------------------Overrides------------------------------------------------
 	
 	@Override
 	public void run() {
