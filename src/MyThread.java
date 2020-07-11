@@ -67,6 +67,4 @@ public class MyThread extends Thread {
             //Pal general case: elegir transition para firing (and & election)
             
             monitor.tryFiring(firingVector);
-        }
-    }
 }

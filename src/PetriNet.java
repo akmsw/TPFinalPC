@@ -12,7 +12,8 @@ public class PetriNet {
 
     //Campos privados
     private Matrix incidence, incidenceBackwards, initialMarking, currentMarking, enabledTransitions, placesInvariants, aux;
-    
+    private double[] auxVector = {};
+
     /**
 	 * Constructor.
 	 * 
@@ -25,6 +26,7 @@ public class PetriNet {
         this.initialMarking = initialMarking;
         this.placesInvariants = placesInvariants;
         this.enabledTransitions = new Matrix(incidence.getRowDimension(), 1); //Inicializo el vector E de transiciones sensibilizadas con todos 0, del tamaño del vector de marcado, con 1 sola fila. FJC
+        this.aux = new Matrix(auxVector,1);
 
         setCurrentMarkingVector(initialMarking); //Inicializamos el vector de marcado actual igual al vector de marcado inicial
     }
@@ -96,27 +98,39 @@ public class PetriNet {
     //----------------------------------------Otros------------------------------------------
 
     /**
+     * Este método testea si es posible realizar el disparo de la transición
+     * con el vector de firing del hilo.
+     * 
      * @param firingVector El vector de firing actual del vector.
-     * @return Si el resultado de la ecuación de estado fue correcto y se pudo asignar el nuevo vector de estado de la red.
+     * @return Si el resultado de la ecuación de estado fue correcto y
+     *         se pudo asignar el nuevo vector de estado de la red.
      */
     public boolean stateEquationTest(Matrix firingVector) {
-        double[] auxVector = {};
-
-        aux = new Matrix(auxVector,1);
-
-        aux = currentMarking.plus(incidence.times(firingVector)); //Ecuación de estado.
+        this.aux = stateEquation(firingVector);
         
-        for(int i=0; i<aux.getColumnDimension(); i++) //Si alguno de los índices es menor que cero,
-            if(aux.get(0,i)<0) return false;          //la ecuación de estado fue errónea (no se pudo disparar) así que devolvemos 'false'.
+        for(int i=0; i<this.aux.getColumnDimension(); i++) //Si alguno de los índices es menor que cero,
+            if(this.aux.get(0,i)<0) return false;          //la ecuación de estado fue errónea (no se pudo disparar) así que devolvemos 'false'.
         
         return true;
     }
+    
+    /**
+     * Si todo salió bien en el stateEquationTest,
+     * cambiamos el vector de marcado.
+     * 
+     * @param firingVector Vector de disparo del hilo.
+     */
+    public void fireTransition(Matrix firingVector) {
+        setCurrentMarkingVector(stateEquation(firingVector));
+    }
 
     /**
-     * Si todo salió bien en el testeo de la ecuación de estado,
-     * cambiamos el vector de marcado y devolvemos 'true'.
+     * Este método calcula la ecuación de estado.
+     * 
+     * @param firingVector Vector de disparo del hilo.
+     * @return El resultado de la ecuación de estado.
      */
-    public void fireTransition() {
-        setCurrentMarkingVector(aux);
+    public Matrix stateEquation(Matrix firingVector) {
+        return currentMarking.plus(incidence.times(firingVector)); //Ecuación de estado.
     }
 }

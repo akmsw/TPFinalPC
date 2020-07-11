@@ -97,8 +97,8 @@ public class Monitor {
      * @param firingVector Vector de firing del thread.
      */
     public synchronized void tryFiring(Matrix firingVector) {
-        if(pNet.stateEquationTest(firingVector)) {    //Si la ecuación de estado da un resultado correcto,
-            pNet.fireTransition();                    //disparo
+        if(pNet.stateEquationTest(firingVector)) {    //Si la ecuación de estado da un resultado correcto, disparo
+            pNet.fireTransition(firingVector);
             
             System.out.println("Succ eggs fool fire ring"); 
 
@@ -123,9 +123,10 @@ public class Monitor {
 
             try {
                 conditionQueues.get(getQueue(firingVector)).acquire();
+                pNet.fireTransition(firingVector);
             }
             catch(Exception e) {
-                System.out.println("rompió");
+                System.out.println("Error al encolar un hilo.");
             }
         }
     }
@@ -148,6 +149,9 @@ public class Monitor {
     }
 
     /**
+     * Este método calcula la cantidad de transiciones sensibilizadas
+     * que tienen hilos esperando en sus colas.
+     * 
      * @param and Vector resultado de la operación 'and'.
      * @return La cantidad de transiciones sensibilizadas en la red.
      */

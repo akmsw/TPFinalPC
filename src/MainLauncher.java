@@ -10,7 +10,7 @@ import Jama.Matrix;
 
 public class MainLauncher {
     
-    //Matriz de incidencia de la red de Petri dada.
+    //Campos privados.
     private static double[][] incidenceArray = {
         {-1, 0,-1, 0, 1},
         { 1,-1, 0, 0, 0},
