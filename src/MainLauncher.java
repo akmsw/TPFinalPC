@@ -27,6 +27,7 @@ public class MainLauncher {
         { 1, 0, 1, 0, 0}
     };
 
+    //Cuando ya no se use borrar
     private static double[][] identityA = {
         {1,0,0,0,0},
         {0,1,0,0,0},
@@ -66,6 +67,8 @@ public class MainLauncher {
         monitor = new Monitor(pNet, myLog);
         
         MyThread[] threads = new MyThread[incidence.getColumnDimension()];
+
+        System.out.println("SOY EL BIG MOMMA SARANIC THREAD. VOY A CREAR " + (incidence.getColumnDimension()-1) + " THREADS.");
                 
         for(int i=0; i<incidence.getColumnDimension(); i++) {
             threads[i] = new MyThread(identity.getMatrix(i, i, 0, identity.getColumnDimension()-1), monitor);

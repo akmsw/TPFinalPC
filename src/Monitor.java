@@ -6,6 +6,7 @@
  * @since 01/07/2020
  */
 
+
 import java.util.concurrent.Semaphore;
 import java.util.ArrayList;
 
@@ -87,10 +88,12 @@ public class Monitor {
 
     public synchronized void catchMonitor() throws InterruptedException {
         entry.acquire();
+        System.out.println(Thread.currentThread().getId() + ": Catchié el monitor");
     }
 
     public synchronized void exitMonitor() {
         entry.release();
+        System.out.println(Thread.currentThread().getId() + ": Exitié del monitor");
     }
     
     /**
@@ -109,24 +112,33 @@ public class Monitor {
             Matrix and = pNet.getEnabledTransitions().arrayTimes(whoAreQueued()); //Operacion logica AND entre vector de transiciones sensibilizadas y vector de colas con hilos en espera para disparar
             
             if(enabledAndWaiting(and)>1) { //Si tengo más de una transición sensibilizada, llamo a Paul Erex.
+                System.out.println(Thread.currentThread().getId() + ": Hay más de un hilo esperando en una enabled transition.");
                 conditionQueues.get(politics.decide(and)).release();
                 exitMonitor();
             }
             else if (enabledAndWaiting(and)==1) { //Si tengo sólo una, busco su índice.
+                System.out.println(Thread.currentThread().getId() + ": Hay sólo un hilo esperando en una enabled transition");
                 conditionQueues.get(getSingleEnabled(and)).release();
                 exitMonitor();
             }
-            else exitMonitor(); //Si no hay ninguna, me voy y no hago nada.
+            else {
+                System.out.println(Thread.currentThread().getId() + ": Nobody's waiting");
+                exitMonitor(); //Si no hay ninguna, me voy y no hago nada.
+            }
             //TODO: IMPORTANTEEEEEE hay que ver como trabajamos con el mutex para darle prioridad a los que estan waiting en lugar de permitir nuevos hilos de la cola de entrada.
         } else {
+            System.out.println(Thread.currentThread().getId() + ": No pude disparar");
+            
             exitMonitor();
 
             try {
-                conditionQueues.get(getQueue(firingVector)).acquire();
+                System.out.println(Thread.currentThread().getId() + ": me wa sleepidy");
+                conditionQueues.get(getQueue(firingVector)).acquire(); //TODO: confirmar si cuando se despierta se continua a partir de aca
+                System.out.println(Thread.currentThread().getId() +  ": me desperte, voy a triggerear transition");
                 pNet.fireTransition(firingVector);
             }
             catch(Exception e) {
-                System.out.println("Error al encolar un hilo.");
+                System.out.println(Thread.currentThread().getId() + "Error al encolar un hilo.");
             }
         }
     }

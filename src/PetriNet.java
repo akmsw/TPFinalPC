@@ -17,18 +17,20 @@ public class PetriNet {
     /**
 	 * Constructor.
 	 * 
-     * @param incidence La matriz de incidencia de la red de Petri.
-     * @param initialMarking El vector de marcado inicial de la red de Petri.
+     * @param incidence La matriz de incidencia de la red.
+     * @param incidenceBackwards Matriz 'backwards' de incidencia de la red.
+     * @param initialMarking El vector de marcado inicial de la red.
+     * @param placesInvariants Los invariantes de plaza de la red.
      */
     public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants) {
         this.incidence = incidence;
         this.incidenceBackwards = incidenceBackwards;
         this.initialMarking = initialMarking;
         this.placesInvariants = placesInvariants;
-        this.enabledTransitions = new Matrix(incidence.getRowDimension(), 1); //Inicializo el vector E de transiciones sensibilizadas con todos 0, del tamaño del vector de marcado, con 1 sola fila. FJC
+        this.enabledTransitions = new Matrix(1, incidence.getColumnDimension()); //Inicializo el vector E de transiciones sensibilizadas con todos 0, del tamaño del vector de marcado, con 1 sola fila. FJC
         this.aux = new Matrix(auxVector,1);
 
-        setCurrentMarkingVector(initialMarking); //Inicializamos el vector de marcado actual igual al vector de marcado inicial
+        setCurrentMarkingVector(this.initialMarking); //Inicializamos el vector de marcado actual igual al vector de marcado inicial
     }
 
     //----------------------------------------Métodos públicos---------------------------------
@@ -86,7 +88,7 @@ public class PetriNet {
             
             for(int i=0; i<incidenceBackwards.getRowDimension(); i++) //Itero filas es decir Plazas
                 if(incidenceBackwards.get(i,j)>currentMarking.get(0,i)) { //Si el peso del arco es mayor a la cantidad de tokens en la plaza que conecta a esa transicion j
-                    currentTransitionEnabled = false;
+                    currentTransitionEnabled = false; //currentMarking.get(i,0) antes estaba en (0,i) pero lo cambiamos cuando transpusimos el currentMarking
                     break;
                 }
 
@@ -107,10 +109,16 @@ public class PetriNet {
      */
     public boolean stateEquationTest(Matrix firingVector) {
         this.aux = stateEquation(firingVector);
+
+        System.out.println("STATE EQUATION TEST");
         
         for(int i=0; i<this.aux.getColumnDimension(); i++) //Si alguno de los índices es menor que cero,
-            if(this.aux.get(0,i)<0) return false;          //la ecuación de estado fue errónea (no se pudo disparar) así que devolvemos 'false'.
+            if(this.aux.get(0,i)<0) {
+                System.out.println("ROMPIMO");
+                return false;
+            }          //la ecuación de estado fue errónea (no se pudo disparar) así que devolvemos 'false'.
         
+        System.out.println("PUEDO DISPARAR");
         return true;
     }
     
@@ -131,6 +139,7 @@ public class PetriNet {
      * @return El resultado de la ecuación de estado.
      */
     public Matrix stateEquation(Matrix firingVector) {
-        return currentMarking.plus(incidence.times(firingVector)); //Ecuación de estado.
+        System.out.println("HABEMVS STATUM EQVATIONIS");
+        return (currentMarking.transpose().plus(incidence.times(firingVector.transpose()))).transpose(); //Ecuación de estado.
     }
 }
