@@ -68,7 +68,7 @@ public class MainLauncher {
         
         MyThread[] threads = new MyThread[incidence.getColumnDimension()];
 
-        System.out.println("SOY EL BIG MOMMA SARANIC THREAD. VOY A CREAR " + (incidence.getColumnDimension()-1) + " THREADS.");
+        System.out.println("SOY EL BIG MOMMA SARANIC THREAD. VOY A CREAR " + incidence.getColumnDimension() + " THREADS.");
                 
         for(int i=0; i<incidence.getColumnDimension(); i++) {
             threads[i] = new MyThread(identity.getMatrix(i, i, 0, identity.getColumnDimension()-1), monitor);

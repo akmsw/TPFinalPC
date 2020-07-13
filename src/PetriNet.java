@@ -13,6 +13,7 @@ public class PetriNet {
     //Campos privados
     private Matrix incidence, incidenceBackwards, initialMarking, currentMarking, enabledTransitions, placesInvariants, aux;
     private double[] auxVector = {};
+    private int transitionsFired;
 
     /**
 	 * Constructor.
@@ -23,6 +24,7 @@ public class PetriNet {
      * @param placesInvariants Los invariantes de plaza de la red.
      */
     public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants) {
+        this.transitionsFired = 0;
         this.incidence = incidence;
         this.incidenceBackwards = incidenceBackwards;
         this.initialMarking = initialMarking;
@@ -63,6 +65,13 @@ public class PetriNet {
      */
     public Matrix getEnabledTransitions() {
         return enabledTransitions;
+    }
+
+    /**
+     * @return La cantidad de transiciones que se dispararon hasta el momento.
+     */
+    public int getTransitionsFired() {
+        return transitionsFired; //TODO: Cuando cambiemos al criterio de colores debe ser un vector que lleve la cuenta de cada transicion
     }
 
     //----------------------------------------Setters------------------------------------------
@@ -110,15 +119,18 @@ public class PetriNet {
     public boolean stateEquationTest(Matrix firingVector) {
         this.aux = stateEquation(firingVector);
 
-        System.out.println("STATE EQUATION TEST");
+        System.out.println(Thread.currentThread().getId() + ": STATE EQUATION TEST. Marcado actual:");        
+
+        this.aux.print(0, 0); //BORRAR ESTE PRINT
         
         for(int i=0; i<this.aux.getColumnDimension(); i++) //Si alguno de los índices es menor que cero,
             if(this.aux.get(0,i)<0) {
-                System.out.println("ROMPIMO");
+                System.out.println(Thread.currentThread().getId() + ": ROMPIMO");
                 return false;
             }          //la ecuación de estado fue errónea (no se pudo disparar) así que devolvemos 'false'.
         
-        System.out.println("PUEDO DISPARAR");
+        System.out.println(Thread.currentThread().getId() + ": PUEDO DISPARAR");
+        
         return true;
     }
     
@@ -130,6 +142,10 @@ public class PetriNet {
      */
     public void fireTransition(Matrix firingVector) {
         setCurrentMarkingVector(stateEquation(firingVector));
+        System.out.println(Thread.currentThread().getId() + ": Se disparó la transicion: fV: ");
+        firingVector.print(0, 0);
+        System.out.println(Thread.currentThread().getId() + ": Exito al disparar transicion: T");// + getQueue(firingVector)); 
+        transitionsFired++; //Aumento las transiciones disparadas
     }
 
     /**
@@ -139,7 +155,7 @@ public class PetriNet {
      * @return El resultado de la ecuación de estado.
      */
     public Matrix stateEquation(Matrix firingVector) {
-        System.out.println("HABEMVS STATUM EQVATIONIS");
+        System.out.println(Thread.currentThread().getId() + ": HABEMVS STATUM EQVATIONIS");        
         return (currentMarking.transpose().plus(incidence.times(firingVector.transpose()))).transpose(); //Ecuación de estado.
     }
 }
