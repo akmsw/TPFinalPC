@@ -14,16 +14,17 @@ import java.util.logging.SimpleFormatter;
 import java.io.File;
 import java.io.IOException;
 
-public class Log {
+public class Log extends Thread {
 
-	//Private class fields
+	//Campos privados
 	private File f;
 	private FileHandler FH;
 	private Logger logger;
 
-	//Constructor
 	/**
-	 * @param fileName The name of the log file.
+	 * Constructor.
+	 * 
+	 * @param fileName nombre del archivo log.
 	 */
 	public Log(String fileName) throws SecurityException, IOException {
 		f = new File(fileName);
@@ -34,12 +35,12 @@ public class Log {
 		
 		FH = new FileHandler(fileName,true);
 		
-		SimpleFormatter formatter = new SimpleFormatter();
+		SimpleFormatter formatter = new SimpleFormatter();		
 		
 		FH.setFormatter(formatter);
 	}
 
-	//----------------------------------------Public Methods----------------------------------------
+	//----------------------------------------Métodos públicos----------------------------------------
 
 	public void writeLog() {
 		logger = Logger.getLogger("ReportTest");
@@ -47,11 +48,18 @@ public class Log {
 		logger.addHandler(FH);
 		logger.setLevel(Level.INFO);
 
-		//Message shown before ending program.
+		//Mensaje mostrado al finalizar el programa.
 		logger.info("------------------------------------------------------------------------------");
 		logger.info("END OF LOG: ");
 		logger.info("------------------------------------------------------------------------------");
 
 		System.out.println("");
+	}
+
+	//----------------------------------------Overrides------------------------------------------------
+	
+	@Override
+	public void run() {
+		//TODO: Contar cosas del monitor y escribirlas en el archivo txt
 	}
 }
