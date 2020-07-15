@@ -102,8 +102,6 @@ public class Monitor {
         if(pNet.stateEquationTest(firingVector)) {    //Si la ecuación de estado da un resultado correcto, disparo
             pNet.fireTransition(firingVector);
 
-            pNet.setEnabledTransitions();
-
             and = pNet.getEnabledTransitions().arrayTimes(whoAreQueued()); //Operacion logica AND entre vector de transiciones sensibilizadas y vector de colas con hilos en espera para disparar
             
             System.out.println(Thread.currentThread().getId() + ": Llamando a waitingCheck sin haber waiteado antes.");
@@ -114,16 +112,14 @@ public class Monitor {
             exitMonitor();
 
             try {
-                System.out.println(Thread.currentThread().getId() + ": me voy a encolar en la cola de condicion de la transicion: T" + getQueue(firingVector));
+                System.out.println(Thread.currentThread().getId() + ": Me voy a encolar en la cola de condicion de la transicion: T" + getQueue(firingVector));
                 conditionQueues.get(getQueue(firingVector)).acquire(); //Cuando se despierta se continua a partir de aca
-                System.out.println(Thread.currentThread().getId() +  ": me desperte, voy a triggerear la transicion: " + getQueue(firingVector));
+                System.out.println(Thread.currentThread().getId() +  ": Me desperté, voy a triggerear la transicion: " + getQueue(firingVector));
                 pNet.fireTransition(firingVector);
-                pNet.setEnabledTransitions();
                 and = pNet.getEnabledTransitions().arrayTimes(whoAreQueued());                
                 System.out.println(Thread.currentThread().getId() + ": Llamando a waitingCheck despues de despertar.");
                 waitingCheck(and);
-            }
-            catch(Exception e) {
+            } catch(Exception e) {
                 System.out.println(Thread.currentThread().getId() + "Error al encolar un hilo.");
             }
         }
@@ -134,11 +130,12 @@ public class Monitor {
      *            están esperando en colas de transiciones sensibilizadas.
      */
     public void waitingCheck(Matrix and) {
+        and.print(0, 0);
         if(enabledAndWaiting(and)>1) { //Si tengo más de una transición sensibilizada, llamo a Paul Erex.
             System.out.println(Thread.currentThread().getId() + ": Hay más de un hilo esperando en enableds transitions.");
             int choice = politics.decide(and);
             conditionQueues.get(choice).release();                
-            System.out.println(Thread.currentThread().getId() + ": hace return. Cedo el mutex al de la transicion: " + choice);
+            System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex al de la transicion: " + choice);
             return; //Salimos del metodo y volvemos al run()
         }
         else if (enabledAndWaiting(and)==1) { //Si tengo sólo una, busco su índice.
@@ -155,8 +152,7 @@ public class Monitor {
     }
 
     /**
-     * Este método devuelve el arreglo de hilos que están esperando
-     * en las colas de las transiciones.
+     * @return El arreglo de hilos que están esperando en las colas de las transiciones.
      */
     public Matrix whoAreQueued() {
         double[] aux = new double[pNet.getIncidenceMatrix().getColumnDimension()];
@@ -182,7 +178,7 @@ public class Monitor {
         int aux = 0;
 
         for(int i=0; i<and.getColumnDimension(); i++)
-            if(and.get(0,i)==1) aux++;
+            if(and.get(0,i)>0) aux++;
         
         return aux;
     }

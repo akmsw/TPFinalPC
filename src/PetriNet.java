@@ -142,10 +142,16 @@ public class PetriNet {
      */
     public void fireTransition(Matrix firingVector) {
         setCurrentMarkingVector(stateEquation(firingVector));
+        
         System.out.println(Thread.currentThread().getId() + ": Se disparó la transicion: fV: ");
-        firingVector.print(0, 0);
+        
+        firingVector.print(0,0);
+        
         System.out.println(Thread.currentThread().getId() + ": Exito al disparar transicion: T");// + getQueue(firingVector)); 
+        
         transitionsFired++; //Aumento las transiciones disparadas
+        
+        setEnabledTransitions();
     }
 
     /**

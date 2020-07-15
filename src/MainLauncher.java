@@ -18,45 +18,41 @@ public class MainLauncher {
         { 0,-1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         { 0, 0, 1, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         { 0, 0,-1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0,-1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
         { 0, 0, 0,-1,-1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
         { 0, 0, 0, 1, 0,-1, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0},
         { 0, 0, 0, 0, 1, 0,-1, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0},
         { 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-        { 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0}
-
-
-
-
-
-
-        
-        { 0, 1, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        { 0, 0, 1, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        { 1,-1,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0, 0, 0, 8, 0},
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0, 0, 0, 8},
-        { 0,-1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        { 0, 0,-1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0},
         { 0, 0, 0, 0, 0, 1, 0, 1, 0,-1,-1, 0, 0, 0, 0, 0, 0},
         { 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0,-1,-1, 0, 0, 0, 0},
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0,-8, 0},
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0,-8},
-        {-1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        { 0, 0, 0,-1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0},
-        { 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
-        { 0, 0, 0, 1, 0,-1, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0},
-        { 0, 0, 0, 0, 1, 0,-1, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0},
-        { 0, 0, 0,-1,-1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-        { 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-        { 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0}
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0, 0, 0, 8, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0, 0, 0, 8},
     };
 
-    private static double[][] incidenceBackwardsArray = { //TODO: VER SI NOS HACE FALTA SINO BORRAR
-        { 1, 0, 1, 0, 0},
-        { 0, 1, 0, 0, 0},
-        { 0, 0, 0, 1, 0},
-        { 0, 0, 0, 0, 1},
-        { 1, 0, 1, 0, 0}
+    private static double[][] incidenceBackwardsArray = {
+        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
     };
 
     //TODO: Cuando ya no se use borrar
@@ -85,37 +81,62 @@ public class MainLauncher {
         { 8, 0, 8, 0, 8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 8, 0, 1},
     };
 
-    private static double[] iMark = {};
+    private static double[][] threadMakerA = {
+        { 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+        { 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+        { 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+        { 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    };
+
+    private static double[] alphaTimesA = { 2, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 5, 5, 4, 4};
+    //ArrivalRate: 2[s]
+    //FinalizarTareas: 3[s]
+    //ProcesarTareas2: 5[s]
+    //VaciarMemorias: 4[s]
+    //Los bethas los tomamos como infinitos para que no se desensibilicen las transiciones.
+
+    private static double[] iMark = { 1, 0, 0, 4, 0, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8};
 
     private static Log myLog;
     private static Monitor monitor;
     private static PetriNet pNet;
 
     public static void main(String args[]) {
-        Matrix identity = new Matrix(identityA);        
+       // Matrix identity = new Matrix(identityA);        
         Matrix incidence = new Matrix(incidenceArray);
         Matrix incidenceBackwards = new Matrix(incidenceBackwardsArray);
         Matrix initialMarking = new Matrix(iMark, 1); //1 es la cantidad de filas que quiero en la matriz
         Matrix placesInvariants = new Matrix(pInvariants);
+        Matrix transitionInvariants = new Matrix(tInvariants);
+        Matrix threadMaker = new Matrix(threadMakerA);
+        Matrix alphaTimes = new Matrix(alphaTimesA, 1);
         
         pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants);
         
+        /* TODO: DESCOMENTAR CUANDO QUIERAS USAR EL LOG
         try { //Inicializamos el hilo Log
             myLog = new Log("ReportMonitor.txt");
             myLog.start(); //El hilo Log comienza a correr para registrar toda la actividad
-        }
-        catch (Exception e) {
+        } catch(Exception e) {
             System.out.println("LOG ERROR");
-        }
+        }*/
 
         monitor = new Monitor(pNet, myLog);
-        
-        MyThread[] threads = new MyThread[incidence.getColumnDimension()];
 
-        System.out.println("SOY EL BIG MOMMA SARANIC THREAD. VOY A CREAR " + incidence.getColumnDimension() + " THREADS.");
-                
-        for(int i=0; i<incidence.getColumnDimension(); i++) {
-            threads[i] = new MyThread(identity.getMatrix(i, i, 0, identity.getColumnDimension()-1), monitor);
+        int threadQuantity = threadMaker.getRowDimension(); //Uno por cada invariante de transicion (sin las transiciones del vaciado) + 2 hilos extra para vaciar memorias
+        
+        MyThread[] threads = new MyThread[threadQuantity];
+
+        System.out.println("SOY EL BIG MOMMA CHECHERO THREAD. VOY A CREAR " + threadQuantity + " THREADS.");
+        
+        for(int i=0; i<threadQuantity; i++) {
+            threads[i] = new MyThread(threadMaker.getMatrix(i, i, 0, threadMaker.getColumnDimension()-1), monitor);
             threads[i].start();
         }
     }

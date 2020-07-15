@@ -22,8 +22,8 @@ public class MyThread extends Thread {
      * @param firingVector Vector de transiciones asociadas al hilo.
      * @param monitor      Referencia al monitor que controla la red de Petri.
      */
-    public MyThread(Matrix firingVector, Monitor monitor) {
-        this.firingVector = firingVector;
+    public MyThread(Matrix myTransitions, Monitor monitor) {
+        this.myTransitions = myTransitions;
         this.monitor = monitor;
     }
 
@@ -45,44 +45,44 @@ public class MyThread extends Thread {
         return myTransitions;
     }
 
-    // ----------------------------------------Setters------------------------------------------
-
-    /**
-     * @param myTransitions El vector de transiciones asociadas a este hilo.
-     */
-    public void setAssociatedTransitions(Matrix myTransitions) {
-        this.myTransitions = myTransitions;
-    }
-
-    // ----------------------------------------Overrides------------------------------------------
+    // ----------------------------------------Overrides----------------------------------------
 
     @Override
     public void run() {
+        int i = 0;
+       
         while(monitor.getPetriNet().getTransitionsFired()<10) { //El run termina luego de N transiciones exitosas entre todos los hilos en conjunto
-            try {
-                System.out.println(Thread.currentThread().getId() + ": Intento catchear el monitor");
-                monitor.catchMonitor();
-            } catch(InterruptedException e) {
-                System.out.println(Thread.currentThread().getId() + ": Guacho hay bardo para entrar al monitor");
-            }
+            if(myTransitions.get(0,i)>0) {
+                firingVector = getTransitionVector(i);
+                
+                try {
+                    System.out.println(Thread.currentThread().getId() + ": Intento catchear el monitor");
+                    monitor.catchMonitor();
+                } catch(InterruptedException e) {
+                    System.out.println(Thread.currentThread().getId() + ": Guacho hay bardo para entrar al monitor");
+                }
 
-            //Pal general case: elegir transition para firing (and & election)
-            System.out.println(Thread.currentThread().getId() + ": voy a disparar. fV:");
+                System.out.println(Thread.currentThread().getId() + ": Voy a disparar. fV:");
             
-            firingVector.print(0,0);
-            
-            monitor.tryFiring(firingVector);
+                firingVector.print(0,0);
 
-            //TODO: BORRAR ESTE SLEEP.
-            System.out.println(Thread.currentThread().getId() +": Sleeping 2 seconds");
-            try {
-                java.lang.Thread.sleep(2000); //Cada 2 segundos vuelvo a ejecutar el run().
-            } catch(InterruptedException e) {
-                e.printStackTrace();
+                monitor.tryFiring(firingVector);
+
+                //TODO: BORRAR ESTE SLEEP.
+                System.out.println(Thread.currentThread().getId() +": Sleeping 2 seconds");
+                try {
+                    java.lang.Thread.sleep(2000); //Cada 2 segundos vuelvo a ejecutar el run().
+                } catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+            
+            i++;
+            
+            if(i>=myTransitions.getColumnDimension()) i=0; //la dimension de myTransitions deberia ser 19
         }
 
-        System.out.println(Thread.currentThread().getId() +": Termino mi run()");
+        System.out.println(Thread.currentThread().getId() +": Terminó mi run()");
     }
 
     // ----------------------------------------Otros------------------------------------------
@@ -91,7 +91,7 @@ public class MyThread extends Thread {
      * @param i Índice de la transición que se quiere obtener.
      * @return Vector con ceros y un '1' en la i-ésima transición.
      */
-    public Matrix getTransicion(int i) {
+    public Matrix getTransitionVector(int i) {
         Matrix vector = new Matrix(1,monitor.getPetriNet().getIncidenceMatrix().getColumnDimension());
         
         vector.set(0,i,1);
