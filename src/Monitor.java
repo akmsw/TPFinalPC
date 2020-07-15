@@ -6,7 +6,6 @@
  * @since 01/07/2020
  */
 
-
 import java.util.concurrent.Semaphore;
 import java.util.ArrayList;
 
@@ -41,9 +40,9 @@ public class Monitor {
             conditionQueues.add(new Semaphore(0));
     }
     
-    //----------------------------------------Métodos públicos---------------------------------
+    // ----------------------------------------Métodos públicos---------------------------------
 
-    //----------------------------------------Getters------------------------------------------
+    // ----------------------------------------Getters------------------------------------------
 
     /**
      * @param vector Vector donde se buscará el índice de la transición a disparar.
@@ -66,6 +65,9 @@ public class Monitor {
         return this.pNet;
     }
 
+    public ArrayList<Semaphore> getConditionQueues(){
+        return conditionQueues;
+    }
     /**
      * @param and Vector de transiciones que tiene sólo una sensibilizada.
      * @return El índice de la transición sensibilizada.
@@ -82,9 +84,9 @@ public class Monitor {
         return index;
     }
 
-    //----------------------------------------Otros------------------------------------------
+    // ----------------------------------------Otros------------------------------------------
 
-    public void catchMonitor() throws InterruptedException {
+    public synchronized void catchMonitor() throws InterruptedException {
         entry.acquire();
         System.out.println(Thread.currentThread().getId() + ": Catchié el monitor");
     }
@@ -94,15 +96,17 @@ public class Monitor {
         System.out.println(Thread.currentThread().getId() + ": Exitié del monitor");
     }
     
+    
     //TODO: AGREGAR SYNCRONIZED
     /**
      * @param firingVector Vector de firing del thread.
      */
+    /*
     public void tryFiring(Matrix firingVector) {
         if(pNet.stateEquationTest(firingVector)) {    //Si la ecuación de estado da un resultado correcto, disparo
             pNet.fireTransition(firingVector);
 
-            and = pNet.getEnabledTransitions().arrayTimes(whoAreQueued()); //Operacion logica AND entre vector de transiciones sensibilizadas y vector de colas con hilos en espera para disparar
+            //and = pNet.getEnabledTransitions().arrayTimes(whoAreQueued()); //Operacion logica AND entre vector de transiciones sensibilizadas y vector de colas con hilos en espera para disparar
             
             System.out.println(Thread.currentThread().getId() + ": Llamando a waitingCheck sin haber waiteado antes.");
             waitingCheck(and);
@@ -116,14 +120,14 @@ public class Monitor {
                 conditionQueues.get(getQueue(firingVector)).acquire(); //Cuando se despierta se continua a partir de aca
                 System.out.println(Thread.currentThread().getId() +  ": Me desperté, voy a triggerear la transicion: " + getQueue(firingVector));
                 pNet.fireTransition(firingVector);
-                and = pNet.getEnabledTransitions().arrayTimes(whoAreQueued());                
+                //and = pNet.getEnabledTransitions().arrayTimes(whoAreQueued());                
                 System.out.println(Thread.currentThread().getId() + ": Llamando a waitingCheck despues de despertar.");
                 waitingCheck(and);
             } catch(Exception e) {
                 System.out.println(Thread.currentThread().getId() + "Error al encolar un hilo.");
             }
         }
-    }
+    }*/
 
     /**
      * @param and Vector resultado de la operación AND para ver quiénes
@@ -181,5 +185,13 @@ public class Monitor {
             if(and.get(0,i)>0) aux++;
         
         return aux;
+    }
+
+    /**
+     * @return El vector que indica si hay hilos esperando
+     *         en colas de transiciones sensibilizadas.
+     */
+    public Matrix getAnd() {
+        return pNet.getEnabledTransitions().arrayTimes(whoAreQueued());
     }
 }

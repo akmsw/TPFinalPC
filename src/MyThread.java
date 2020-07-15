@@ -66,15 +66,46 @@ public class MyThread extends Thread {
             
                 firingVector.print(0,0);
 
-                monitor.tryFiring(firingVector);
+                if(monitor.getPetriNet().stateEquationTest(firingVector)) {
+                    monitor.getPetriNet().fireTransition(firingVector);
+                    
+                    Matrix EandW = monitor.getAnd();
 
-                //TODO: BORRAR ESTE SLEEP.
+                    System.out.println(Thread.currentThread().getId() + ": Llamando a waitingCheck sin haber waiteado antes.");
+
+                    monitor.waitingCheck(EandW);
+                } else {
+                    System.out.println(Thread.currentThread().getId() + ": No pude disparar");            
+                    monitor.exitMonitor();
+
+                    try {
+                        System.out.println(Thread.currentThread().getId() + ": Me voy a encolar en la cola de condicion de la transicion: T" + monitor.getQueue(firingVector));
+                        
+                        monitor.getConditionQueues().get(monitor.getQueue(firingVector)).acquire(); //Cuando se despierta se continua a partir de aca
+                        
+                        System.out.println(Thread.currentThread().getId() +  ": Me desperté, voy a triggerear la transicion: " + monitor.getQueue(firingVector));
+                        
+                        if(monitor.getPetriNet().getTransitionsFired()>=10) break;
+
+                        monitor.getPetriNet().fireTransition(firingVector);
+                        
+                        Matrix EandW = monitor.getAnd();               
+                        
+                        System.out.println(Thread.currentThread().getId() + ": Llamando a waitingCheck despues de despertar.");
+                        
+                        monitor.waitingCheck(EandW);
+                    } catch(Exception e) {
+                        System.out.println(Thread.currentThread().getId() + "Error al encolar un hilo.");
+                    }
+                }
+
+                /*//TODO: BORRAR ESTE SLEEP.
                 System.out.println(Thread.currentThread().getId() +": Sleeping 2 seconds");
                 try {
                     java.lang.Thread.sleep(2000); //Cada 2 segundos vuelvo a ejecutar el run().
                 } catch(InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
             
             i++;
@@ -82,7 +113,7 @@ public class MyThread extends Thread {
             if(i>=myTransitions.getColumnDimension()) i=0; //la dimension de myTransitions deberia ser 19
         }
 
-        System.out.println(Thread.currentThread().getId() +": Terminó mi run()");
+        System.out.println(Thread.currentThread().getId() + ": Terminó mi run()");
     }
 
     // ----------------------------------------Otros------------------------------------------
