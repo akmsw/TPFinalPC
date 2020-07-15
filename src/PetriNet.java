@@ -35,9 +35,9 @@ public class PetriNet {
         setCurrentMarkingVector(this.initialMarking); //Inicializamos el vector de marcado actual igual al vector de marcado inicial
     }
 
-    //----------------------------------------Métodos públicos---------------------------------
+    // ----------------------------------------Métodos públicos---------------------------------
 
-    //----------------------------------------Getters------------------------------------------
+    // ----------------------------------------Getters------------------------------------------
 
     /**
      * @return La matriz de incidencia de la red de Petri.
@@ -74,7 +74,7 @@ public class PetriNet {
         return transitionsFired; //TODO: Cuando cambiemos al criterio de colores debe ser un vector que lleve la cuenta de cada transicion
     }
 
-    //----------------------------------------Setters------------------------------------------
+    // ----------------------------------------Setters------------------------------------------
 
     /**
      * @param currentMarking Vector de marcado actual de la red de Petri.
@@ -106,7 +106,7 @@ public class PetriNet {
         }
     }
 
-    //----------------------------------------Otros------------------------------------------
+    // ----------------------------------------Otros------------------------------------------
 
     /**
      * Este método testea si es posible realizar el disparo de la transición

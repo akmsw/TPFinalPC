@@ -27,8 +27,7 @@ public class MyThread extends Thread {
         this.monitor = monitor;
     }
 
-    // ----------------------------------------Métodos
-    // públicos---------------------------------
+    // ----------------------------------------Métodos públicos---------------------------------
 
     // ----------------------------------------Getters------------------------------------------
 
@@ -67,21 +66,36 @@ public class MyThread extends Thread {
                 System.out.println(Thread.currentThread().getId() + ": Guacho hay bardo para entrar al monitor");
             }
 
-            // Pal general case: elegir transition para firing (and & election)
+            //Pal general case: elegir transition para firing (and & election)
             System.out.println(Thread.currentThread().getId() + ": voy a disparar. fV:");
+            
             firingVector.print(0,0);
+            
             monitor.tryFiring(firingVector);
 
             //TODO: BORRAR ESTE SLEEP.
             System.out.println(Thread.currentThread().getId() +": Sleeping 2 seconds");
             try {
                 java.lang.Thread.sleep(2000); //Cada 2 segundos vuelvo a ejecutar el run().
-            } catch (InterruptedException e) {
+            } catch(InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
         System.out.println(Thread.currentThread().getId() +": Termino mi run()");
+    }
 
+    // ----------------------------------------Otros------------------------------------------
+
+    /**
+     * @param i Índice de la transición que se quiere obtener.
+     * @return Vector con ceros y un '1' en la i-ésima transición.
+     */
+    public Matrix getTransicion(int i) {
+        Matrix vector = new Matrix(1,monitor.getPetriNet().getIncidenceMatrix().getColumnDimension());
+        
+        vector.set(0,i,1);
+        
+        return vector;
     }
 }
