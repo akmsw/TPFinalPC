@@ -11,7 +11,7 @@ import Jama.Matrix;
 public class PetriNet {
 
     //Campos privados
-    private Matrix incidence, incidenceBackwards, initialMarking, currentMarking, enabledTransitions, placesInvariants, aux;
+    private Matrix incidence, incidenceBackwards, initialMarking, currentMarking, enabledTransitions, placesInvariants, aux, enabledAtTime, alphaTimes, workingVector;
     private double[] auxVector = {};
     private int transitionsFired;
 
@@ -22,17 +22,28 @@ public class PetriNet {
      * @param incidenceBackwards Matriz 'backwards' de incidencia de la red.
      * @param initialMarking El vector de marcado inicial de la red.
      * @param placesInvariants Los invariantes de plaza de la red.
+     * @param alphaTimes Los tiempos 'alfa' asociados a cada transición.
      */
-    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants) {
-        this.transitionsFired = 0;
+    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes) {
         this.incidence = incidence;
         this.incidenceBackwards = incidenceBackwards;
         this.initialMarking = initialMarking;
         this.placesInvariants = placesInvariants;
+        this.alphaTimes = alphaTimes;
+
+        this.transitionsFired = 0;
+
         this.enabledTransitions = new Matrix(1, incidence.getColumnDimension()); //Inicializo el vector E de transiciones sensibilizadas con todos 0, del tamaño del vector de marcado, con 1 sola fila. FJC
+        
         this.aux = new Matrix(auxVector,1);
 
+        this.enabledAtTime = new Matrix(1, incidence.getColumnDimension()); //Vector que almacena los W_i
+
+        this.workingVector = new Matrix(1, incidence.getColumnDimension()); //Vector que indica cuales transiciones están siendo ejecutadas en este momento
+
         setCurrentMarkingVector(this.initialMarking); //Inicializamos el vector de marcado actual igual al vector de marcado inicial
+        
+        setEnabledTransitions();
     }
 
     // ----------------------------------------Métodos públicos---------------------------------
@@ -74,6 +85,28 @@ public class PetriNet {
         return transitionsFired; //TODO: Cuando cambiemos al criterio de colores debe ser un vector que lleve la cuenta de cada transicion
     }
 
+    /**
+     * @return El vector de tiempos alfa asociados a las transiciones.
+     */
+    public Matrix getAlphaVector() {
+        return alphaTimes;
+    }
+
+    /**
+     * @return El vector de los W_i.
+     */
+    public Matrix getEnabledAtTime() {
+        return enabledAtTime;
+    }
+
+    /**
+     * @return Vector de transiciones que tienen al menos
+     *         un hilo trabajando en ellas.
+     */
+    public Matrix getWorkingVector() {
+        return workingVector;
+    }
+
     // ----------------------------------------Setters------------------------------------------
 
     /**
@@ -84,13 +117,22 @@ public class PetriNet {
     }
 
     /**
+     * @param index Índice de la transición que está sensibilizada.
+     * @param time Instante de tiempo en el que se sensibilizó la transición.
+     */
+    public void setEnabledAtTime(int index, long time){
+        enabledAtTime.set(0, index, (double)time);
+    }
+
+    /**
      * Este método recorre la matriz de incidencia 'backwards' chequeando si
      * la columna (transición) está sensibilizada (el peso de cada arco es menor
      * o igual a la cantidad de tokens de la plaza). Seteamos en '1' la transición
      * sensibilizada en el vector 'enabledTransitions'.
      */
     public void setEnabledTransitions() {
-        boolean currentTransitionEnabled;
+        boolean currentTransitionEnabled;        
+        long currentTime = System.currentTimeMillis(); //Establezco el tiempo una sola vez para denotar que todas las transiciones se sensibilizaron "al mismo tiempo"
 
         for(int j=0; j<incidenceBackwards.getColumnDimension(); j++) { //Itero columnas es decir Transiciones
             currentTransitionEnabled = true;
@@ -101,10 +143,14 @@ public class PetriNet {
                     break;
                 }
 
-            if(currentTransitionEnabled) enabledTransitions.set(0,j,1); //Si la transicion se detectó como sensibilizada, escribo un 1 en la posicion j del arreglo enabledTransicions. FJC
-            else enabledTransitions.set(0,j,0); //Si la transicion se detectó como no sensibilizada, escribo un 0 en la posicion j del arreglo enabledTransicions. FJC
+            if(currentTransitionEnabled) {
+                enabledTransitions.set(0,j,1); //Si la transicion se detectó como sensibilizada, escribo un 1 en la posicion j del arreglo enabledTransicions. FJC
+                setEnabledAtTime(j,currentTime); //Establezco el tiempo en que se sensibilizaron las transiciones subsiguientes
+            } else enabledTransitions.set(0,j,0); //Si la transicion se detectó como no sensibilizada, escribo un 0 en la posicion j del arreglo enabledTransicions. FJC
         }
     }
+
+    
 
     // ----------------------------------------Otros------------------------------------------
 
@@ -117,19 +163,19 @@ public class PetriNet {
      *         se pudo asignar el nuevo vector de estado de la red.
      */
     public boolean stateEquationTest(Matrix firingVector) {
-        this.aux = stateEquation(firingVector);
+        aux = stateEquation(firingVector);
 
         System.out.println(Thread.currentThread().getId() + ": STATE EQUATION TEST. Marcado actual:");        
 
-        this.aux.print(0, 0); //BORRAR ESTE PRINT
+        aux.print(0, 0); //BORRAR ESTE PRINT
         
         for(int i=0; i<this.aux.getColumnDimension(); i++) //Si alguno de los índices es menor que cero,
             if(this.aux.get(0,i)<0) {
                 System.out.println(Thread.currentThread().getId() + ": ROMPIMO");
                 return false;
-            }          //la ecuación de estado fue errónea (no se pudo disparar) así que devolvemos 'false'.
+            } //la ecuación de estado fue errónea (no se pudo disparar) así que devolvemos 'false'.
         
-        System.out.println(Thread.currentThread().getId() + ": PUEDO DISPARAR");
+        System.out.println(Thread.currentThread().getId() + ": La transición está sensibilizada. Hay que chequear el alfa.");
         
         return true;
     }
@@ -147,10 +193,12 @@ public class PetriNet {
         
         firingVector.print(0,0);
         
-        System.out.println(Thread.currentThread().getId() + ": Exito al disparar transicion: T");// + getQueue(firingVector)); 
+        System.out.println(Thread.currentThread().getId() + ": Exito al disparar transicion.");// + getQueue(firingVector)); 
         
         transitionsFired++; //Aumento las transiciones disparadas
         
+        System.out.println(Thread.currentThread().getId() + ": Cantidad de transiciones disparadas: " + transitionsFired);
+
         setEnabledTransitions();
     }
 
@@ -161,7 +209,6 @@ public class PetriNet {
      * @return El resultado de la ecuación de estado.
      */
     public Matrix stateEquation(Matrix firingVector) {
-        System.out.println(Thread.currentThread().getId() + ": HABEMVS STATUM EQVATIONIS");        
         return (currentMarking.transpose().plus(incidence.times(firingVector.transpose()))).transpose(); //Ecuación de estado.
     }
 }

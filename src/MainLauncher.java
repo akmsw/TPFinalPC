@@ -81,6 +81,7 @@ public class MainLauncher {
         { 8, 0, 8, 0, 8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 8, 0, 1},
     };
 
+    //Orden Ts: ArrivalRate AsignarP1 AssignarP2 EmpezarP1 EmpezarP2 FinalizarT1P1 FinalizarT1P2 FinalizarT2P1 FinalizarT2P2 P1M1 P1M2 P2M1 P2M2 ProcesarT2P1 ProcesarT2P2 VaciarM1 VaciarM2
     private static double[][] threadMakerA = {
         { 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
         { 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
@@ -94,7 +95,7 @@ public class MainLauncher {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
     };
 
-    private static double[] alphaTimesA = { 2, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 5, 5, 4, 4};
+    private static double[] alphaTimesA = { 2000, 0, 0, 0, 0, 3000, 3000, 3000, 3000, 0, 0, 0, 0, 5000, 5000, 4000, 4000};
     //ArrivalRate: 2[s]
     //FinalizarTareas: 3[s]
     //ProcesarTareas2: 5[s]
@@ -117,7 +118,7 @@ public class MainLauncher {
         Matrix threadMaker = new Matrix(threadMakerA);
         Matrix alphaTimes = new Matrix(alphaTimesA, 1);
         
-        pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants);
+        pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, alphaTimes);
         
         /* TODO: DESCOMENTAR CUANDO QUIERAS USAR EL LOG
         try { //Inicializamos el hilo Log
