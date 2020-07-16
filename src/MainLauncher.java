@@ -55,15 +55,6 @@ public class MainLauncher {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
     };
 
-    //TODO: Cuando ya no se use borrar
-    private static double[][] identityA = {
-        {1,0,0,0,0},
-        {0,1,0,0,0},
-        {0,0,1,0,0},
-        {0,0,0,1,0},
-        {0,0,0,0,1}
-    };
-
     //TODO: Ver si no se usa y borrar
     private static double[][] pInvariants = {
         {2, 2, 2, 2, 0},

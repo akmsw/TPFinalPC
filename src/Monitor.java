@@ -119,39 +119,6 @@ public class Monitor {
         entry.release();
         System.out.println(Thread.currentThread().getId() + ": Exitié del monitor");
     }
-    
-    
-    //TODO: AGREGAR SYNCRONIZED
-    /**
-     * @param firingVector Vector de firing del thread.
-     */
-    /*
-    public void tryFiring(Matrix firingVector) {
-        if(pNet.stateEquationTest(firingVector)) {    //Si la ecuación de estado da un resultado correcto, disparo
-            pNet.fireTransition(firingVector);
-
-            //and = pNet.getEnabledTransitions().arrayTimes(whoAreQueued()); //Operacion logica AND entre vector de transiciones sensibilizadas y vector de colas con hilos en espera para disparar
-            
-            System.out.println(Thread.currentThread().getId() + ": Llamando a waitingCheck sin haber waiteado antes.");
-            waitingCheck(and);
-            //TODO: IMPORTANTEEEEEE hay que ver como trabajamos con el mutex para darle prioridad a los que estan waiting en lugar de permitir nuevos hilos de la cola de entrada.
-        } else {
-            System.out.println(Thread.currentThread().getId() + ": No pude disparar");            
-            exitMonitor();
-
-            try {
-                System.out.println(Thread.currentThread().getId() + ": Me voy a encolar en la cola de condicion de la transicion: T" + getQueue(firingVector));
-                conditionQueues.get(getQueue(firingVector)).acquire(); //Cuando se despierta se continua a partir de aca
-                System.out.println(Thread.currentThread().getId() +  ": Me desperté, voy a triggerear la transicion: " + getQueue(firingVector));
-                pNet.fireTransition(firingVector);
-                //and = pNet.getEnabledTransitions().arrayTimes(whoAreQueued());                
-                System.out.println(Thread.currentThread().getId() + ": Llamando a waitingCheck despues de despertar.");
-                waitingCheck(and);
-            } catch(Exception e) {
-                System.out.println(Thread.currentThread().getId() + "Error al encolar un hilo.");
-            }
-        }
-    }*/
 
     /**
      * @param and Vector resultado de la operación AND para ver quiénes

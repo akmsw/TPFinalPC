@@ -48,9 +48,6 @@ public class MyThread extends Thread {
 
     // ----------------------------------------Overrides----------------------------------------
 
-    /**
-     * 
-     */
     @Override
     public void run() {
         int i = 0;
@@ -71,31 +68,6 @@ public class MyThread extends Thread {
             
                 firingVector.print(0,0);
 
-                /*if(monitor.getPetriNet().stateEquationTest(firingVector)) {
-                    if(!monitor.alphaTimeCheck(firingVector)) {
-                        monitor.exitMonitor();
-                        
-                        try {
-                            System.out.println(Thread.currentThread().getId() + ": No pasó alfa. Voy a trabajar durante: " + monitor.getWaitingTime() + " ms");
-                            sleep(monitor.getWaitingTime());
-                        } catch(InterruptedException e) {
-                            System.out.println(Thread.currentThread().getId() + ": Error en tiempo de sleep");
-                        }
-
-                        System.out.println(Thread.currentThread().getId() + ": Terminé de trabajar (alfa), voy a pelear por el mutex.");
-
-                        continue;
-                    }
-
-                    monitor.getPetriNet().fireTransition(firingVector);
-                    
-                    Matrix EandW = monitor.getAnd();
-
-                    System.out.println(Thread.currentThread().getId() + ": Llamando a waitingCheck sin haber waiteado antes.");
-
-                    monitor.waitingCheck(EandW);
-                }*/
-
                 if(!monitor.getPetriNet().stateEquationTest(firingVector)) {
                     System.out.println(Thread.currentThread().getId() + ": No pude disparar porque la transición no está sensibilizada.");        
                     monitor.exitMonitor();
@@ -108,14 +80,6 @@ public class MyThread extends Thread {
                         System.out.println(Thread.currentThread().getId() +  ": Me desperté, voy a triggerear la transicion: " + monitor.getIndexHigh(firingVector));
                         
                         if(monitor.getPetriNet().getTransitionsFired()>=stopCondition) break;
-
-                        /*monitor.getPetriNet().fireTransition(firingVector);
-                        
-                        Matrix EandW = monitor.getAnd();               
-                        
-                        System.out.println(Thread.currentThread().getId() + ": Llamando a waitingCheck despues de despertar.");
-                        
-                        monitor.waitingCheck(EandW);*/
                     } catch(Exception e) {
                         System.out.println(Thread.currentThread().getId() + "Error al encolar un hilo.");
                     }
@@ -132,14 +96,6 @@ public class MyThread extends Thread {
                             System.out.println(Thread.currentThread().getId() +  ": Me desperté, voy a triggerear la transicion: " + monitor.getIndexHigh(firingVector));
                             
                             if(monitor.getPetriNet().getTransitionsFired()>=stopCondition) break;
-    
-                            /*monitor.getPetriNet().fireTransition(firingVector);
-                            
-                            Matrix EandW = monitor.getAnd();               
-                            
-                            System.out.println(Thread.currentThread().getId() + ": Llamando a waitingCheck despues de despertar.");
-                            
-                            monitor.waitingCheck(EandW);*/
                         } catch(Exception e) {
                             System.out.println(Thread.currentThread().getId() + "Error al encolar un hilo.");
                         }
@@ -163,15 +119,7 @@ public class MyThread extends Thread {
                     monitor.getPetriNet().getWorkingVector().set(0, monitor.getIndexHigh(firingVector), 0);
 
                     continue;
-                } /*else {
-                    try {
-                        System.out.println(Thread.currentThread().getId() + ": Me voy a encolar en la cola de condicion de la transicion: T" + monitor.getIndexHigh(firingVector));
-                        monitor.getConditionQueues().get(monitor.getIndexHigh(firingVector)).acquire();
-                        if(monitor.getPetriNet().getTransitionsFired()>=stopCondition) break;
-                    } catch(Exception e) {
-                        System.out.println(Thread.currentThread().getId() + "Error al encolar un hilo.");
-                    }
-                }*/
+                }
 
                 monitor.getPetriNet().fireTransition(firingVector);
                     
