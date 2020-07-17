@@ -34,7 +34,7 @@ public class Politics {
      * @return El índice de la transición elegida para disparar.
      */
     public int decide(Matrix and) {
-        System.out.println("Politics Deciding...");
+        //System.out.println("Politics Deciding...");
         indexes.clear();
         
         for(int i=0; i<and.getColumnDimension(); i++)  //Se recorre el vector AND para ver cuántas transiciones e hilos esperando hay.

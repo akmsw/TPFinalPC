@@ -17,19 +17,17 @@ public class Monitor {
     private ArrayList<Semaphore> conditionQueues;
     private Semaphore entry;
     private PetriNet pNet;
-    private Log myLog; //TODO: Log debe contar cosas y detectar cuando detenerse
     private Politics politics;
-    private Matrix and;
+    //private Matrix and;
     private long waitingTime;
-
+    
     /**
      * Constructor.
      * 
      * @param pNet Red de Petri que será controlada por el monitor.
      */
-    public Monitor(PetriNet pNet, Log myLog) {
+    public Monitor(PetriNet pNet) {
         this.pNet = pNet;
-        this.myLog = myLog;
 
         entry = new Semaphore(1);
 
@@ -57,7 +55,7 @@ public class Monitor {
         }
         
         return index;
-    }    
+    }
 
     /**
      * @return La red de petri controlada por el monitor.
@@ -71,6 +69,13 @@ public class Monitor {
      */
     public ArrayList<Semaphore> getConditionQueues() {
         return conditionQueues;
+    }
+
+    /**
+     * @return La cola de entrada del monitor.
+     */
+    public Semaphore getEntryQueue(){
+        return entry;
     }
 
     /**
@@ -112,12 +117,12 @@ public class Monitor {
      */
     public synchronized void catchMonitor() throws InterruptedException {
         entry.acquire();
-        System.out.println(Thread.currentThread().getId() + ": Catchié el monitor");
+        //System.out.println(Thread.currentThread().getId() + ": Catchié el monitor");
     }
 
     public void exitMonitor() {
         entry.release();
-        System.out.println(Thread.currentThread().getId() + ": Exitié del monitor");
+        //System.out.println(Thread.currentThread().getId() + ": Exitié del monitor");
     }
 
     /**
@@ -125,23 +130,23 @@ public class Monitor {
      *            están esperando en colas de transiciones sensibilizadas.
      */
     public void waitingCheck(Matrix and) {
-        and.print(0, 0);
+        //and.print(0, 0);
         if(enabledAndWaiting(and)>1) { //Si tengo más de una transición sensibilizada, llamo a Paul Erex.
-            System.out.println(Thread.currentThread().getId() + ": Hay más de un hilo esperando en enableds transitions.");
+            //System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en varias enableds transitions.");
+            //System.out.println(Thread.currentThread().getId() + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             int choice = politics.decide(and);
             conditionQueues.get(choice).release();                
-            System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex al de la transicion: " + choice);
+            //System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex al de la transicion: " + choice);
             return; //Salimos del metodo y volvemos al run()
-        }
-        else if (enabledAndWaiting(and)==1) { //Si tengo sólo una, busco su índice.
-            System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en una enabled transition");
+        } else if (enabledAndWaiting(and)==1) { //Si tengo sólo una, busco su índice.
+            //System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en una enabled transition");
             int singlechoice = getSingleEnabled(and);
             conditionQueues.get(singlechoice).release();
-            System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex a la single choice: " + singlechoice);
+            //monitor.getPetriNet().getWorkingVector().get(0, monitor.getIndexHigh(firingVector))==1
+            //System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex a la single choice: " + singlechoice);
             return; //Salimos del metodo y volvemos al run()
-        }
-        else {
-            System.out.println(Thread.currentThread().getId() + ": Nobody's waiting on enabled transitions");
+        } else {
+            //System.out.println(Thread.currentThread().getId() + ": Nobody's waiting on enabled transitions");
             exitMonitor(); //Si no hay ningun hilo esperando en colas de transiciones actualmente sensibilizadas, me voy y no hago nada.
         }
     }
