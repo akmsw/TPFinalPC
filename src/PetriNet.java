@@ -49,7 +49,7 @@ public class PetriNet {
 
         //logNotifier = new Object();
         
-        setEnabledTransitions();
+        //setEnabledTransitions();
     }
 
     // ----------------------------------------Métodos públicos---------------------------------
@@ -183,7 +183,7 @@ public class PetriNet {
      * @param index Índice de la transición que está sensibilizada.
      * @param time Instante de tiempo en el que se sensibilizó la transición.
      */
-    public void setEnabledAtTime(int index, long time){
+    public void setEnabledAtTime(int index, long time) {
         enabledAtTime.set(0, index, (double)time);
     }
 
@@ -250,17 +250,17 @@ public class PetriNet {
     public void fireTransition(Matrix firingVector) {
         setCurrentMarkingVector(stateEquation(firingVector));
         
-        //System.out.println(Thread.currentThread().getId() + ": Se disparó la transicion: fV: ");
+        System.out.println(Thread.currentThread().getId() + ": Se disparó la transicion: fV: ");
         
-        //firingVector.print(0,0);
+        firingVector.print(0,0);
         
-        //System.out.println(Thread.currentThread().getId() + ": Exito al disparar transicion.");// + getQueue(firingVector)); 
+        System.out.println(Thread.currentThread().getId() + ": Exito al disparar transicion.");// + getQueue(firingVector)); 
         
         firedTransitions = firedTransitions.plus(firingVector); //Aumento las transiciones disparadas.
 
         lastFiredTransition = getIndex(firingVector);
 
-        getWorkingVector().set(0, lastFiredTransition, 0);
+        getWorkingVector().set(0, getIndex(firingVector), 0);
         
         setEnabledTransitions();
 
@@ -270,8 +270,8 @@ public class PetriNet {
 
         totalFired++;
 
-        //System.out.println("Cantidad de transiciones disparadas hasta el momento: " + totalFired +
-        //                   "\nCantidad de tareas completadas hasta el momento: " + (firedTransitions.get(0, 5) + firedTransitions.get(0, 6) + firedTransitions.get(0, 7) + firedTransitions.get(0, 8)));
+        System.out.println("Cantidad de transiciones disparadas hasta el momento: " + totalFired +
+                          "\nCantidad de tareas completadas hasta el momento: " + (firedTransitions.get(0, 5) + firedTransitions.get(0, 6) + firedTransitions.get(0, 7) + firedTransitions.get(0, 8)));
     }
 
     /**

@@ -74,7 +74,7 @@ public class Monitor {
     /**
      * @return La cola de entrada del monitor.
      */
-    public Semaphore getEntryQueue(){
+    public Semaphore getEntryQueue() {
         return entry;
     }
 
@@ -131,23 +131,23 @@ public class Monitor {
      *            están esperando en colas de transiciones sensibilizadas.
      */
     public void waitingCheck(Matrix and) {
-        //and.print(0, 0);
+        and.print(0, 0);
         if(enabledAndWaiting(and)>1) { //Si tengo más de una transición sensibilizada, llamo a Paul Erex.
-            //System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en varias enableds transitions.");
-            //System.out.println(Thread.currentThread().getId() + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+            System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en varias enableds transitions.");
+            System.out.println(Thread.currentThread().getId() + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             int choice = politics.decide(and);
             conditionQueues.get(choice).release();                
-            //System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex al de la transicion: " + choice);
+            System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex al de la transicion: " + choice);
             return; //Salimos del metodo y volvemos al run()
-        } else if (enabledAndWaiting(and)==1) { //Si tengo sólo una, busco su índice.
-            //System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en una enabled transition");
+        } else if(enabledAndWaiting(and)==1) { //Si tengo sólo una, busco su índice.
+            System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en una enabled transition");
             int singlechoice = getSingleEnabled(and);
             conditionQueues.get(singlechoice).release();
-            //monitor.getPetriNet().getWorkingVector().get(0, monitor.getIndexHigh(firingVector))==1
-            //System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex a la single choice: " + singlechoice);
+            
+            System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex a la single choice: " + singlechoice);
             return; //Salimos del metodo y volvemos al run()
         } else {
-            //System.out.println(Thread.currentThread().getId() + ": Nobody's waiting on enabled transitions");
+            System.out.println(Thread.currentThread().getId() + ": Nobody's waiting on enabled transitions");
             exitMonitor(); //Si no hay ningun hilo esperando en colas de transiciones actualmente sensibilizadas, me voy y no hago nada.
         }
     }
@@ -196,8 +196,12 @@ public class Monitor {
         long alpha = (long)pNet.getAlphaVector().get(0, getIndexHigh(firingVector)); //Se lee el vector de alphaTimes y se busca el alpha correspondiente a la posicion que indica el firingVector
         long currentTime = System.currentTimeMillis();
         long enabledAtTime = (long)pNet.getEnabledAtTime().get(0, getIndexHigh(firingVector));
+
+        //System.out.println("alpha = " + alpha + "\ncurrentTime = " + currentTime + "\nenabledAtTime = " + enabledAtTime);
         
         waitingTime = alpha - (currentTime-enabledAtTime);
+
+        //System.out.println("resta = " + (currentTime-enabledAtTime) + "\nwaitingTime = " + waitingTime);
 
         return alpha<(currentTime-enabledAtTime); //Se hace la resta entre el tiempo actual y el tiempo en que se sensibilizó (wi), y si ese tiempo es mayor que alpha entonces se retorna true
     }
