@@ -29,14 +29,14 @@ public class Monitor {
     public Monitor(PetriNet pNet) {
         this.pNet = pNet;
 
-        entry = new Semaphore(1);
+        entry = new Semaphore(1,true); //fair?
 
         politics = new Politics();
         
         conditionQueues = new ArrayList<Semaphore>();
         
         for(int i=0; i<(pNet.getIncidenceMatrix().getColumnDimension()); i++) //Bucle 'for' para inicializar los semáforos en las colas del monitor.
-            conditionQueues.add(new Semaphore(0));
+            conditionQueues.add(new Semaphore(0,true)); //fair?
     }
     
     // ----------------------------------------Métodos públicos---------------------------------
