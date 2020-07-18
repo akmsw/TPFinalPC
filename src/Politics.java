@@ -36,11 +36,11 @@ public class Politics {
      * @return El índice de la transición elegida para disparar.
      */
     public int decide(Matrix and) {
-        System.out.println("Politics Deciding...");
+        //System.out.println("Politics Deciding...");
         
         indexes.clear();
         
-        and.print(0, 0);
+        //and.print(0, 0);
         
         for(int i=0; i<and.getColumnDimension(); i++)  //Se recorre el vector AND para ver cuántas transiciones e hilos esperando hay.
             if(and.get(0,i)>0) indexes.add(i); //Si el elemento es mayor que 0, se agrega al arraylist indexes.
@@ -66,7 +66,7 @@ public class Politics {
        int choice = (int)Math.round(randomGenerator.nextInt(indexes.size())); //Se elige aleatoriamente entre las transiciones sensibilizadas, con distribucion uniforme
        int indexChosen = (int)Math.round(indexes.get(choice)); //Muy importante hacer el parseval porque la matrix tiene double
 
-        System.out.println("Decided: " + indexChosen);
+        //System.out.println("Decided: " + indexChosen);
         
         return indexChosen; //Retorna con un numero random entre las transiciones con hilo esperando que hay.
     }

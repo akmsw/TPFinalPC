@@ -19,7 +19,7 @@ public class Monitor {
     private PetriNet pNet;
     private Politics politics;
     //private Matrix and;
-    private long waitingTime;
+    private long workingTime;
     
     /**
      * Constructor.
@@ -105,9 +105,9 @@ public class Monitor {
     /**
      * @return El tiempo de espera de la transición a disparar.
      */
-    public long getWaitingTime() {
-        if(waitingTime<0) return 0;
-        else return waitingTime;
+    public long getWorkingTime() {
+        if(workingTime<0) return 0;
+        else return workingTime;
     }
 
     // ----------------------------------------Otros------------------------------------------
@@ -198,7 +198,7 @@ public class Monitor {
 
         //System.out.println("alpha = " + alpha + "\ncurrentTime = " + currentTime + "\nenabledAtTime = " + enabledAtTime);
         
-        waitingTime = alpha - (currentTime-enabledAtTime);
+        workingTime = alpha - (currentTime-enabledAtTime);
 
         //System.out.println("resta = " + (currentTime-enabledAtTime) + "\nwaitingTime = " + waitingTime);
 

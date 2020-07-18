@@ -15,7 +15,7 @@ public class PetriNet {
     private double[] auxVector = {};
     private int lastFiredTransition, totalFired;
     private int stopCondition;
-    //private Object logNotifier;
+    private Object lock;
 
     /**
 	 * Constructor.
@@ -27,8 +27,9 @@ public class PetriNet {
      * @param alphaTimes Los tiempos 'alfa' asociados a cada transición.
      * @param stopCondition Condición de corte del programa (cuántas tareas
      *                      se deben finalizar para terminar el programa).
+     * @param lock Lock para sincronizar la escritura en el Log con el disparo de transiciones
      */
-    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix transitionInvariants, Matrix alphaTimes, int stopCondition) {
+    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix transitionInvariants, Matrix alphaTimes, int stopCondition, Object lock) {
         this.incidence = incidence;
         this.incidenceBackwards = incidenceBackwards;
         this.initialMarking = initialMarking;
@@ -36,6 +37,7 @@ public class PetriNet {
         this.transitionInvariants = transitionInvariants;
         this.alphaTimes = alphaTimes;
         this.stopCondition = stopCondition;
+        this.lock = lock;
 
         this.firedTransitions = new Matrix(1, incidence.getColumnDimension());
 
@@ -48,8 +50,6 @@ public class PetriNet {
         this.workingVector = new Matrix(1, incidence.getColumnDimension()); //Vector que indica cuales transiciones están siendo ejecutadas en este momento
 
         setCurrentMarkingVector(this.initialMarking); //Inicializamos el vector de marcado actual igual al vector de marcado inicial
-
-        //logNotifier = new Object();
         
         //setEnabledTransitions();
     }
@@ -134,7 +134,7 @@ public class PetriNet {
      */
     public String getProcessorsTasks() {
         return "Cantidad de ejecuciones de T1 en procesador 1: " + firedTransitions.get(0,5) + "\nCantidad de ejecuciones de T2 en procesador 1: " + firedTransitions.get(0,7) +
-               "\n\nCantidad de ejecuciones de T1 en procesador 2: " + firedTransitions.get(0,6) + "\nCantidad de ejecuciones de T2 en procesador 2: " + firedTransitions.get(0,8);
+               "\nCantidad de ejecuciones de T1 en procesador 2: " + firedTransitions.get(0,6) + "\nCantidad de ejecuciones de T2 en procesador 2: " + firedTransitions.get(0,8);
     }
 
     /**
@@ -257,13 +257,24 @@ public class PetriNet {
         
         //firingVector.print(0,0);
         
-       // System.out.println(Thread.currentThread().getId() + ": Exito al disparar transicion.") + getQueue(firingVector)); 
+        //System.out.println(Thread.currentThread().getId() + ": Exito al disparar transicion." + getIndex(firingVector) );
         
         firedTransitions = firedTransitions.plus(firingVector); //Aumento las transiciones disparadas.
 
         lastFiredTransition = getIndex(firingVector);
 
         getWorkingVector().set(0, getIndex(firingVector), 0);
+
+        synchronized(lock) {
+            lock.notify();
+            try {
+                System.out.println(Thread.currentThread().getId() + ": YO HILO ESTOY ESPERANDO");
+                lock.wait();
+            } catch(InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
         
         setEnabledTransitions();
 
@@ -326,6 +337,6 @@ public class PetriNet {
                 check = false;
             }
         }
-        //if(check) System.out.println("Los invariantes de plaza se respetan.");
+        if(check) System.out.println("Los invariantes de plaza se respetan.");
     }
 }

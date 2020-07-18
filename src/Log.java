@@ -16,6 +16,8 @@ import java.util.concurrent.Semaphore;
 import java.io.File;
 import java.io.IOException;
 
+import Jama.Matrix;
+
 public class Log extends Thread {
 
 	//Campos privados
@@ -25,14 +27,18 @@ public class Log extends Thread {
 	private Monitor monitor;
 	private ArrayList<Integer> transitionsSequence;
 	private int stepToLog; //Cada ciertas transiciones checkear las memorias y demás
+	private Object lock;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param fileName nombre del archivo log.
 	 * @param monitor Monitor que controla la red de Petri.
+	 * @param stepToLog Paso que se utilizará para escribir en el log
+	 * 					(cada cuántas transiciones disparadas escribiremos).
+	 * @param lock Lock que interactúa entre el Log y el hilo que disparó.
 	 */
-	public Log(String fileName, Monitor monitor, int stepToLog) throws SecurityException, IOException {
+	public Log(String fileName, Monitor monitor, int stepToLog, Object lock) throws SecurityException, IOException {
 		f = new File(fileName);
 		
 		if(!f.exists()) f.createNewFile();
@@ -46,6 +52,7 @@ public class Log extends Thread {
 		this.monitor = monitor;
 		this.stepToLog = stepToLog;
 		this.transitionsSequence = new ArrayList<Integer>();
+		this.lock = lock;
 	}
 
 	// ----------------------------------------Overrides----------------------------------------
@@ -61,24 +68,47 @@ public class Log extends Thread {
 		logger.info("START LOGGING");
 		logger.info("------------------------------------------------------------------------------");
 
+		Matrix initialMark, currentMark, aux;
+		boolean transitionInvariant;
+
+		initialMark = monitor.getPetriNet().getInitialMarkingVector();
+
 		while(!monitor.getPetriNet().hasCompleted()) {
-			try {
-				//monitor.getPetriNet().getLogNotifier().wait();
-				wait();
-			} catch(InterruptedException e) {
-				//System.out.println("Error al esperar.");
+			transitionInvariant = true;
+			
+			synchronized(lock) {
+				try {
+					System.out.println("EL LOG ESTÁ ESPERANDO");
+					lock.wait();
+				} catch(InterruptedException e) {
+					System.out.println("Error al esperar.");
+				}
 			}
 
-			monitor.getPetriNet().checkPlacesInvariants();
+			currentMark = monitor.getPetriNet().getCurrentMarkingVector();
 
+			aux = initialMark.minus(currentMark);
+
+			for(int i=0; i<aux.getColumnDimension(); i++)
+				if(aux.get(0, i)!=0) {
+					transitionInvariant = false;
+					break;
+				}
+			
+			if(transitionInvariant)
+				System.out.println("***********************************************************************************************************************************");
+			
+			//monitor.getPetriNet().checkPlacesInvariants();
 			transitionsSequence.add(monitor.getPetriNet().getLastFiredTransition());
 
-			logger.info("Transición disparada: " + monitor.getPetriNet().getLastFiredTransition());
+			logger.info("Transición disparada: T" + monitor.getPetriNet().getLastFiredTransition());
 
 			if(monitor.getPetriNet().getTotalFired()%stepToLog==0) {
-				monitor.getPetriNet().getMemoriesLoad();
-				monitor.getPetriNet().getProcessorsLoad();
-				monitor.getPetriNet().getProcessorsTasks();
+				logger.info(monitor.getPetriNet().getMemoriesLoad() + "\n" + monitor.getPetriNet().getProcessorsLoad() + "\n" + monitor.getPetriNet().getProcessorsTasks() );	
+			}
+
+			synchronized(lock) {
+				lock.notify();
 			}
 		}
 
