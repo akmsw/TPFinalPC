@@ -101,6 +101,35 @@ public class MainLauncher {
         { 8, 0, 8, 0, 8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 8, 0, 1},
     };
 
+    /*LOS EX CAMINOS QUE USABAMOS
+    private static double[][] caminitosxd = {
+        { 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+        { 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+        { 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+        { 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    };*/
+
+    //LOS EX CAMINOS QUE USABAMOS
+    /*private static double[][] caminitosconArrivalSingle = {
+        { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        { 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+        { 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+        { 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+        { 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    };*/
+
     /*
         Orden transiciones (izquierda a derecha):
             0: ArrivalRate
@@ -123,40 +152,43 @@ public class MainLauncher {
     */
     private static ArrayList<Matrix> threadPaths;
     
-    private static double[] a = {0}; //ArrivalRate
-    private static Matrix path1 = new Matrix(a,1); 
+    private static double[] a = {0}; //ArrivalRate 
+    private static double[] b = {1}; // AsignarP1
+    private static double[] c = {2}; // - 
+    private static double[] d = {3}; // EmpezarP1
+    private static double[] e = {4}; //
+    private static double[] f = {5}; //
+    private static double[] g = {6}; //
+    private static double[] h = {7}; //
+    private static double[] i = {8}; //
+    private static double[] j = {9}; //
+    private static double[] k = {10}; //  
+    private static double[] l = {11}; //
+    private static double[] m = {12}; // 
+    private static double[] n = {13}; //
+    private static double[] o = {14}; //  
+    private static double[] p = {15}; //
+    private static double[] q = {16}; //
     
-    private static double[] b = {1,3}; //AsignarP1 - EmpezarP1
+    private static Matrix path1 = new Matrix(a,1);
     private static Matrix path2 = new Matrix(b,1);
-    
-    private static double[] c = {2,4}; //AsignarP2 - EmpezarP2
     private static Matrix path3 = new Matrix(c,1);
-    
-    private static double[] d = {5}; //FinalizarT1P1
-    private static Matrix path4 = new Matrix(d,1);
-    
-    private static double[] e = {13,7}; //ProcesarT2P1 - FinalizarT2P1
-    private static Matrix path5 = new Matrix(e,1);
-    
-    private static double[] f = {6}; //FinalizarT1P2
+    private static Matrix path4 = new Matrix(d,1);    
+    private static Matrix path5 = new Matrix(e,1);  
     private static Matrix path6 = new Matrix(f,1);
-
-    private static double[] g = {14,8}; //ProcesarT2P2 - FinalizarT2P2
     private static Matrix path7 = new Matrix(g,1);
-    
-    private static double[] h = {9,10}; //P1M1, P1M2
     private static Matrix path8 = new Matrix(h,1);
-    
-    private static double[] i = {11,12}; //P1M1, P2M2
     private static Matrix path9 = new Matrix(i,1);
-    
-    private static double[] j = {15};  //VaciarM1
     private static Matrix path10 = new Matrix(j,1);
-
-    private static double[] k = {16};  //VaciarM2
     private static Matrix path11 = new Matrix(k,1);
+    private static Matrix path12 = new Matrix(l,1);
+    private static Matrix path13 = new Matrix(m,1);
+    private static Matrix path14 = new Matrix(n,1);
+    private static Matrix path15 = new Matrix(o,1);
+    private static Matrix path16 = new Matrix(p,1);
+    private static Matrix path17 = new Matrix(q,1);
 
-    private static double[] alphaTimesA = { 20, 0, 0, 0, 0, 30, 30, 30, 30, 0, 0, 0, 0, 50, 50, 40, 40};
+    private static double[] alphaTimesA = { 20, 0, 0, 0, 0, 30, 30, 30, 30, 0, 0, 0, 0, 30, 30, 40, 40};
     //ArrivalRate: 2[s]
     //FinalizarTareas: 3[s]
     //ProcesarTareas2: 5[s]
@@ -165,7 +197,7 @@ public class MainLauncher {
 
     private static double[] iMark = { 1, 0, 0, 4, 0, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8};
     
-    private static final int stopCondition = 1000; //Cantidad de tareas que se tienen que finalizar para terminar la ejecucion
+    private static final int stopCondition = 200; //Cantidad de tareas que se tienen que finalizar para terminar la ejecucion
     private static final int stepToLog = 10; //Cada tantas tareas se checkea el balance de carga en procesadores y memorias
 
     private static Log myLog;
@@ -193,6 +225,12 @@ public class MainLauncher {
         threadPaths.add(path9);
         threadPaths.add(path10);
         threadPaths.add(path11);
+        threadPaths.add(path12);
+        threadPaths.add(path13);
+        threadPaths.add(path14);
+        threadPaths.add(path15);
+        threadPaths.add(path16);
+        threadPaths.add(path17);
         
         pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, transitionInvariants, alphaTimes, stopCondition);
 

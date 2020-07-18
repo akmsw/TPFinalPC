@@ -106,7 +106,8 @@ public class Monitor {
      * @return El tiempo de espera de la transición a disparar.
      */
     public long getWaitingTime() {
-        return waitingTime;
+        if(waitingTime<0) return 0;
+        else return waitingTime;
     }
 
     // ----------------------------------------Otros------------------------------------------
