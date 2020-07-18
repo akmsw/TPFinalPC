@@ -131,23 +131,22 @@ public class Monitor {
      *            están esperando en colas de transiciones sensibilizadas.
      */
     public void waitingCheck(Matrix and) {
-        and.print(0, 0);
-        if(enabledAndWaiting(and)>1) { //Si tengo más de una transición sensibilizada, llamo a Paul Erex.
-            System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en varias enableds transitions.");
-            System.out.println(Thread.currentThread().getId() + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+        //and.print(0, 0);
+        if(enabledAndWaiting(and)>1) { //Si tengo más de una transición sensibilizada con hilos encolados, llamo a Paul Erex.
+            //System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en varias enableds transitions.");
+            //System.out.println(Thread.currentThread().getId() + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
             int choice = politics.decide(and);
-            conditionQueues.get(choice).release();                
-            System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex al de la transicion: " + choice);
+            conditionQueues.get(choice).release();
+            //System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex al de la transicion: " + choice);
             return; //Salimos del metodo y volvemos al run()
         } else if(enabledAndWaiting(and)==1) { //Si tengo sólo una, busco su índice.
-            System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en una enabled transition");
+            //System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en una enabled transition");
             int singlechoice = getSingleEnabled(and);
             conditionQueues.get(singlechoice).release();
-            
-            System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex a la single choice: " + singlechoice);
+            //System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex a la single choice: " + singlechoice);
             return; //Salimos del metodo y volvemos al run()
         } else {
-            System.out.println(Thread.currentThread().getId() + ": Nobody's waiting on enabled transitions");
+            //System.out.println(Thread.currentThread().getId() + ": Nobody's waiting on enabled transitions");
             exitMonitor(); //Si no hay ningun hilo esperando en colas de transiciones actualmente sensibilizadas, me voy y no hago nada.
         }
     }

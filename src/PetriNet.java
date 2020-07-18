@@ -25,8 +25,10 @@ public class PetriNet {
      * @param initialMarking El vector de marcado inicial de la red.
      * @param placesInvariants Los invariantes de plaza de la red.
      * @param alphaTimes Los tiempos 'alfa' asociados a cada transición.
+     * @param stopCondition Condición de corte del programa (cuántas tareas
+     *                      se deben finalizar para terminar el programa).
      */
-    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix transitionInvariants, Matrix alphaTimes,int stopCondition) {
+    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix transitionInvariants, Matrix alphaTimes, int stopCondition) {
         this.incidence = incidence;
         this.incidenceBackwards = incidenceBackwards;
         this.initialMarking = initialMarking;
@@ -205,8 +207,9 @@ public class PetriNet {
                     currentTransitionEnabled = false; //currentMarking.get(i,0) antes estaba en (0,i) pero lo cambiamos cuando transpusimos el currentMarking
                     break;
                 }
-
-            if(currentTransitionEnabled && getWorkingVector().get(0,j)!=1) { //Si la transición está sensibilizada y no hay nadie trabajando en ella...
+            
+            //CAMBIO: argumento del if. Doble chequeo de si alguien está trabajando en esa transición (acá y en el run de myThread).
+            if(currentTransitionEnabled) { //&& getWorkingVector().get(0,j)!=1) { //Si la transición está sensibilizada y no hay nadie trabajando en ella...
                 enabledTransitions.set(0,j,1); //Escribo un 1 en la posicion j del arreglo enabledTransicions. FJC
                 setEnabledAtTime(j,currentTime); //Establezco el tiempo en que se sensibilizaron las transiciones subsiguientes
             } else enabledTransitions.set(0,j,0); //Si la transicion se detectó como no sensibilizada, escribo un 0 en la posicion j del arreglo enabledTransicions. FJC
@@ -250,11 +253,11 @@ public class PetriNet {
     public void fireTransition(Matrix firingVector) {
         setCurrentMarkingVector(stateEquation(firingVector));
         
-        System.out.println(Thread.currentThread().getId() + ": Se disparó la transicion: fV: ");
+       // System.out.println(Thread.currentThread().getId() + ": Se disparó la transicion: fV: ");
         
-        firingVector.print(0,0);
+        //firingVector.print(0,0);
         
-        System.out.println(Thread.currentThread().getId() + ": Exito al disparar transicion.");// + getQueue(firingVector)); 
+       // System.out.println(Thread.currentThread().getId() + ": Exito al disparar transicion.") + getQueue(firingVector)); 
         
         firedTransitions = firedTransitions.plus(firingVector); //Aumento las transiciones disparadas.
 
@@ -270,8 +273,8 @@ public class PetriNet {
 
         totalFired++;
 
-        System.out.println("Cantidad de transiciones disparadas hasta el momento: " + totalFired +
-                          "\nCantidad de tareas completadas hasta el momento: " + (firedTransitions.get(0, 5) + firedTransitions.get(0, 6) + firedTransitions.get(0, 7) + firedTransitions.get(0, 8)));
+      //  System.out.println("Cantidad de transiciones disparadas hasta el momento: " + totalFired +
+      //                    "\nCantidad de tareas completadas hasta el momento: " + (firedTransitions.get(0, 5) + firedTransitions.get(0, 6) + firedTransitions.get(0, 7) + firedTransitions.get(0, 8)));
     }
 
     /**
