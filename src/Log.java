@@ -21,13 +21,13 @@ import Jama.Matrix;
 public class Log extends Thread {
 
 	//Campos privados
+	private int stepToLog; //Cada ciertas transiciones checkear las memorias y demás
+	private Object lock;
+	private ArrayList<String> transitionsSequence;
 	private File f;
 	private FileHandler FH;
 	private Logger logger;
 	private Monitor monitor;
-	private ArrayList<String> transitionsSequence;
-	private int stepToLog; //Cada ciertas transiciones checkear las memorias y demás
-	private Object lock;
 
 	/**
 	 * Constructor.
@@ -59,6 +59,8 @@ public class Log extends Thread {
 	
 	@Override
 	public void run() {
+		int wachen = 0;
+
 		logger = Logger.getLogger("ReportTest");
 		
 		logger.addHandler(FH);
@@ -95,11 +97,17 @@ public class Log extends Thread {
 					break;
 				}
 			
-			if(transitionInvariant)
+				transitionsSequence.add(monitor.getPetriNet().getLastFiredTransition() + "");
+			
+			if(transitionInvariant) {
 				System.out.println("***********************************************************************************************************************************");
+				transitionsSequence.add("ACA WACHEN VOLVI AL CUESTION");
+				wachen++;
+				
+			}
 			
 			//monitor.getPetriNet().checkPlacesInvariants();
-			transitionsSequence.add(monitor.getPetriNet().getLastFiredTransition() + "");
+			
 
 			//logger.info("Transición disparada: T" + monitor.getPetriNet().getLastFiredTransition());
 
@@ -116,7 +124,7 @@ public class Log extends Thread {
 					"\n" + monitor.getPetriNet().getMemoriesLoad() + 
 					"\n" + monitor.getPetriNet().getProcessorsLoad() + 
 					"\n" + monitor.getPetriNet().getProcessorsTasks() +
-					"\nSe dispararon "+ transitionsSequence.size() + " transiciones.");
+					"\nSe dispararon "+ (transitionsSequence.size()-wachen) + " transiciones.");
 		
 		logger.info(transitionsSequence.toString());
 

@@ -14,12 +14,11 @@ import Jama.Matrix;
 public class Monitor {
 
     //Campos privados
+    private long workingTime;
     private ArrayList<Semaphore> conditionQueues;
     private Semaphore entry;
     private PetriNet pNet;
     private Politics politics;
-    //private Matrix and;
-    private long workingTime;
     
     /**
      * Constructor.
@@ -29,14 +28,14 @@ public class Monitor {
     public Monitor(PetriNet pNet) {
         this.pNet = pNet;
 
-        entry = new Semaphore(1, true); //fair?
+        entry = new Semaphore(1,true); //fair?
 
         politics = new Politics();
         
         conditionQueues = new ArrayList<Semaphore>();
         
         for(int i=0; i<(pNet.getIncidenceMatrix().getColumnDimension()); i++) //Bucle 'for' para inicializar los semáforos en las colas del monitor.
-            conditionQueues.add(new Semaphore(0, false)); //fair?
+            conditionQueues.add(new Semaphore(0)); //fair?
     }
     
     // ----------------------------------------Métodos públicos---------------------------------

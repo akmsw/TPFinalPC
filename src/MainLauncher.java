@@ -133,27 +133,27 @@ public class MainLauncher {
      */
     private static ArrayList<Matrix> threadPaths;
 
-    /*
-     * private static double[] a = {0};
-     * private static double[] b = {1,3,5};
-     * private static double[] c = {1,3,5};
-     * private static double[] d = {2,4,6};
-     * private static double[] e = {2,4,6};
-     * private static double[] f = {1,3,13,7};
-     * private static double[] g = {1,3,13,7};
-     * private static double[] h = {2,4,14,8};
-     * private static double[] i = {2,4,14,8};
-     * private static double[] j = {9};
-     * private static double[] k = {10};
-     * private static double[] l = {11};
-     * private static double[] m = {12};
-     * private static double[] n = {15};
-     * private static double[] o = {16};
-     */
+    
+     private static double[] a = {0};
+     private static double[] b = {1,3,5};
+     private static double[] c = {1,3,5};
+     private static double[] d = {2,4,6};
+     private static double[] e = {2,4,6};
+     private static double[] f = {1,3,13,7};
+     private static double[] g = {1,3,13,7};
+     private static double[] h = {2,4,14,8};
+     private static double[] i = {2,4,14,8};
+     private static double[] j = {9};
+     private static double[] k = {10};
+     private static double[] l = {11};
+     private static double[] m = {12};
+     private static double[] n = {15};
+     private static double[] o = {16};
+     
 
     //private static double[] a = {0,1,3,0,1,0,1,0,1,0,1,5,9,3,5,9,3,5,9,3,5,9,3,5,9,0,1,3,0,1,0,1,5,9,3,5,9,3,5,9,15};
 
-    private static double[] a = { 0, 1, 3, 5 };
+    /*private static double[] a = { 0, 1, 3, 5 };
     private static double[] b = { 0, 1, 3, 5 };
     private static double[] c = { 0, 2, 4, 6 };
     private static double[] d = { 0, 2, 4, 6 };
@@ -166,7 +166,7 @@ public class MainLauncher {
     private static double[] k = { 11 };
     private static double[] l = { 12 };
     private static double[] m = { 15 };
-    private static double[] n = { 16 }; 
+    private static double[] n = { 16 };  */
 
     // private static double[] a = {0}; //ArrivalRate
     /*
@@ -213,13 +213,12 @@ public class MainLauncher {
     private static Matrix path12 = new Matrix(l, 1);
     private static Matrix path13 = new Matrix(m, 1);
     private static Matrix path14 = new Matrix(n, 1);
-  //  private static Matrix path15 = new Matrix(o,1);
-  //  private static Matrix path16 = new Matrix(p,1);
-  //  private static Matrix path17 = new Matrix(q,1);
+    private static Matrix path15 = new Matrix(o,1);
+ //  private static Matrix path16 = new Matrix(p,1);
+ //   private static Matrix path17 = new Matrix(q,1);
 
-    private static double[] alphaTimesA = { 25, 0, 0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 75, 75, 100, 100 };
-    // private static double[] alphaTimesA = { 300, 0, 0, 0, 0, 400, 400, 400, 400,
-    // 0, 0, 0, 0, 400, 400, 500, 500};
+     private static double[] alphaTimesA = { 25, 0, 0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 75, 75, 100, 100 };
+    // private static double[] alphaTimesA = { 100, 0, 0, 0, 0, 80, 80, 80, 80, 0, 0, 0, 0, 170, 170, 250, 250};
     // private static double[] alphaTimesA = { 200, 0, 0, 0, 0, 250, 250, 250, 250,
     // 0, 0, 0, 0, 250, 250, 300, 300};
     // ArrivalRate: 2[s]
@@ -264,9 +263,9 @@ public class MainLauncher {
         threadPaths.add(path12);
         threadPaths.add(path13);
         threadPaths.add(path14);
-     //   threadPaths.add(path15);
-     //   threadPaths.add(path16);
-     //   threadPaths.add(path17);
+        threadPaths.add(path15);
+    //    threadPaths.add(path16);
+    //    threadPaths.add(path17);
 
         pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, transitionInvariants, alphaTimes, stopCondition, lock);
 
