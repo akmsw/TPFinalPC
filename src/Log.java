@@ -25,7 +25,7 @@ public class Log extends Thread {
 	private FileHandler FH;
 	private Logger logger;
 	private Monitor monitor;
-	private ArrayList<Integer> transitionsSequence;
+	private ArrayList<String> transitionsSequence;
 	private int stepToLog; //Cada ciertas transiciones checkear las memorias y demás
 	private Object lock;
 
@@ -51,7 +51,7 @@ public class Log extends Thread {
 		
 		this.monitor = monitor;
 		this.stepToLog = stepToLog;
-		this.transitionsSequence = new ArrayList<Integer>();
+		this.transitionsSequence = new ArrayList<String>();
 		this.lock = lock;
 	}
 
@@ -99,18 +99,26 @@ public class Log extends Thread {
 				System.out.println("***********************************************************************************************************************************");
 			
 			//monitor.getPetriNet().checkPlacesInvariants();
-			transitionsSequence.add(monitor.getPetriNet().getLastFiredTransition());
+			transitionsSequence.add(monitor.getPetriNet().getLastFiredTransition() + "");
 
-			logger.info("Transición disparada: T" + monitor.getPetriNet().getLastFiredTransition());
+			//logger.info("Transición disparada: T" + monitor.getPetriNet().getLastFiredTransition());
 
 			if(monitor.getPetriNet().getTotalFired()%stepToLog==0) {
-				logger.info(monitor.getPetriNet().getMemoriesLoad() + "\n" + monitor.getPetriNet().getProcessorsLoad() + "\n" + monitor.getPetriNet().getProcessorsTasks() );	
+				logger.info("\n"+monitor.getPetriNet().getMemoriesLoad() + "\n" + monitor.getPetriNet().getProcessorsLoad() + "\n" + monitor.getPetriNet().getProcessorsTasks() );	
 			}
 
 			synchronized(lock) {
 				lock.notify();
 			}
 		}
+		
+		logger.info("Se completaron exitosamente 1000 tareas." + 
+					"\n" + monitor.getPetriNet().getMemoriesLoad() + 
+					"\n" + monitor.getPetriNet().getProcessorsLoad() + 
+					"\n" + monitor.getPetriNet().getProcessorsTasks() +
+					"\nSe dispararon "+ transitionsSequence.size() + " transiciones.");
+		
+		logger.info(transitionsSequence.toString());
 
 		logger.info("------------------------------------------------------------------------------");
 		logger.info("FINISH LOGGING");

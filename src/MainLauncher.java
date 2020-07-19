@@ -153,7 +153,7 @@ public class MainLauncher {
 
     //private static double[] a = {0,1,3,0,1,0,1,0,1,0,1,5,9,3,5,9,3,5,9,3,5,9,3,5,9,0,1,3,0,1,0,1,5,9,3,5,9,3,5,9,15};
 
-   /* private static double[] a = { 0, 1, 3, 5 };
+    private static double[] a = { 0, 1, 3, 5 };
     private static double[] b = { 0, 1, 3, 5 };
     private static double[] c = { 0, 2, 4, 6 };
     private static double[] d = { 0, 2, 4, 6 };
@@ -166,7 +166,7 @@ public class MainLauncher {
     private static double[] k = { 11 };
     private static double[] l = { 12 };
     private static double[] m = { 15 };
-    private static double[] n = { 16 }; */
+    private static double[] n = { 16 }; 
 
     // private static double[] a = {0}; //ArrivalRate
     /*
@@ -181,7 +181,7 @@ public class MainLauncher {
      */
 
     
-     private static double[] a = {0};  
+    /* private static double[] a = {0};  
      private static double[] b = {1};
      private static double[] c = {2};
      private static double[] d = {3}; 
@@ -197,9 +197,8 @@ public class MainLauncher {
      private static double[] n = {13};
      private static double[] o = {14};
      private static double[] p = {15};
-     private static double[] q = {16};
+     private static double[] q = {16}; */
      
-
     private static Matrix path1 = new Matrix(a, 1);
     private static Matrix path2 = new Matrix(b, 1);
     private static Matrix path3 = new Matrix(c, 1);
@@ -214,9 +213,9 @@ public class MainLauncher {
     private static Matrix path12 = new Matrix(l, 1);
     private static Matrix path13 = new Matrix(m, 1);
     private static Matrix path14 = new Matrix(n, 1);
-    private static Matrix path15 = new Matrix(o,1);
-    private static Matrix path16 = new Matrix(p,1);
-    private static Matrix path17 = new Matrix(q,1);
+  //  private static Matrix path15 = new Matrix(o,1);
+  //  private static Matrix path16 = new Matrix(p,1);
+  //  private static Matrix path17 = new Matrix(q,1);
 
     private static double[] alphaTimesA = { 25, 0, 0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 75, 75, 100, 100 };
     // private static double[] alphaTimesA = { 300, 0, 0, 0, 0, 400, 400, 400, 400,
@@ -265,9 +264,9 @@ public class MainLauncher {
         threadPaths.add(path12);
         threadPaths.add(path13);
         threadPaths.add(path14);
-        threadPaths.add(path15);
-        threadPaths.add(path16);
-        threadPaths.add(path17);
+     //   threadPaths.add(path15);
+     //   threadPaths.add(path16);
+     //   threadPaths.add(path17);
 
         pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, transitionInvariants, alphaTimes, stopCondition, lock);
 
