@@ -75,14 +75,16 @@ public class MainLauncher {
                                                                          // Tarea2P1 + Tarea2P2 = 1
     };
 
-    private static double[][] tInvariants = { { 8, 8, 0, 8, 0, 8, 0, 0, 0, 8, 0, 0, 0, 0, 0, 1, 0 },
-            { 8, 8, 0, 8, 0, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 1 },
-            { 8, 0, 8, 0, 8, 0, 8, 0, 0, 0, 0, 8, 0, 0, 0, 1, 0 },
-            { 8, 0, 8, 0, 8, 0, 8, 0, 0, 0, 0, 0, 8, 0, 0, 0, 1 },
-            { 8, 8, 0, 8, 0, 0, 0, 8, 0, 8, 0, 0, 0, 8, 0, 1, 0 },
-            { 8, 8, 0, 8, 0, 0, 0, 8, 0, 0, 8, 0, 0, 8, 0, 0, 1 },
-            { 8, 0, 8, 0, 8, 0, 0, 0, 8, 0, 0, 8, 0, 0, 8, 1, 0 },
-            { 8, 0, 8, 0, 8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 8, 0, 1 }, };
+    private static double[][] tInvariants = {
+        { 8, 8, 0, 8, 0, 8, 0, 0, 0, 8, 0, 0, 0, 0, 0, 1, 0 },
+        { 8, 8, 0, 8, 0, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 1 },
+        { 8, 0, 8, 0, 8, 0, 8, 0, 0, 0, 0, 8, 0, 0, 0, 1, 0 },
+        { 8, 0, 8, 0, 8, 0, 8, 0, 0, 0, 0, 0, 8, 0, 0, 0, 1 },
+        { 8, 8, 0, 8, 0, 0, 0, 8, 0, 8, 0, 0, 0, 8, 0, 1, 0 },
+        { 8, 8, 0, 8, 0, 0, 0, 8, 0, 0, 8, 0, 0, 8, 0, 0, 1 },
+        { 8, 0, 8, 0, 8, 0, 0, 0, 8, 0, 0, 8, 0, 0, 8, 1, 0 },
+        { 8, 0, 8, 0, 8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 8, 0, 1 }
+    };
 
     /*
      * LOS EX CAMINOS QUE USABAMOS private static double[][] caminitosxd = { { 1, 1,
@@ -98,8 +100,8 @@ public class MainLauncher {
 
     // LOS EX CAMINOS QUE USABAMOS
     /*
-     * private static double[][] caminitosconArrivalSingle = { { 1, 0, 0, 0, 0, 0,
-     * 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, { 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0,
+     * private static double[][] caminitosconArrivalSingle = {
+     * { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, { 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0,
      * 0, 0, 0}, { 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}, { 1, 0, 1, 0,
      * 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0}, { 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0,
      * 1, 0, 0, 0, 0}, { 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0}, { 1, 1,
@@ -110,25 +112,48 @@ public class MainLauncher {
      */
 
     /*
-     * Orden transiciones (izquierda a derecha): 0: ArrivalRate 1: AsignarP1 2:
-     * AsignarP2 3: EmpezarP1 4: EmpezarP2 5: FinalizarT1P1 6: FinalizarT1P2 7:
-     * FinalizarT2P1 8: FinalizarT2P2 9: P1M1 10: P1M2 11: P2M1 12: P2M2 13:
-     * ProcesarT2P1 14: ProcesarT2P2 15: VaciarM1 16: VaciarM2
+     * Orden transiciones (izquierda a derecha):
+     * 0: ArrivalRate
+     * 1: AsignarP1
+     * 2: AsignarP2
+     * 3: EmpezarP1
+     * 4: EmpezarP2
+     * 5: FinalizarT1P1
+     * 6: FinalizarT1P2
+     * 7: FinalizarT2P1
+     * 8: FinalizarT2P2
+     * 9: P1M1
+     * 10: P1M2
+     * 11: P2M1
+     * 12: P2M2 
+     * 13: ProcesarT2P1 
+     * 14: ProcesarT2P2 
+     * 15: VaciarM1 
+     * 16: VaciarM2
      */
     private static ArrayList<Matrix> threadPaths;
 
     /*
-     * private static double[] a = {0}; private static double[] b = {1,3,5}; private
-     * static double[] c = {1,3,5}; private static double[] d = {2,4,6}; private
-     * static double[] e = {2,4,6}; private static double[] f = {1,3,13,7}; private
-     * static double[] g = {1,3,13,7}; private static double[] h = {2,4,14,8};
-     * private static double[] i = {2,4,14,8}; private static double[] j = {9};
-     * private static double[] k = {10}; private static double[] l = {11}; private
-     * static double[] m = {12}; private static double[] n = {15}; private static
-     * double[] o = {16};
+     * private static double[] a = {0};
+     * private static double[] b = {1,3,5};
+     * private static double[] c = {1,3,5};
+     * private static double[] d = {2,4,6};
+     * private static double[] e = {2,4,6};
+     * private static double[] f = {1,3,13,7};
+     * private static double[] g = {1,3,13,7};
+     * private static double[] h = {2,4,14,8};
+     * private static double[] i = {2,4,14,8};
+     * private static double[] j = {9};
+     * private static double[] k = {10};
+     * private static double[] l = {11};
+     * private static double[] m = {12};
+     * private static double[] n = {15};
+     * private static double[] o = {16};
      */
 
-    private static double[] a = { 0, 1, 3, 5 };
+    //private static double[] a = {0,1,3,0,1,0,1,0,1,0,1,5,9,3,5,9,3,5,9,3,5,9,3,5,9,0,1,3,0,1,0,1,5,9,3,5,9,3,5,9,15};
+
+   /* private static double[] a = { 0, 1, 3, 5 };
     private static double[] b = { 0, 1, 3, 5 };
     private static double[] c = { 0, 2, 4, 6 };
     private static double[] d = { 0, 2, 4, 6 };
@@ -141,7 +166,7 @@ public class MainLauncher {
     private static double[] k = { 11 };
     private static double[] l = { 12 };
     private static double[] m = { 15 };
-    private static double[] n = { 16 };
+    private static double[] n = { 16 }; */
 
     // private static double[] a = {0}; //ArrivalRate
     /*
@@ -155,17 +180,25 @@ public class MainLauncher {
      * private static double[] n = {15}; // private static double[] o = {16}; //
      */
 
-    /*
-     * private static double[] a = {0}; //ArrivalRate private static double[] b =
-     * {1}; //ArrivalRate private static double[] c = {2}; //ArrivalRate private
-     * static double[] d = {3}; // - private static double[] e = {4}; // private
-     * static double[] f = {5}; // private static double[] g = {6}; // private
-     * static double[] h = {7}; // private static double[] i = {8}; // private
-     * static double[] j = {9}; // private static double[] k = {10}; // private
-     * static double[] l = {11}; // private static double[] m = {12}; // private
-     * static double[] n = {13}; // private static double[] o = {14}; // private
-     * static double[] p = {15}; // private static double[] q = {16}; //
-     */
+    
+     private static double[] a = {0};  
+     private static double[] b = {1};
+     private static double[] c = {2};
+     private static double[] d = {3}; 
+     private static double[] e = {4}; 
+     private static double[] f = {5}; 
+     private static double[] g = {6};
+     private static double[] h = {7}; 
+     private static double[] i = {8};  
+     private static double[] j = {9};
+     private static double[] k = {10}; 
+     private static double[] l = {11}; 
+     private static double[] m = {12};
+     private static double[] n = {13};
+     private static double[] o = {14};
+     private static double[] p = {15};
+     private static double[] q = {16};
+     
 
     private static Matrix path1 = new Matrix(a, 1);
     private static Matrix path2 = new Matrix(b, 1);
@@ -181,9 +214,9 @@ public class MainLauncher {
     private static Matrix path12 = new Matrix(l, 1);
     private static Matrix path13 = new Matrix(m, 1);
     private static Matrix path14 = new Matrix(n, 1);
-    // private static Matrix path15 = new Matrix(o,1);
-    // private static Matrix path16 = new Matrix(p,1);
-    // private static Matrix path17 = new Matrix(q,1);
+    private static Matrix path15 = new Matrix(o,1);
+    private static Matrix path16 = new Matrix(p,1);
+    private static Matrix path17 = new Matrix(q,1);
 
     private static double[] alphaTimesA = { 25, 0, 0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 75, 75, 100, 100 };
     // private static double[] alphaTimesA = { 300, 0, 0, 0, 0, 400, 400, 400, 400,
@@ -199,10 +232,8 @@ public class MainLauncher {
 
     private static double[] iMark = { 1, 0, 0, 4, 0, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8 };
 
-    private static final int stopCondition = 1000; // Cantidad de tareas que se tienen que finalizar para terminar la
-                                                 // ejecucion
-    private static final int stepToLog = 50; // Cada tantas tareas se checkea el balance de carga en procesadores y
-                                             // memorias
+    private static final int stopCondition = 1000; // Cantidad de tareas que se tienen que finalizar para terminar la ejecucion
+    private static final int stepToLog = 50; // Cada tantas tareas se checkea el balance de carga en procesadores y memorias
 
     private static Log myLog;
     private static Monitor monitor;
@@ -234,9 +265,9 @@ public class MainLauncher {
         threadPaths.add(path12);
         threadPaths.add(path13);
         threadPaths.add(path14);
-        // threadPaths.add(path15);
-        // threadPaths.add(path16);
-        // threadPaths.add(path17);
+        threadPaths.add(path15);
+        threadPaths.add(path16);
+        threadPaths.add(path17);
 
         pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, transitionInvariants, alphaTimes, stopCondition, lock);
 

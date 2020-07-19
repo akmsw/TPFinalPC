@@ -78,7 +78,7 @@ public class Log extends Thread {
 			
 			synchronized(lock) {
 				try {
-					System.out.println("EL LOG ESTÁ ESPERANDO");
+					//System.out.println("EL LOG ESTÁ ESPERANDO");
 					lock.wait();
 				} catch(InterruptedException e) {
 					System.out.println("Error al esperar.");

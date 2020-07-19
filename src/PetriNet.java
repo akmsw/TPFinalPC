@@ -268,7 +268,7 @@ public class PetriNet {
         synchronized(lock) {
             lock.notify();
             try {
-                System.out.println(Thread.currentThread().getId() + ": YO HILO ESTOY ESPERANDO");
+                //System.out.println(Thread.currentThread().getId() + ": YO HILO ESTOY ESPERANDO");
                 lock.wait();
             } catch(InterruptedException e) {
                 // TODO Auto-generated catch block

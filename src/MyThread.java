@@ -151,7 +151,7 @@ public class MyThread extends Thread {
             if(i>=myTransitions.size()) i=0; //la dimension de myTransitions deberia ser 19
         }
 
-        System.out.println(Thread.currentThread().getId() + ": Terminó mi run()");
+        //System.out.println(Thread.currentThread().getId() + ": Terminó mi run()");
 
         //System.out.println(monitor.getPetriNet().getMemoriesLoad());
        // System.out.println(monitor.getPetriNet().getProcessorsLoad());
