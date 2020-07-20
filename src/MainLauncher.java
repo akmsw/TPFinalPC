@@ -247,13 +247,13 @@ public class MainLauncher {
         threadPaths.add(path14);
         threadPaths.add(path15);
 
-        pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, transitionInvariants, alphaTimes, stopCondition, lock);
+        pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, alphaTimes, stopCondition, lock);
 
         monitor = new Monitor(pNet);
 
         //Creación y ejecución del hilo Log.
         try {
-            myLog = new Log("ReportMonitor.txt", monitor, stepToLog, lock);
+            myLog = new Log("ReportMonitor.txt", monitor, stepToLog, lock, transitionInvariants);
             myLog.start();
         } catch(Exception e) {
             e.printStackTrace();

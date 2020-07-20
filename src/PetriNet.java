@@ -18,7 +18,7 @@ public class PetriNet {
     private Matrix incidence, incidenceBackwards; //Matrices a utilizar.
     private Matrix initialMarking, currentMarking; //Vectores relativos al marcado de la red.
     private Matrix enabledTransitions, enabledAtTime; //Vectores relativos a la sensibilización de transiciones.
-    private Matrix placesInvariants, transitionInvariants; //Vectores relativos a los invariantes de la red.
+    private Matrix placesInvariants; //Vectores relativos a los invariantes de la red.
     private Matrix aux; //Vector auxiliar para el cálculo de la ecuación de estado de la red.
     private Matrix alphaTimes; //Vector con los alfas de cada transición.
     private Matrix workingVector; //Vector que indica los hilos que están trabajando en las transiciones.
@@ -31,17 +31,15 @@ public class PetriNet {
      * @param incidenceBackwards Matriz 'backwards' de incidencia de la red.
      * @param initialMarking El vector de marcado inicial de la red.
      * @param placesInvariants Los invariantes de plaza de la red.
-     * @param transitionInvariants Los invariantes de transición de la red.
      * @param alphaTimes Los tiempos 'alfa' asociados a cada transición.
      * @param stopCondition Condición de corte del programa (cuántas tareas se deben finalizar para terminar el programa).
      * @param lock Lock para sincronizar la escritura en el Log con el disparo de transiciones
      */
-    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix transitionInvariants, Matrix alphaTimes, int stopCondition, Object lock) {
+    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes, int stopCondition, Object lock) {
         this.incidence = incidence;
         this.incidenceBackwards = incidenceBackwards;
         this.initialMarking = initialMarking;
         this.placesInvariants = placesInvariants;
-        this.transitionInvariants = transitionInvariants;
         this.alphaTimes = alphaTimes;
         this.stopCondition = stopCondition;
         this.lock = lock;

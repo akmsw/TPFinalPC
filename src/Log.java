@@ -28,6 +28,7 @@ public class Log extends Thread {
 	private FileHandler FH;
 	private Logger logger;
 	private Monitor monitor;
+	private Matrix tInvariants;
 
 	/**
 	 * Constructor.
@@ -39,10 +40,11 @@ public class Log extends Thread {
 	 * @param lock Lock que interactúa entre el Log y el hilo que disparó.
 	 * @throws IOException Si hubo un error al crear el archivo log.
 	 */
-	public Log(String fileName, Monitor monitor, int stepToLog, Object lock) throws IOException {
+	public Log(String fileName, Monitor monitor, int stepToLog, Object lock, Matrix tInvariants) throws IOException {
 		this.monitor = monitor;
 		this.stepToLog = stepToLog;
 		this.lock = lock;
+		this.tInvariants = tInvariants;
 
 		transitionsSequence = new ArrayList<String>();
 
