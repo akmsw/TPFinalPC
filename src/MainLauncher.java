@@ -124,7 +124,7 @@ public class MainLauncher {
 
     private static ArrayList<Matrix> threadPaths;
 
-    private static double[] a = {0};
+    /*private static double[] a = {0};
     private static double[] b = {1,3,5};
     private static double[] c = {1,3,5};
     private static double[] d = {2,4,6};
@@ -138,9 +138,9 @@ public class MainLauncher {
     private static double[] l = {11};
     private static double[] m = {12};
     private static double[] n = {15};
-    private static double[] o = {16};
+    private static double[] o = {16};*/
     
-    /*private static double[] a = { 0, 1, 3, 5 };
+    private static double[] a = { 0, 1, 3, 5 };
     private static double[] b = { 0, 1, 3, 5 };
     private static double[] c = { 0, 2, 4, 6 };
     private static double[] d = { 0, 2, 4, 6 };
@@ -155,7 +155,7 @@ public class MainLauncher {
     private static double[] m = { 15 };
     private static double[] n = { 16 };
 
-    private static double[] a = {0};
+    /*private static double[] a = {0};
     private static double[] b = {0,1,3,5};
     private static double[] c = {0,1,3,5};
     private static double[] d = {0,2,4,6};
@@ -203,7 +203,7 @@ public class MainLauncher {
     private static Matrix path12 = new Matrix(l, 1);
     private static Matrix path13 = new Matrix(m, 1);
     private static Matrix path14 = new Matrix(n, 1);
-    private static Matrix path15 = new Matrix(o,1);
+    //private static Matrix path15 = new Matrix(o,1);
 
     //Los betas los tomamos como infinitos para que no se desensibilicen las transiciones.
     private static double[] alphaTimesA = { 25, 0, 0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 75, 75, 100, 100 }; //Alfas de las transiciones.
@@ -245,7 +245,7 @@ public class MainLauncher {
         threadPaths.add(path12);
         threadPaths.add(path13);
         threadPaths.add(path14);
-        threadPaths.add(path15);
+        //threadPaths.add(path15);
 
         pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, alphaTimes, stopCondition, lock);
 

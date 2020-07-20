@@ -115,7 +115,7 @@ public class Log extends Thread {
 					break;
 				}
 			
-			transitionsSequence.add(monitor.getPetriNet().getLastFiredTransition() + "");
+			transitionsSequence.add("T" + monitor.getPetriNet().getLastFiredTransition() + "");
 			
 			if(transitionInvariant) {
 				System.out.println("SE VOLVIÓ AL MARCADO INICIAL");
