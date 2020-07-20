@@ -62,28 +62,26 @@ public class MainLauncher {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 }
     };
 
-    /*
-     * Orden de plazas (izquierda a derecha):
-     *  0: P0
-     *  1: ColaProcesos
-     *  2: ColaP1
-     *  3: LimiteColaP1
-     *  4: ColaP2
-     *  5: LimiteColaP2
-     *  6: Procesador1
-     *  7: Procesador2
-     *  8: RecursoTareas
-     *  9: ProcesandoP1
-     *  10: ProcesandoP2
-     *  11: Tarea2P1
-     *  12: Tarea2P2
-     *  13: ListoP1
-     *  14: ListoP2
-     *  15: M1
-     *  16: M2
-     *  17: DisponibleM1
-     *  18: DisponibleM2
-     */
+    /* Orden de plazas (izquierda a derecha):
+        0: P0
+        1: ColaProcesos
+        2: ColaP1
+        3: LimiteColaP1
+        4: ColaP2
+        5: LimiteColaP2
+        6: Procesador1
+        7: Procesador2
+        8: RecursoTareas
+        9: ProcesandoP1
+        10: ProcesandoP2
+        11: Tarea2P1
+        12: Tarea2P2
+        13: ListoP1
+        14: ListoP2
+        15: M1
+        16: M2
+        17: DisponibleM1
+        18: DisponibleM2 */
     private static double[][] pInvariants = {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8, 0 }, // M1 + DisponibleM1  = 8
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8 }, // M2 + DisponibleM2 = 8
@@ -95,26 +93,24 @@ public class MainLauncher {
         { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 }  // RecursoTarea + ProcesandoP1 + ProcesandoP2 + Tarea2P1 + Tarea2P2 = 1
     };
 
-    /*
-     * Orden de transiciones (izquierda a derecha):
-     *  0: ArrivalRate
-     *  1: AsignarP1
-     *  2: AsignarP2
-     *  3: EmpezarP1
-     *  4: EmpezarP2
-     *  5: FinalizarT1P1
-     *  6: FinalizarT1P2
-     *  7: FinalizarT2P1
-     *  8: FinalizarT2P2
-     *  9: P1M1
-     *  10: P1M2
-     *  11: P2M1
-     *  12: P2M2 
-     *  13: ProcesarT2P1 
-     *  14: ProcesarT2P2 
-     *  15: VaciarM1 
-     *  16: VaciarM2
-     */
+    /* Orden de transiciones (izquierda a derecha):
+        0: ArrivalRate
+        1: AsignarP1
+        2: AsignarP2
+        3: EmpezarP1
+        4: EmpezarP2
+        5: FinalizarT1P1
+        6: FinalizarT1P2
+        7: FinalizarT2P1
+        8: FinalizarT2P2
+        9: P1M1
+        10: P1M2
+        11: P2M1
+        12: P2M2 
+        13: ProcesarT2P1 
+        14: ProcesarT2P2 
+        15: VaciarM1 
+        16: VaciarM2 */
     private static double[][] tInvariants = {
         { 8, 8, 0, 8, 0, 8, 0, 0, 0, 8, 0, 0, 0, 0, 0, 1, 0 },
         { 8, 8, 0, 8, 0, 8, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 1 },

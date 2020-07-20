@@ -90,9 +90,9 @@ public class MyThread extends Thread {
 
             try {
                 monitor.catchMonitor();
-                if(monitor.getPetriNet().hasCompleted()) break; /*Mientras estábamos peleando por el mutex puede que algún otro hilo
+                if(monitor.getPetriNet().hasCompleted()) break; /* Mientras estábamos peleando por el mutex puede que algún otro hilo
                                                                    haya ejecutado una transición que haya hecho llegar a la condición
-                                                                   de corte del programa y, por lo tanto, hay que chequear si ésto sucedió.*/
+                                                                   de corte del programa y, por lo tanto, hay que chequear si esto sucedió. */
             } catch(InterruptedException e) {
                 e.printStackTrace();
                 System.out.println(Thread.currentThread().getId() + ": Error al entrar al monitor.");
@@ -109,8 +109,8 @@ public class MyThread extends Thread {
                     e.printStackTrace();
                     System.out.println(Thread.currentThread().getId() + ": Error al encolar un hilo.");
                 }
-            } else if(!working && monitor.getPetriNet().getWorkingVector().get(0, monitor.getIndexHigh(firingVector))==1) { /*Hacemos este chequeo para contemplar el caso en el que un hilo estuvo esperando
-                                                                                                                              el tiempo alfa y ahora DEBE disparar la transición para la cual estuvo esperando.*/
+            } else if(!working && monitor.getPetriNet().getWorkingVector().get(0, monitor.getIndexHigh(firingVector))==1) { /* Hacemos este chequeo para contemplar el caso en el que un hilo estuvo esperando
+                                                                                                                               el tiempo alfa y ahora DEBE disparar la transición para la cual estuvo esperando. */
                 monitor.exitMonitor();
 
                 try {
