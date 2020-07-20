@@ -109,23 +109,19 @@ public class MyThread extends Thread {
                     e.printStackTrace();
                     System.out.println(Thread.currentThread().getId() + ": Error al encolar un hilo.");
                 }
-            } else {
-                if(!working) { /*Hacemos este chequeo para contemplar el caso en el que un hilo estuvo esperando
-                                 el tiempo alfa y ahora DEBE disparar la transición para la cual estuvo esperando.*/
-                    if(monitor.getPetriNet().getWorkingVector().get(0, monitor.getIndexHigh(firingVector))==1) {
-                        monitor.exitMonitor();
+            } else if(!working && monitor.getPetriNet().getWorkingVector().get(0, monitor.getIndexHigh(firingVector))==1) { /*Hacemos este chequeo para contemplar el caso en el que un hilo estuvo esperando
+                                                                                                                              el tiempo alfa y ahora DEBE disparar la transición para la cual estuvo esperando.*/
+                monitor.exitMonitor();
 
-                        try {
-                            monitor.getConditionQueues().get(monitor.getIndexHigh(firingVector)).acquire();
-
-                            if(monitor.getPetriNet().hasCompleted()) break;
-                        } catch(Exception e) {
-                            e.printStackTrace();
-                            System.out.println(Thread.currentThread().getId() + ": Error al encolar un hilo.");
-                        }
-                    }
+                try {
+                    monitor.getConditionQueues().get(monitor.getIndexHigh(firingVector)).acquire();
+                    if(monitor.getPetriNet().hasCompleted()) break;
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    System.out.println(Thread.currentThread().getId() + ": Error al encolar un hilo.");
                 }
             }
+            
             if(!monitor.alphaTimeCheck(firingVector)) {
                 monitor.exitMonitor();
 

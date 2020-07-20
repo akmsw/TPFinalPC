@@ -119,7 +119,7 @@ public class Log extends Thread {
 				transitionInvariantsAmount++;
 			}
 			
-			//monitor.getPetriNet().checkPlacesInvariants();
+			monitor.getPetriNet().checkPlacesInvariants();
 
 			if(monitor.getPetriNet().getTotalFired()%stepToLog==0)
 				logger.info("\n"+monitor.getPetriNet().getMemoriesLoad() +
