@@ -107,21 +107,21 @@ public class Log extends Thread {
 
 			currentMark = monitor.getPetriNet().getCurrentMarkingVector();
 
-			aux = initialMark.minus(currentMark);
+			/*aux = initialMark.minus(currentMark);
 
 			for(int i=0; i<aux.getColumnDimension(); i++)
 				if(aux.get(0, i)!=0) {
 					transitionInvariant = false;
 					break;
-				}
+				}*/
 			
 			transitionsSequence.add("T" + monitor.getPetriNet().getLastFiredTransition() + "");
 			
-			if(transitionInvariant) {
+			/*if(transitionInvariant) {
 				System.out.println("SE VOLVIÓ AL MARCADO INICIAL");
 				transitionsSequence.add("#");
 				transitionInvariantsAmount++;
-			}
+			}*/
 			
 			monitor.getPetriNet().checkPlacesInvariants();
 
