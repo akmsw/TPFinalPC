@@ -144,9 +144,7 @@ public class MainLauncher {
     private static double[] n = {15};
     private static double[] o = {16};
     
-    /*private static double[] a = {0,1,3,0,1,0,1,0,1,0,1,5,9,3,5,9,3,5,9,3,5,9,3,5,9,0,1,3,0,1,0,1,5,9,3,5,9,3,5,9,15};
-
-    private static double[] a = { 0, 1, 3, 5 };
+    /*private static double[] a = { 0, 1, 3, 5 };
     private static double[] b = { 0, 1, 3, 5 };
     private static double[] c = { 0, 2, 4, 6 };
     private static double[] d = { 0, 2, 4, 6 };
