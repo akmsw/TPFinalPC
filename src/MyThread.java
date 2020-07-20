@@ -40,7 +40,7 @@ public class MyThread extends Thread {
     // ----------------------------------------Getters------------------------------------------
 
     /**
-     * @return El vector de transiciones a disparar.
+     * @return El vector de disparo del hilo.
      */
     public Matrix getFiringVector() {
         return firingVector;

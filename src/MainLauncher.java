@@ -193,7 +193,7 @@ public class MainLauncher {
     private static double[] n = {13};
     private static double[] o = {14};
     private static double[] p = {15};
-    private static double[] q = {16}; */
+    private static double[] q = {16};*/
      
     private static Matrix path1 = new Matrix(a, 1);
     private static Matrix path2 = new Matrix(b, 1);

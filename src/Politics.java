@@ -30,9 +30,9 @@ public class Politics {
     // ----------------------------------------Otros--------------------------------------------
     
     /**
-     * En este método se decide qué transición será elegida para despertar
-     * a los hilos que tenga encolados. Para esto, se recorre el vector resultado
-     * de la operación 'AND' para ver cuántas transiciones con hilos esperando hay.
+     * En este método se decide qué transición será elegida para despertar a los hilos
+     * que tenga encolados. Para esto, se recorre el vector resultado de la operación 'AND'
+     * para ver cuántas transiciones con hilos esperando hay.
      * Se almacena el índice de estas transiciones en un arreglo y se hace una
      * elección aleatoria con distribución uniforme entre todos los índices que se hayan guardado.
      * 
