@@ -13,7 +13,7 @@ import Jama.Matrix;
 
 public class Monitor {
 
-    //Campos privados
+    //Campos privados.
     private long workingTime;
     private ArrayList<Semaphore> conditionQueues;
     private Semaphore entry;
@@ -21,21 +21,23 @@ public class Monitor {
     private Politics politics;
     
     /**
-     * Constructor.
+     * Constructor. Aquí se crea el objeto de tipo Politics que entrará en juego
+     * ante cualquier conflicto que se presente en la red y se crean las colas
+     * de condición para las transiciones y la cola de entrada del monitor.
      * 
      * @param pNet Red de Petri que será controlada por el monitor.
      */
     public Monitor(PetriNet pNet) {
         this.pNet = pNet;
 
-        entry = new Semaphore(1,true); //fair?
+        entry = new Semaphore(1,true);
 
         politics = new Politics();
         
         conditionQueues = new ArrayList<Semaphore>();
         
-        for(int i=0; i<(pNet.getIncidenceMatrix().getColumnDimension()); i++) //Bucle 'for' para inicializar los semáforos en las colas del monitor.
-            conditionQueues.add(new Semaphore(0)); //fair?
+        for(int i=0; i<(pNet.getIncidenceMatrix().getColumnDimension()); i++)
+            conditionQueues.add(new Semaphore(0));
     }
     
     // ----------------------------------------Métodos públicos---------------------------------
@@ -43,7 +45,8 @@ public class Monitor {
     // ----------------------------------------Getters------------------------------------------
 
     /**
-     * @param vector Vector donde se buscará el índice de la transición a disparar.
+     * @param vector El vector donde se buscará el índice de la transición a disparar.
+     * @return Índice de la transición a disparar.
      */
     public int getIndexHigh(Matrix vector) {
         int index = 0;
@@ -64,7 +67,7 @@ public class Monitor {
     }
 
     /**
-     * @return Conjunto de colas de condición.
+     * @return Conjunto de colas de condición de las transiciones.
      */
     public ArrayList<Semaphore> getConditionQueues() {
         return conditionQueues;
@@ -78,7 +81,7 @@ public class Monitor {
     }
 
     /**
-     * @param and Vector de transiciones que tiene sólo una sensibilizada.
+     * @param and El vector de transiciones que tiene sólo una transición sensibilizada.
      * @return El índice de la transición sensibilizada.
      */
     public int getSingleEnabled(Matrix and) {
@@ -94,8 +97,12 @@ public class Monitor {
     }
 
     /**
-     * @return El vector que indica si hay hilos esperando
-     *         en colas de transiciones sensibilizadas.
+     * En este método se calcula el resultado de la operación 'AND'
+     * entre el vector de transiciones sensibilizadas y el vector
+     * de transiciones con hilos encolados.
+     * 
+     * @return El vector que almacena las transiciones sensibilizadas
+     *         con al menos un hilo encolado en ellas.
      */
     public Matrix getAnd() {
         return pNet.getEnabledTransitions().arrayTimes(whoAreQueued());
@@ -112,46 +119,52 @@ public class Monitor {
     // ----------------------------------------Otros------------------------------------------
 
     /**
+     * En este método se toma el mutex del monitor.
+     * 
      * @throws InterruptedException Si el hilo que quiso hacer el acquire
      *                              fue interrumpido en el proceso.
      */
     public synchronized void catchMonitor() throws InterruptedException {
         entry.acquire();
-        //System.out.println(Thread.currentThread().getId() + ": Catchié el monitor");
-    }
-
-    public void exitMonitor() {
-        entry.release();
-        //System.out.println(Thread.currentThread().getId() + ": Exitié del monitor");
     }
 
     /**
-     * @param and Vector resultado de la operación AND para ver quiénes
+     * En este método se libera el mutex del monitor.
+     */
+    public void exitMonitor() {
+        entry.release();
+    }
+
+    /**
+     * En este método se chequea si hay hilos encolados en transiciones sensibilizadas.
+     * Si hay más de una transición sensibilizada con al menos un hilo encolado en cada una,
+     * se llama al objeto de tipo Politics para decidir a quién despertar y cederle el mutex
+     * del monitor. Si hay sólo una transición sensibilizada con al menos un hilo encolado en ella,
+     * entonces no se decide mediante la política, sino que se le cede el mutex al hilo que se
+     * despierte de esa cola. Si no hay ninguna transición sensibilizada con hilos encolados,
+     * entonces se cede el mutex del monitor para que los hilos que están en la cola de entrada
+     * compitan por él.
+     * 
+     * @param and El vector resultado de la operación AND para ver quiénes
      *            están esperando en colas de transiciones sensibilizadas.
      */
     public void waitingCheck(Matrix and) {
-        //and.print(0, 0);
-        if(enabledAndWaiting(and)>1) { //Si tengo más de una transición sensibilizada con hilos encolados, llamo a Paul Erex.
-            //System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en varias enableds transitions.");
-            //System.out.println(Thread.currentThread().getId() + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+        if(enabledAndWaiting(and)>1) {
             int choice = politics.decide(and);
             conditionQueues.get(choice).release();
-            //System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex al de la transicion: " + choice);
-            return; //Salimos del metodo y volvemos al run()
-        } else if(enabledAndWaiting(and)==1) { //Si tengo sólo una, busco su índice.
-            //System.out.println(Thread.currentThread().getId() + ": Hay al menos un hilo esperando en una enabled transition");
+            return;
+        } else if(enabledAndWaiting(and)==1) {
             int singlechoice = getSingleEnabled(and);
             conditionQueues.get(singlechoice).release();
-            //System.out.println(Thread.currentThread().getId() + ": Hago return. Cedo el mutex a la single choice: " + singlechoice);
-            return; //Salimos del metodo y volvemos al run()
-        } else {
-            //System.out.println(Thread.currentThread().getId() + ": Nobody's waiting on enabled transitions");
-            exitMonitor(); //Si no hay ningun hilo esperando en colas de transiciones actualmente sensibilizadas, me voy y no hago nada.
-        }
+            return;
+        } else exitMonitor();
     }
 
     /**
-     * @return El arreglo de hilos que están esperando en las colas de las transiciones.
+     * En este método se calcula un vector que almacena las transiciones
+     * que tienen hilos encolados.
+     * 
+     * @return El vector de transiciones con hilos encolados.
      */
     public Matrix whoAreQueued() {
         double[] aux = new double[pNet.getIncidenceMatrix().getColumnDimension()];
@@ -170,8 +183,8 @@ public class Monitor {
      * Este método calcula la cantidad de transiciones sensibilizadas
      * que tienen hilos esperando en sus colas.
      * 
-     * @param and Vector resultado de la operación 'and'.
-     * @return La cantidad de transiciones sensibilizadas en la red.
+     * @param and El vector resultado de la operación 'and'.
+     * @return La cantidad de transiciones sensibilizadas en la red con hilos encolados.
      */
     public int enabledAndWaiting(Matrix and) {
         int aux = 0;
@@ -183,24 +196,23 @@ public class Monitor {
     }    
 
     /**
-     * Este método calcula W_i - tiempo actual, para chequear
-     * si pasó el tiempo alfa y se puede disparar la transición.
+     * Este método calcula la resta entre el tiempo de sensibilizado
+     * y el tiempo actual, para chequear si transcurrió el tiempo alfa
+     * y ya se puede disparar la transición.
+     * Además, se setea el tiempo que debe esperar el hilo que quiere
+     * disparar una transición cuyo alfa aún no ha transcurrido.
      * 
-     * @param firingVector Vector de disparo del hilo, de donde se rescata la
+     * @param firingVector El vector de disparo del hilo, de donde se rescata la
      *                     transición cuyo alfa se va a chequear.
      * @return Si el tiempo alfa ya ha transcurrido o no.
      */
     public boolean alphaTimeCheck(Matrix firingVector) {
-        long alpha = (long)pNet.getAlphaVector().get(0, getIndexHigh(firingVector)); //Se lee el vector de alphaTimes y se busca el alpha correspondiente a la posicion que indica el firingVector
+        long alpha = (long)pNet.getAlphaVector().get(0, getIndexHigh(firingVector));
         long currentTime = System.currentTimeMillis();
         long enabledAtTime = (long)pNet.getEnabledAtTime().get(0, getIndexHigh(firingVector));
-
-        //System.out.println("alpha = " + alpha + "\ncurrentTime = " + currentTime + "\nenabledAtTime = " + enabledAtTime);
         
         workingTime = alpha - (currentTime-enabledAtTime);
 
-        //System.out.println("resta = " + (currentTime-enabledAtTime) + "\nwaitingTime = " + waitingTime);
-
-        return alpha<(currentTime-enabledAtTime); //Se hace la resta entre el tiempo actual y el tiempo en que se sensibilizó (wi), y si ese tiempo es mayor que alpha entonces se retorna true
+        return alpha<(currentTime-enabledAtTime);
     }
 }

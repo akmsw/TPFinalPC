@@ -15,11 +15,11 @@ import Jama.Matrix;
 
 public class Politics {
     
-    //Campos privados
+    //Campos privados.
     private ArrayList<Integer> indexes;
     private Random randomGenerator;
 
-    //Constructor
+    //Constructor.
     public Politics() {
         indexes = new ArrayList<Integer>();
         randomGenerator = new Random();
@@ -30,25 +30,25 @@ public class Politics {
     // ----------------------------------------Otros--------------------------------------------
     
     /**
-     * @param and Vector con más de una transición sensibilizada que tienen
+     * En este método se decide qué transición será elegida para despertar
+     * a los hilos que tenga encolados. Para esto, se recorre el vector resultado
+     * de la operación 'AND' para ver cuántas transiciones con hilos esperando hay.
+     * Se almacena el índice de estas transiciones en un arreglo y se hace una
+     * elección aleatoria con distribución uniforme entre todos los índices que se hayan guardado.
+     * 
+     * @param and El vector con más de una transición sensibilizada que tienen
      *            al menos un hilo encolado.
      * @return El índice de la transición elegida para disparar.
      */
     public int decide(Matrix and) {
-        //System.out.println("Politics Deciding...");
-        
         indexes.clear();
         
-        //and.print(0, 0);
+        for(int i=0; i<and.getColumnDimension(); i++)
+            if(and.get(0,i)>0) indexes.add(i);
         
-        for(int i=0; i<and.getColumnDimension(); i++)  //Se recorre el vector AND para ver cuántas transiciones e hilos esperando hay.
-            if(and.get(0,i)>0) indexes.add(i); //Si el elemento es mayor que 0, se agrega al arraylist indexes.
-        
-       int choice = (int)Math.round(randomGenerator.nextInt(indexes.size())); //Se elige aleatoriamente entre las transiciones sensibilizadas, con distribucion uniforme
-       int indexChosen = (int)Math.round(indexes.get(choice)); //Muy importante hacer el parseval porque la matrix tiene double
+       int choice = (int)Math.round(randomGenerator.nextInt(indexes.size()));
+       int indexChosen = (int)Math.round(indexes.get(choice));
 
-        //System.out.println("Decided: " + indexChosen);
-        
-        return indexChosen; //Retorna con un numero random entre las transiciones con hilo esperando que hay.
+        return indexChosen;
     }
 }
