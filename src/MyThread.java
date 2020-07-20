@@ -101,25 +101,16 @@ public class MyThread extends Thread {
             if(!monitor.getPetriNet().stateEquationTest(firingVector)) {
                 monitor.exitMonitor();
 
-                try {
-                    monitor.getConditionQueues().get(monitor.getIndexHigh(firingVector)).acquire();
+                wakeToQueue();
 
-                    if(monitor.getPetriNet().hasCompleted()) break;
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    System.out.println(Thread.currentThread().getId() + ": Error al encolar un hilo.");
-                }
+                if(monitor.getPetriNet().hasCompleted()) break;
             } else if(!working && monitor.getPetriNet().getWorkingVector().get(0, monitor.getIndexHigh(firingVector))==1) { /* Hacemos este chequeo para contemplar el caso en el que un hilo estuvo esperando
                                                                                                                                el tiempo alfa y ahora DEBE disparar la transición para la cual estuvo esperando. */
                 monitor.exitMonitor();
 
-                try {
-                    monitor.getConditionQueues().get(monitor.getIndexHigh(firingVector)).acquire();
-                    if(monitor.getPetriNet().hasCompleted()) break;
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    System.out.println(Thread.currentThread().getId() + ": Error al encolar un hilo.");
-                }
+                wakeToQueue();
+                
+                if(monitor.getPetriNet().hasCompleted()) break;
             }
             
             if(!monitor.alphaTimeCheck(firingVector)) {
@@ -167,5 +158,17 @@ public class MyThread extends Thread {
         vector.set(0, i, 1);
         
         return vector;
+    }
+
+    /**
+     * Este método encola el hilo en la transición que quiso disparar.
+     */
+    public void wakeToQueue() {
+        try {
+            monitor.getConditionQueues().get(monitor.getIndexHigh(firingVector)).acquire();
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println(Thread.currentThread().getId() + ": Error al encolar un hilo.");
+        }
     }
 }
