@@ -36,8 +36,7 @@ public class Politics {
      * Se almacena el índice de estas transiciones en un arreglo y se hace una
      * elección aleatoria con distribución uniforme entre todos los índices que se hayan guardado.
      * 
-     * @param and El vector con más de una transición sensibilizada que tienen
-     *            al menos un hilo encolado.
+     * @param and El vector con más de una transición sensibilizada que tienen al menos un hilo encolado.
      * @return El índice de la transición elegida para disparar.
      */
     public int decide(Matrix and) {
