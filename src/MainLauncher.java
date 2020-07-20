@@ -261,15 +261,17 @@ public class MainLauncher {
         try {
             myLog = new Log("ReportMonitor.txt", monitor, stepToLog, lock);
             myLog.start();
-        } catch (Exception e) {
+        } catch(Exception e) {
+            e.printStackTrace();
             System.out.println("Error al crear el log.");
         }
 
         //Sleep para que el hilo Log y los hilos de tareas se sincronicen.
         try {
             java.lang.Thread.sleep(1000);
-        } catch (InterruptedException e) {
+        } catch(InterruptedException e) {
             e.printStackTrace();
+            System.out.println("Error en sincronización de hilo Log e hilos de tareas.");
         }
 
         int threadQuantity = threadPaths.size(); //Cantidad de hilos a crear: uno por cada invariante de transicion (sin las transiciones del vaciado) + 2 hilos extra para vaciar memorias.

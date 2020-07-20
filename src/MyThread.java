@@ -93,7 +93,8 @@ public class MyThread extends Thread {
                 if(monitor.getPetriNet().hasCompleted()) break; /*Mientras estábamos peleando por el mutex puede que algún otro hilo
                                                                    haya ejecutado una transición que haya hecho llegar a la condición
                                                                    de corte del programa y, por lo tanto, hay que chequear si ésto sucedió.*/
-            } catch (InterruptedException e) {
+            } catch(InterruptedException e) {
+                e.printStackTrace();
                 System.out.println(Thread.currentThread().getId() + ": Error al entrar al monitor.");
             }
 
@@ -104,7 +105,8 @@ public class MyThread extends Thread {
                     monitor.getConditionQueues().get(monitor.getIndexHigh(firingVector)).acquire();
 
                     if(monitor.getPetriNet().hasCompleted()) break;
-                } catch (Exception e) {
+                } catch(Exception e) {
+                    e.printStackTrace();
                     System.out.println(Thread.currentThread().getId() + ": Error al encolar un hilo.");
                 }
             } else {
@@ -117,7 +119,8 @@ public class MyThread extends Thread {
                             monitor.getConditionQueues().get(monitor.getIndexHigh(firingVector)).acquire();
 
                             if(monitor.getPetriNet().hasCompleted()) break;
-                        } catch (Exception e) {
+                        } catch(Exception e) {
+                            e.printStackTrace();
                             System.out.println(Thread.currentThread().getId() + ": Error al encolar un hilo.");
                         }
                     }
@@ -130,7 +133,8 @@ public class MyThread extends Thread {
                     monitor.getPetriNet().getWorkingVector().set(0, monitor.getIndexHigh(firingVector), 1);
                     working = true;
                     sleep(monitor.getWorkingTime());
-                } catch (InterruptedException e) {
+                } catch(InterruptedException e) {
+                    e.printStackTrace();
                     System.out.println(Thread.currentThread().getId() + ": Error en tiempo de sleep");
                 }
 

@@ -96,6 +96,7 @@ public class Log extends Thread {
 				try {
 					lock.wait();
 				} catch(InterruptedException e) {
+					e.printStackTrace();
 					System.out.println("Error en espera en el log.");
 				}
 			}

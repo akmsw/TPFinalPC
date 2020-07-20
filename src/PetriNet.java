@@ -271,6 +271,7 @@ public class PetriNet {
                 lock.wait();
             } catch(InterruptedException e) {
                 e.printStackTrace();
+                System.out.println("Interrupción en la espera del hilo Log.");
             }
         }
         
