@@ -26,8 +26,6 @@ public class Politics {
     }
 
     // ----------------------------------------Métodos públicos---------------------------------
-
-    // ----------------------------------------Otros--------------------------------------------
     
     /**
      * En este método se decide qué transición será elegida para despertar a los hilos
@@ -36,7 +34,7 @@ public class Politics {
      * Se almacena el índice de estas transiciones en un arreglo y se hace una
      * elección aleatoria con distribución uniforme entre todos los índices que se hayan guardado.
      * 
-     * @see {@link Monitor#getAnd()}
+     * @see Monitor#getAnd()
      * @param and El vector con más de una transición sensibilizada que tienen al menos un hilo encolado.
      * @return El índice de la transición elegida para disparar.
      */

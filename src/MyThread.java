@@ -151,7 +151,7 @@ public class MyThread extends Thread {
         }
     }
 
-    // ----------------------------------------Otros------------------------------------------
+    // ----------------------------------------Otros--------------------------------------------
 
     /**
      * En este método se crea un vector de una fila y con tantas columnas como transiciones

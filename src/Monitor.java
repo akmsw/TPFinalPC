@@ -81,7 +81,7 @@ public class Monitor {
     }
 
     /**
-     * @see {@link #getAnd()}
+     * @see #getAnd()
      * @param and El vector de transiciones que tiene sólo una transición sensibilizada.
      * @return El índice de la transición sensibilizada.
      */
@@ -146,7 +146,7 @@ public class Monitor {
      * entonces se cede el mutex del monitor para que los hilos que están en la cola de entrada
      * compitan por él.
      * 
-     * @see {@link #getAnd()}
+     * @see #getAnd()
      * @param and El vector resultado de la operación AND para ver quiénes
      *            están esperando en colas de transiciones sensibilizadas.
      */
@@ -185,7 +185,7 @@ public class Monitor {
      * Este método calcula la cantidad de transiciones sensibilizadas
      * que tienen hilos esperando en sus colas.
      * 
-     * @see @see {@link #getAnd()}
+     * @see #getAnd()
      * @param and El vector resultado de la operación 'and'.
      * @return La cantidad de transiciones sensibilizadas en la red con hilos encolados.
      */
