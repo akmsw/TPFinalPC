@@ -10,10 +10,19 @@ import Jama.Matrix;
 
 public class PetriNet {
 
-    //Campos privados
-    private Matrix incidence, incidenceBackwards, initialMarking, currentMarking, enabledTransitions, placesInvariants, aux;
+    //Campos privados.
+    private Object lock;
+    private int lastFiredTransition, totalFired;
+    private int stopCondition;
     private double[] auxVector = {};
-    private int transitionsFired;
+    private Matrix incidence, incidenceBackwards; //Matrices a utilizar.
+    private Matrix initialMarking, currentMarking; //Vectores relativos al marcado de la red.
+    private Matrix enabledTransitions, enabledAtTime; //Vectores relativos a la sensibilización de transiciones.
+    private Matrix placesInvariants; //Vectores relativos a los invariantes de la red.
+    private Matrix aux; //Vector auxiliar para el cálculo de la ecuación de estado de la red.
+    private Matrix alphaTimes; //Vector con los alfas de cada transición.
+    private Matrix workingVector; //Vector que indica los hilos que están trabajando en las transiciones.
+    private Matrix firedTransitions; //Vectores que almacena el número de veces que se disparó cada transición.
 
     /**
 	 * Constructor.
@@ -22,22 +31,35 @@ public class PetriNet {
      * @param incidenceBackwards Matriz 'backwards' de incidencia de la red.
      * @param initialMarking El vector de marcado inicial de la red.
      * @param placesInvariants Los invariantes de plaza de la red.
+     * @param alphaTimes Los tiempos 'alfa' asociados a cada transición.
+     * @param stopCondition Condición de corte del programa (cuántas tareas se deben finalizar para terminar el programa).
+     * @param lock Lock para sincronizar la escritura en el Log con el disparo de transiciones
      */
-    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants) {
-        this.transitionsFired = 0;
+    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes, int stopCondition, Object lock) {
         this.incidence = incidence;
         this.incidenceBackwards = incidenceBackwards;
         this.initialMarking = initialMarking;
         this.placesInvariants = placesInvariants;
-        this.enabledTransitions = new Matrix(1, incidence.getColumnDimension()); //Inicializo el vector E de transiciones sensibilizadas con todos 0, del tamaño del vector de marcado, con 1 sola fila. FJC
-        this.aux = new Matrix(auxVector,1);
+        this.alphaTimes = alphaTimes;
+        this.stopCondition = stopCondition;
+        this.lock = lock;
 
-        setCurrentMarkingVector(this.initialMarking); //Inicializamos el vector de marcado actual igual al vector de marcado inicial
+        firedTransitions = new Matrix(1, incidence.getColumnDimension());
+
+        enabledTransitions = new Matrix(1, incidence.getColumnDimension());
+        
+        aux = new Matrix(auxVector,1);
+
+        enabledAtTime = new Matrix(1, incidence.getColumnDimension()); //Vector que almacena los instantes de sensiblizado de cada transición.
+
+        workingVector = new Matrix(1, incidence.getColumnDimension());
+
+        setCurrentMarkingVector(initialMarking);
     }
 
-    //----------------------------------------Métodos públicos---------------------------------
+    // ----------------------------------------Métodos públicos---------------------------------
 
-    //----------------------------------------Getters------------------------------------------
+    // ----------------------------------------Getters------------------------------------------
 
     /**
      * @return La matriz de incidencia de la red de Petri.
@@ -61,101 +83,252 @@ public class PetriNet {
     }
 
     /**
-     * @return Vector de transiciones sensibilizadas.
+     * @return El vector de transiciones sensibilizadas.
      */
     public Matrix getEnabledTransitions() {
         return enabledTransitions;
     }
 
     /**
-     * @return La cantidad de transiciones que se dispararon hasta el momento.
+     * @return El vector con la cantidad de veces que fue disparada cada transición.
      */
-    public int getTransitionsFired() {
-        return transitionsFired; //TODO: Cuando cambiemos al criterio de colores debe ser un vector que lleve la cuenta de cada transicion
+    public Matrix getTransitionsFired() {
+        return firedTransitions;
     }
 
-    //----------------------------------------Setters------------------------------------------
+    /**
+     * @return El vector de tiempos alfa asociados a las transiciones.
+     */
+    public Matrix getAlphaVector() {
+        return alphaTimes;
+    }
 
     /**
-     * @param currentMarking Vector de marcado actual de la red de Petri.
+     * @return El vector de los tiempos de sensibilizado de cada transición.
+     */
+    public Matrix getEnabledAtTime() {
+        return enabledAtTime;
+    }
+
+    /**
+     * @return El vector que indica si las transiciones tienen un hilo trabajando en ellas.
+     */
+    public Matrix getWorkingVector() {
+        return workingVector;
+    }
+
+    /**
+     * @return La carga de las memorias.
+     */
+    public String getMemoriesLoad() {
+        return "Cantidad de escrituras en memoria 1: " + (firedTransitions.get(0,9) + firedTransitions.get(0,11)) + "\nCantidad de escrituras en memoria 2: " + (firedTransitions.get(0,10) + firedTransitions.get(0,12));
+    }
+    
+    /**
+     * @return La carga de los procesadores (AsignarP1 y AsignarP2).
+     */
+    public String getProcessorsLoad() {
+        return "Carga del procesador 1: " + firedTransitions.get(0,1) + "\nCarga del procesador 2: " + firedTransitions.get(0,2);
+    }
+
+    /**
+     * @return La cantidad de tareas ejecutadas en cada procesador individualmente (FinalizarTXPX).
+     */
+    public String getProcessorsTasks() {
+        return "Cantidad de ejecuciones de T1 en procesador 1: " + firedTransitions.get(0,5) + "\nCantidad de ejecuciones de T2 en procesador 1: " + firedTransitions.get(0,7) +
+               "\nCantidad de ejecuciones de T1 en procesador 2: " + firedTransitions.get(0,6) + "\nCantidad de ejecuciones de T2 en procesador 2: " + firedTransitions.get(0,8);
+    }
+
+    /**
+     * Este método devuelve el índice donde está el '1' en el
+     * vector de disparo del hilo (el índice de la transición que
+     * se quiere disparar).
+     * 
+     * @param vector El vector donde se buscará el índice de la transición a disparar.
+     * @return Índice de la transición a disparar.
+     */
+    public int getIndex(Matrix vector) {
+        int index = 0;
+        
+        for(int i=0; i<vector.getColumnDimension(); i++) {
+            if(vector.get(0,i)==1) break;
+            else index++;
+        }
+        
+        return index;
+    }
+
+    /**
+     * @return El índice de la última transición disparada.
+     */
+    public int getLastFiredTransition() {
+        return lastFiredTransition;
+    }
+
+    /**
+     * @return La cantidad total de transiciones disparadas hasta el momento.
+     */
+    public int getTotalFired() {
+        return totalFired;
+    }
+
+    /**
+     * @return La condición de corte del programa (cuántas tareas
+     *         deben completarse para finalizar la ejecución).
+     */
+    public int getStopCondition() {
+        return stopCondition;
+    }
+
+    // ----------------------------------------Setters------------------------------------------
+
+    /**
+     * @param currentMarking El vector de marcado actual de la red de Petri.
      */
     public void setCurrentMarkingVector(Matrix currentMarking) {
         this.currentMarking = currentMarking;
     }
 
     /**
+     * @param index Índice de la transición que está sensibilizada.
+     * @param time Instante de tiempo en el que se sensibilizó la transición.
+     */
+    public void setEnabledAtTime(int index, long time) {
+        enabledAtTime.set(0, index, (double)time);
+    }
+
+    /**
      * Este método recorre la matriz de incidencia 'backwards' chequeando si
      * la columna (transición) está sensibilizada (el peso de cada arco es menor
-     * o igual a la cantidad de tokens de la plaza). Seteamos en '1' la transición
-     * sensibilizada en el vector 'enabledTransitions'.
+     * o igual a la cantidad de tokens de la plaza). Seteamos un '1' en el índice
+     * de la transición en el vector 'enabledTransitions' si la misma está sensibilizada;
+     * si no lo está, se setea un '0' en dicha posición.
      */
     public void setEnabledTransitions() {
-        boolean currentTransitionEnabled;
+        boolean currentTransitionEnabled;        
+        long currentTime = System.currentTimeMillis(); //Establezco el tiempo una sola vez para denotar que todas las transiciones se sensibilizaron "al mismo tiempo".
 
-        for(int j=0; j<incidenceBackwards.getColumnDimension(); j++) { //Itero columnas es decir Transiciones
+        for(int j=0; j<incidenceBackwards.getColumnDimension(); j++) {
             currentTransitionEnabled = true;
             
-            for(int i=0; i<incidenceBackwards.getRowDimension(); i++) //Itero filas es decir Plazas
-                if(incidenceBackwards.get(i,j)>currentMarking.get(0,i)) { //Si el peso del arco es mayor a la cantidad de tokens en la plaza que conecta a esa transicion j
-                    currentTransitionEnabled = false; //currentMarking.get(i,0) antes estaba en (0,i) pero lo cambiamos cuando transpusimos el currentMarking
+            for(int i=0; i<incidenceBackwards.getRowDimension(); i++)
+                if(incidenceBackwards.get(i,j)>currentMarking.get(0,i)) {
+                    currentTransitionEnabled = false;
                     break;
                 }
-
-            if(currentTransitionEnabled) enabledTransitions.set(0,j,1); //Si la transicion se detectó como sensibilizada, escribo un 1 en la posicion j del arreglo enabledTransicions. FJC
-            else enabledTransitions.set(0,j,0); //Si la transicion se detectó como no sensibilizada, escribo un 0 en la posicion j del arreglo enabledTransicions. FJC
+            
+            if(currentTransitionEnabled) {
+                enabledTransitions.set(0,j,1);
+                setEnabledAtTime(j,currentTime);
+            } else enabledTransitions.set(0,j,0);
         }
     }
 
-    //----------------------------------------Otros------------------------------------------
+    // ----------------------------------------Otros--------------------------------------------
 
     /**
      * Este método testea si es posible realizar el disparo de la transición
      * con el vector de firing del hilo.
      * 
-     * @param firingVector El vector de firing actual del vector.
+     * @param firingVector El vector de firing actual del hilo.
      * @return Si el resultado de la ecuación de estado fue correcto y
      *         se pudo asignar el nuevo vector de estado de la red.
      */
     public boolean stateEquationTest(Matrix firingVector) {
-        this.aux = stateEquation(firingVector);
-
-        System.out.println(Thread.currentThread().getId() + ": STATE EQUATION TEST. Marcado actual:");        
-
-        this.aux.print(0, 0); //BORRAR ESTE PRINT
+        aux = stateEquation(firingVector);
         
-        for(int i=0; i<this.aux.getColumnDimension(); i++) //Si alguno de los índices es menor que cero,
-            if(this.aux.get(0,i)<0) {
-                System.out.println(Thread.currentThread().getId() + ": ROMPIMO");
-                return false;
-            }          //la ecuación de estado fue errónea (no se pudo disparar) así que devolvemos 'false'.
-        
-        System.out.println(Thread.currentThread().getId() + ": PUEDO DISPARAR");
+        for(int i=0; i<this.aux.getColumnDimension(); i++)
+            if(this.aux.get(0,i)<0) return false;
         
         return true;
     }
     
     /**
-     * Si todo salió bien en el stateEquationTest,
-     * cambiamos el vector de marcado.
-     * 
-     * @param firingVector Vector de disparo del hilo.
+     * Este método actualiza el vector de marcado de la red, aumenta en 1
+     * la cantidad de veces que fue disparada la transición indicada en
+     * el vector de disparo del hilo, actualiza el valor de la última transición
+     * disparada, avisa al hilo Log para tomar nota del disparo y registrarlo, y
+     * finalmente incrementa la cantidad total de transiciones disparadas hasta
+     * el momento.
+     *  
+     * @param firingVector El vector de disparo del hilo.
      */
     public void fireTransition(Matrix firingVector) {
         setCurrentMarkingVector(stateEquation(firingVector));
-        System.out.println(Thread.currentThread().getId() + ": Se disparó la transicion: fV: ");
-        firingVector.print(0, 0);
-        System.out.println(Thread.currentThread().getId() + ": Exito al disparar transicion: T");// + getQueue(firingVector)); 
-        transitionsFired++; //Aumento las transiciones disparadas
+        
+        firedTransitions = firedTransitions.plus(firingVector); //Aumento las transiciones disparadas.
+
+        lastFiredTransition = getIndex(firingVector);
+
+        getWorkingVector().set(0, getIndex(firingVector), 0);
+
+        synchronized(lock) {
+            lock.notify();
+
+            try {
+                lock.wait();
+            } catch(InterruptedException e) {
+                e.printStackTrace();
+                System.out.println("Interrupción en la espera del hilo Log.");
+            }
+        }
+        
+        setEnabledTransitions();
+
+        totalFired++;
     }
 
     /**
      * Este método calcula la ecuación de estado.
      * 
-     * @param firingVector Vector de disparo del hilo.
+     * @param firingVectorEl vector de disparo del hilo.
      * @return El resultado de la ecuación de estado.
      */
     public Matrix stateEquation(Matrix firingVector) {
-        System.out.println(Thread.currentThread().getId() + ": HABEMVS STATUM EQVATIONIS");        
-        return (currentMarking.transpose().plus(incidence.times(firingVector.transpose()))).transpose(); //Ecuación de estado.
+        return (currentMarking.transpose().plus(incidence.times(firingVector.transpose()))).transpose();
+    }
+
+    /**
+     * @return Si la condición de corte del programa se ha alcanzado.
+     */
+    public boolean hasCompleted() {
+        double aux = 0;
+
+        aux += firedTransitions.get(0, 5) + firedTransitions.get(0, 6) + firedTransitions.get(0, 7) + firedTransitions.get(0, 8);
+        
+        return aux>=stopCondition;
+    }
+
+    /**
+     * En este método se chequea si se respetan los invariantes de plaza de la red.
+     * Para hacerlo, se itera en la matriz de invariantes de plaza comparándola con
+     * las plazas del marcado actual, verificando si la cantidad de tokens encontrados
+     * se corresponde con la cantidad de tokens que debería tener el invariante de plaza.
+     * 
+     * @return Si los invariantes de plaza se mantienen luego de cada disparo de cada transición.
+     */
+    public void checkPlacesInvariants() {
+        int invariantAmount; //La cantidad de tokens que se mantiene invariante.
+        int tokensAmount; //La cantidad de tokens que se van contando en las plazas.
+
+        //Validacion de tamaños
+        if(placesInvariants.getColumnDimension()!=currentMarking.getColumnDimension()) {
+            System.out.println("Error. Dimensiones no coincidentes para validación de invariantes de plaza.");
+            return;
+        }
+        
+        for(int j=0; j<placesInvariants.getRowDimension(); j++) {
+            invariantAmount = 0;
+            tokensAmount = 0;
+
+            for(int i=0; i<currentMarking.getColumnDimension(); i++)
+                if(placesInvariants.get(j, i) > 0) {
+                    invariantAmount = (int)placesInvariants.get(j, i);
+                    tokensAmount = tokensAmount + (int)currentMarking.get(0, i);
+                }
+
+            if(tokensAmount!=invariantAmount) 
+                System.out.println("Error en el invariante de plaza: IP" + j);
+        }
     }
 }
