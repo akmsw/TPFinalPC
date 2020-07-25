@@ -1,4 +1,3 @@
-
 /**
  * @author Luna, Lihué Leandro
  * @author Coronati, Federico Joaquín
@@ -34,10 +33,10 @@ public class MainLauncher {
         { 0, 0, 0, 0, 0, 0, 0, 0,-1, 0, 0, 0, 0, 0, 1, 0, 0 },
         { 0, 0, 0, 0, 0, 1, 0, 1, 0,-1,-1, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0,-1,-1, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0,-8, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0,-8 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0, 0, 0, 8, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0, 0, 0, 8 }
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0,-1, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0,-1 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0, 0, 0, 1, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0, 0, 0, 1 }
     };
 
     private static double[][] incidenceBackwardsArray = {
@@ -56,8 +55,8 @@ public class MainLauncher {
         { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0 },
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 }
     };
@@ -251,22 +250,22 @@ public class MainLauncher {
 
         monitor = new Monitor(pNet);
 
-        //Creación y ejecución del hilo Log.
-        try {
-            myLog = new Log("ReportMonitor.txt", monitor, stepToLog, lock, transitionInvariants);
-            myLog.start();
-        } catch(Exception e) {
-            e.printStackTrace();
-            System.out.println("Error al crear el log.");
-        }
+        // //Creación y ejecución del hilo Log.
+        // try {
+        //     myLog = new Log("ReportMonitor.txt", monitor, stepToLog, lock, transitionInvariants);
+        //     myLog.start();
+        // } catch(Exception e) {
+        //     e.printStackTrace();
+        //     System.out.println("Error al crear el log.");
+        // }
 
-        //Sleep para que el hilo Log y los hilos de tareas se sincronicen.
-        try {
-            java.lang.Thread.sleep(1000);
-        } catch(InterruptedException e) {
-            e.printStackTrace();
-            System.out.println("Error en sincronización de hilo Log e hilos de tareas.");
-        }
+        // //Sleep para que el hilo Log y los hilos de tareas se sincronicen.
+        // try {
+        //     java.lang.Thread.sleep(1000);
+        // } catch(InterruptedException e) {
+        //     e.printStackTrace();
+        //     System.out.println("Error en sincronización de hilo Log e hilos de tareas.");
+        // }
 
         int threadQuantity = threadPaths.size(); //Cantidad de hilos a crear: uno por cada invariante de transicion (sin las transiciones del vaciado) + 2 hilos extra para vaciar memorias.
         

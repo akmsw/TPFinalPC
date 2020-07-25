@@ -12,7 +12,7 @@ import Jama.Matrix;
 
 public class MyThread extends Thread {
 
-    //Campos privados.
+    // Campos privados.
     private boolean working;
     private ArrayList<Matrix> myTransitions;
     private Matrix firingVector; // Este vector indica la transicion que se disparará o que se intentó disparar.
@@ -22,16 +22,16 @@ public class MyThread extends Thread {
      * Constructor.
      * 
      * @param sequence Secuencia de transiciones asociadas al hilo.
-     * @param monitor Referencia al monitor que controla la red de Petri.
+     * @param monitor  Referencia al monitor que controla la red de Petri.
      */
     public MyThread(Matrix sequence, Monitor monitor) {
         this.monitor = monitor;
-        
+
         working = false;
 
         myTransitions = new ArrayList<Matrix>();
 
-        for (int i = 0; i < sequence.getColumnDimension(); i++)
+        for(int i = 0; i < sequence.getColumnDimension(); i++)
             myTransitions.add(getTransitionVector((int) sequence.get(0, i)));
     }
 
@@ -56,30 +56,28 @@ public class MyThread extends Thread {
     // ----------------------------------------Overrides----------------------------------------
 
     /**
-     * En este método, cada hilo tiene un indice que comienza en '0'
-     * e itera entre la cantidad de transiciones asociadas al hilo.
-     * Mientras no se haya concretado la condición de corte del programa,
-     * se arma un vector de disparo con el índice que indique el i-ésimo
-     * elemento obtenido del arreglo 'myTransitions'.
-     * Luego, se intenta tomar el mutex del monitor. Si no se logra, el hilo
-     * se encola en la entrada, cediendo el mutex. Si se logra entrar, se evalúa si
-     * la ecuación de estado es correcta (si la transición está sensibilizada).
-     * Si la transición no está sensibilizada, el hilo se encola en la
-     * transición que quiso disparar, cediendo el mutex.
-     * Si la transición está sensibilizada, el hilo no estuvo trabajando anteriormente
-     * pero hay un hilo trabajando en dicha transición (esperando el alfa de la misma),
-     * entonces se cede el mutex y el hilo se encola en la transición que quiso disparar.
-     * Si todas las condiciones para disparar se dan, entonces se procede a chequear si
-     * estamos en la ventana de tiempo para disparar la transición (entre alfa y beta).
-     * Si aún no pasó el tiempo alfa, el hilo cede el mutex, se lo setea como
-     * 'hilo trabajando' para evitar que otro hilo pueda intentar disparar esa transición
-     * para la cual él está esperando el alfa, y duerme durante el tiempo necesario
-     * para estar en la ventana de tiempo 'beta - alfa', teniendo que tomar el mutex
-     * del monitor cuando se despierte.
-     * Si estamos en la ventana de tiempo donde es posible disparar la transición, el hilo
-     * la dispara, se le quita el estado de 'hilo trabajando', y pasa a chequear si hay
-     * hilos encolados en transiciones sensibilizadas para llamar a la política o para
-     * simplemente ceder el mutex.
+     * En este método, cada hilo tiene un indice que comienza en '0' e itera entre
+     * la cantidad de transiciones asociadas al hilo. Mientras no se haya concretado
+     * la condición de corte del programa, se arma un vector de disparo con el
+     * índice que indique el i-ésimo elemento obtenido del arreglo 'myTransitions'.
+     * Luego, se intenta tomar el mutex del monitor. Si no se logra, el hilo se
+     * encola en la entrada, cediendo el mutex. Si se logra entrar, se evalúa si la
+     * ecuación de estado es correcta (si la transición está sensibilizada). Si la
+     * transición no está sensibilizada, el hilo se encola en la transición que
+     * quiso disparar, cediendo el mutex. Si la transición está sensibilizada, el
+     * hilo noestuvo trabajando anteriormente pero hay un hilo trabajando en dicha
+     * transición (esperando el alfa de la misma), entonces se cede el mutex y el
+     * hilo se encola en la transición que quiso disparar. Si todas las condiciones
+     * para disparar se dan, entonces se procede a chequear si estamos en la ventana
+     * de tiempo para disparar la transición (entre alfa y beta). Si aún no pasó el
+     * tiempo alfa, el hilo cede el mutex, se lo setea como 'hilo trabajando' para
+     * evitar que otro hilo pueda intentar disparar esa transición para la cual él
+     * está esperando el alfa, y duerme durante el tiempo necesario para estar en la
+     * ventana de tiempo 'beta - alfa', teniendo que tomar el mutex del monitor
+     * cuando se despierte. Si estamos en la ventana de tiempo donde es posible
+     * disparar la transición, el hilo la dispara, se le quita el estado de 'hilo
+     * trabajando', y pasa a chequear si hay hilos encolados en transiciones
+     * sensibilizadas para llamar a la política o para simplemente ceder el mutex.
      */
     @Override
     public void run() {
@@ -87,60 +85,79 @@ public class MyThread extends Thread {
 
         while(!monitor.getPetriNet().hasCompleted()) {
             firingVector = myTransitions.get(i);
-
-            try {
-                monitor.catchMonitor();
-                if(monitor.getPetriNet().hasCompleted()) break; /* Mientras estábamos peleando por el mutex puede que algún otro hilo
-                                                                   haya ejecutado una transición que haya hecho llegar a la condición
-                                                                   de corte del programa y, por lo tanto, hay que chequear si esto sucedió. */
-            } catch(InterruptedException e) {
-                e.printStackTrace();
-                System.out.println(Thread.currentThread().getId() + ": Error al entrar al monitor.");
-            }
-
-            if(!monitor.getPetriNet().stateEquationTest(firingVector)) {
-                monitor.exitMonitor();
-
-                wakeToQueue();
-
-                if(monitor.getPetriNet().hasCompleted()) break;
-            } else if(!working && monitor.getPetriNet().getWorkingVector().get(0, monitor.getIndexHigh(firingVector))==1) { /* Hacemos este chequeo para contemplar el caso en el que un hilo estuvo esperando
-                                                                                                                               el tiempo alfa y ahora DEBE disparar la transición para la cual estuvo esperando. */
-                monitor.exitMonitor();
-
-                wakeToQueue();
-                
-                if(monitor.getPetriNet().hasCompleted()) break;
-            }
             
-            if(!monitor.alphaTimeCheck(firingVector)) {
-                monitor.exitMonitor();
-
+            System.out.println(Thread.currentThread().getId() + ": Quiero disparar T" + monitor.getIndex(firingVector));
+            
+            if(monitor.tryFiring(firingVector)) {
+                i++;
+                if(i>=myTransitions.size()) i = 0;
+            } else {
                 try {
-                    monitor.getPetriNet().getWorkingVector().set(0, monitor.getIndexHigh(firingVector), 1);
-                    working = true;
+                    System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime());
                     sleep(monitor.getWorkingTime());
                 } catch(InterruptedException e) {
                     e.printStackTrace();
-                    System.out.println(Thread.currentThread().getId() + ": Error en tiempo de sleep");
                 }
-
-                continue;
             }
-
-            monitor.getPetriNet().fireTransition(firingVector);
-
-            working = false;
-                    
-            Matrix EandW = monitor.getAnd();
-
-            monitor.waitingCheck(EandW);
-            
-            i++;
-            
-            if(i>=myTransitions.size()) i=0; //Si ya cumplí la secuencia de disparos asociada, reseteo el índice para comenzarla nuevamente.
         }
     }
+
+        // while(!monitor.getPetriNet().hasCompleted()) {
+        //     firingVector = myTransitions.get(i);
+
+        //     try {
+        //         monitor.catchMonitor();
+        //         if(monitor.getPetriNet().hasCompleted()) break; /* Mientras estábamos peleando por el mutex puede que algún otro hilo
+        //                                                            haya ejecutado una transición que haya hecho llegar a la condición
+        //                                                            de corte del programa y, por lo tanto, hay que chequear si esto sucedió. */
+        //     } catch(InterruptedException e) {
+        //         e.printStackTrace();
+        //         System.out.println(Thread.currentThread().getId() + ": Error al entrar al monitor.");
+        //     }
+
+        //     if(!monitor.getPetriNet().stateEquationTest(firingVector)) {
+        //         monitor.exitMonitor();
+
+        //         wakeToQueue();
+
+        //         if(monitor.getPetriNet().hasCompleted()) break;
+        //     } else if(!working && monitor.getPetriNet().getWorkingVector().get(0, monitor.getIndexHigh(firingVector))==1) { /* Hacemos este chequeo para contemplar el caso en el que un hilo estuvo esperando
+        //                                                                                                                        el tiempo alfa y ahora DEBE disparar la transición para la cual estuvo esperando. */
+        //         monitor.exitMonitor();
+
+        //         wakeToQueue();
+                
+        //         if(monitor.getPetriNet().hasCompleted()) break;
+        //     }
+            
+        //     if(!monitor.alphaTimeCheck(firingVector)) {
+        //         monitor.exitMonitor();
+
+        //         try {
+        //             monitor.getPetriNet().getWorkingVector().set(0, monitor.getIndexHigh(firingVector), 1);
+        //             working = true;
+        //             sleep(monitor.getWorkingTime());
+        //         } catch(InterruptedException e) {
+        //             e.printStackTrace();
+        //             System.out.println(Thread.currentThread().getId() + ": Error en tiempo de sleep");
+        //         }
+
+        //         continue;
+        //     }
+
+        //     monitor.getPetriNet().fireTransition(firingVector);
+
+        //     working = false;
+                    
+        //     Matrix EandW = monitor.getAnd();
+
+        //     monitor.waitingCheck(EandW);
+            
+        //    i++;
+            
+        //    if(i>=myTransitions.size()) i=0; //Si ya cumplí la secuencia de disparos asociada, reseteo el índice para comenzarla nuevamente.
+        //}
+    
 
     // ----------------------------------------Otros--------------------------------------------
 
@@ -163,12 +180,12 @@ public class MyThread extends Thread {
     /**
      * Este método encola el hilo en la transición que quiso disparar.
      */
-    public void wakeToQueue() {
+  /*  public void wakeToQueue() {
         try {
             monitor.getConditionQueues().get(monitor.getIndexHigh(firingVector)).acquire();
         } catch(Exception e) {
             e.printStackTrace();
             System.out.println(Thread.currentThread().getId() + ": Error al encolar un hilo.");
         }
-    }
+    }*/
 }

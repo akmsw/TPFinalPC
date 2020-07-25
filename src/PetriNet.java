@@ -12,8 +12,7 @@ public class PetriNet {
 
     //Campos privados.
     private Object lock;
-    private int lastFiredTransition, totalFired;
-    private int stopCondition;
+    private int lastFiredTransition, totalFired, stopCondition;
     private double[] auxVector = {};
     private Matrix incidence, incidenceBackwards; //Matrices a utilizar.
     private Matrix initialMarking, currentMarking; //Vectores relativos al marcado de la red.
@@ -198,6 +197,17 @@ public class PetriNet {
     }
 
     /**
+     * En este método se setea un '1' en la posición correspondiente
+     * a la transición en la que el hilo está trabajando para evitar
+     * que hayan dos o más hilos trabajando en una misma transición.
+     * 
+     * @param firingVector El vecto de disparo del hilo.
+     */
+    public void setWorkingVector(Matrix firingVector, int value) {
+        this.workingVector.set(0, getIndex(firingVector), value); //Se setea un "1" que indica que se está trabajando (tiempo alfa) en esa transicion
+    }
+
+    /**
      * Este método recorre la matriz de incidencia 'backwards' chequeando si
      * la columna (transición) está sensibilizada (el peso de cada arco es menor
      * o igual a la cantidad de tokens de la plaza). Seteamos un '1' en el índice
@@ -260,18 +270,18 @@ public class PetriNet {
 
         lastFiredTransition = getIndex(firingVector);
 
-        getWorkingVector().set(0, getIndex(firingVector), 0);
+        setWorkingVector(firingVector, 0);
 
-        synchronized(lock) {
-            lock.notify();
+        // synchronized(lock) {
+        //     lock.notify();
 
-            try {
-                lock.wait();
-            } catch(InterruptedException e) {
-                e.printStackTrace();
-                System.out.println("Interrupción en la espera del hilo Log.");
-            }
-        }
+        //     try {
+        //         lock.wait();
+        //     } catch(InterruptedException e) {
+        //         e.printStackTrace();
+        //         System.out.println("Interrupción en la espera del hilo Log.");
+        //     }
+        // }
         
         setEnabledTransitions();
 
@@ -281,7 +291,7 @@ public class PetriNet {
     /**
      * Este método calcula la ecuación de estado.
      * 
-     * @param firingVectorEl vector de disparo del hilo.
+     * @param firingVector El vector de disparo del hilo.
      * @return El resultado de la ecuación de estado.
      */
     public Matrix stateEquation(Matrix firingVector) {

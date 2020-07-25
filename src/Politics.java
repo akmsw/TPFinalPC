@@ -44,8 +44,8 @@ public class Politics {
         for(int i=0; i<and.getColumnDimension(); i++)
             if(and.get(0,i)>0) indexes.add(i);
         
-       int choice = (int)Math.round(randomGenerator.nextInt(indexes.size()));
-       int indexChosen = (int)Math.round(indexes.get(choice));
+        int choice = (int)Math.round(randomGenerator.nextInt(indexes.size()));
+        int indexChosen = (int)Math.round(indexes.get(choice));
 
         return indexChosen;
     }
