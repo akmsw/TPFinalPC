@@ -39,6 +39,7 @@ public class MyThread extends Thread {
 
     // ----------------------------------------Getters------------------------------------------
 
+
     /**
      * @return El vector de disparo del hilo.
      */
@@ -83,7 +84,7 @@ public class MyThread extends Thread {
     public void run() {
         int i = 0;
 
-        while(!monitor.getPetriNet().hasCompleted()) {
+        while(!monitor.hasCompleted()) {
             firingVector = myTransitions.get(i);
             
            // System.out.println(Thread.currentThread().getId() + ": Quiero disparar T" + monitor.getIndex(firingVector));
@@ -93,9 +94,10 @@ public class MyThread extends Thread {
                 if(i>=myTransitions.size()) i = 0;
             } else {
                 try {
-                    if(monitor.getPetriNet().hasCompleted()) break;
+                    if(monitor.hasCompleted()) break;
 
                //     System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime());
+                    
                     sleep(monitor.getWorkingTime());
                 } catch(InterruptedException e) {
                     e.printStackTrace();
@@ -180,16 +182,4 @@ public class MyThread extends Thread {
         
         return vector;
     }
-
-    /**
-     * Este método encola el hilo en la transición que quiso disparar.
-     */
-  /*  public void wakeToQueue() {
-        try {
-            monitor.getConditionQueues().get(monitor.getIndexHigh(firingVector)).acquire();
-        } catch(Exception e) {
-            e.printStackTrace();
-            System.out.println(Thread.currentThread().getId() + ": Error al encolar un hilo.");
-        }
-    }*/
 }

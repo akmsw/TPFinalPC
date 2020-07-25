@@ -31,12 +31,33 @@ public class ConditionQueues {
             conditionQueues.add(new Semaphore(0));
     }
 
+    // ----------------------------------------Métodos públicos---------------------------------
+
+    // ----------------------------------------Getters------------------------------------------
+
     /**
      * @return Conjunto de colas de condición de las transiciones.
      */
     public ArrayList<Semaphore> getConditionQueues() {
         return conditionQueues;
     }
+
+    /**
+     * @param firingVector El vector de disparo del hilo.
+     * @return La cola correspondiente a la transición que se quiso disparar.
+     */
+    public int getQueue(Matrix firingVector) {
+        int index = 0;
+
+        for(int i = 0; i < firingVector.getColumnDimension(); i++) {
+            if(firingVector.get(0, i) == 1) break;
+            else index++;
+        }
+
+        return index;
+    }
+
+    // ----------------------------------------Otros--------------------------------------------
 
      /**
      * En este método se calcula un vector que almacena las transiciones
@@ -58,21 +79,6 @@ public class ConditionQueues {
     }
 
     /**
-     * @param firingVector El vector de disparo del hilo.
-     * @return La cola correspondiente a la transición que se quiso disparar.
-     */
-    public int getQueue(Matrix firingVector) {
-        int index = 0;
-
-        for(int i = 0; i < firingVector.getColumnDimension(); i++) {
-            if(firingVector.get(0, i) == 1) break;
-            else index++;
-        }
-
-        return index;
-    }
-
-     /**
      * En este método se chequea si hay hilos encolados en transiciones sensibilizadas.
      * Si hay más de una transición sensibilizada con al menos un hilo encolado en cada una,
      * se llama al objeto de tipo Politics para decidir a quién despertar y cederle el mutex
