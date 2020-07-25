@@ -105,63 +105,6 @@ public class MyThread extends Thread {
         System.out.println(Thread.currentThread().getId() + ": TERMINÓ MI RUN");
     }
 
-        // while(!monitor.getPetriNet().hasCompleted()) {
-        //     firingVector = myTransitions.get(i);
-
-        //     try {
-        //         monitor.catchMonitor();
-        //         if(monitor.getPetriNet().hasCompleted()) break; /* Mientras estábamos peleando por el mutex puede que algún otro hilo
-        //                                                            haya ejecutado una transición que haya hecho llegar a la condición
-        //                                                            de corte del programa y, por lo tanto, hay que chequear si esto sucedió. */
-        //     } catch(InterruptedException e) {
-        //         e.printStackTrace();
-        //         System.out.println(Thread.currentThread().getId() + ": Error al entrar al monitor.");
-        //     }
-
-        //     if(!monitor.getPetriNet().stateEquationTest(firingVector)) {
-        //         monitor.exitMonitor();
-
-        //         wakeToQueue();
-
-        //         if(monitor.getPetriNet().hasCompleted()) break;
-        //     } else if(!working && monitor.getPetriNet().getWorkingVector().get(0, monitor.getIndexHigh(firingVector))==1) { /* Hacemos este chequeo para contemplar el caso en el que un hilo estuvo esperando
-        //                                                                                                                        el tiempo alfa y ahora DEBE disparar la transición para la cual estuvo esperando. */
-        //         monitor.exitMonitor();
-
-        //         wakeToQueue();
-                
-        //         if(monitor.getPetriNet().hasCompleted()) break;
-        //     }
-            
-        //     if(!monitor.alphaTimeCheck(firingVector)) {
-        //         monitor.exitMonitor();
-
-        //         try {
-        //             monitor.getPetriNet().getWorkingVector().set(0, monitor.getIndexHigh(firingVector), 1);
-        //             working = true;
-        //             sleep(monitor.getWorkingTime());
-        //         } catch(InterruptedException e) {
-        //             e.printStackTrace();
-        //             System.out.println(Thread.currentThread().getId() + ": Error en tiempo de sleep");
-        //         }
-
-        //         continue;
-        //     }
-
-        //     monitor.getPetriNet().fireTransition(firingVector);
-
-        //     working = false;
-                    
-        //     Matrix EandW = monitor.getAnd();
-
-        //     monitor.waitingCheck(EandW);
-            
-        //    i++;
-            
-        //    if(i>=myTransitions.size()) i=0; //Si ya cumplí la secuencia de disparos asociada, reseteo el índice para comenzarla nuevamente.
-        //}
-    
-
     // ----------------------------------------Otros--------------------------------------------
 
     /**

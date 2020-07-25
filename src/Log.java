@@ -43,7 +43,7 @@ public class Log extends Thread {
 		this.monitor = monitor;
 		this.stepToLog = stepToLog;
 		this.lock = lock;
-		
+
 		transitionsSequence = new ArrayList<String>();
 
 		f = new File(fileName);
