@@ -13,7 +13,6 @@ import Jama.Matrix;
 public class MyThread extends Thread {
 
     // Campos privados.
-    private boolean working;
     private ArrayList<Matrix> myTransitions;
     private Matrix firingVector; // Este vector indica la transicion que se disparará o que se intentó disparar.
     private Monitor monitor;
@@ -26,8 +25,6 @@ public class MyThread extends Thread {
      */
     public MyThread(Matrix sequence, Monitor monitor) {
         this.monitor = monitor;
-
-        working = false;
 
         myTransitions = new ArrayList<Matrix>();
 

@@ -28,7 +28,6 @@ public class Log extends Thread {
 	private FileHandler FH;
 	private Logger logger;
 	private Monitor monitor;
-	private Matrix tInvariants;
 
 	/**
 	 * Constructor.
@@ -44,8 +43,7 @@ public class Log extends Thread {
 		this.monitor = monitor;
 		this.stepToLog = stepToLog;
 		this.lock = lock;
-		this.tInvariants = tInvariants;
-
+		
 		transitionsSequence = new ArrayList<String>();
 
 		f = new File(fileName);
@@ -85,17 +83,9 @@ public class Log extends Thread {
 					"\nSTART LOGGING" + 
 					"\n------------------------------------------------------------------------------");
 
-		Matrix initialMark, currentMark, aux;
-
-		boolean transitionInvariant;
-
 		int transitionInvariantsAmount = 0;
 
-		initialMark = monitor.getPetriNet().getInitialMarkingVector();
-
 		while(!monitor.getPetriNet().hasCompleted()) {
-			transitionInvariant = true;
-			
 			synchronized(lock) {
 				try {
 					lock.wait();
@@ -104,24 +94,8 @@ public class Log extends Thread {
 					System.out.println("Error en espera en el log.");
 				}
 			}
-
-			currentMark = monitor.getPetriNet().getCurrentMarkingVector();
-
-			/*aux = initialMark.minus(currentMark);
-
-			for(int i=0; i<aux.getColumnDimension(); i++)
-				if(aux.get(0, i)!=0) {
-					transitionInvariant = false;
-					break;
-				}*/
 			
 			transitionsSequence.add("T" + monitor.getPetriNet().getLastFiredTransition() + "");
-			
-			/*if(transitionInvariant) {
-				System.out.println("SE VOLVIÓ AL MARCADO INICIAL");
-				transitionsSequence.add("#");
-				transitionInvariantsAmount++;
-			}*/
 			
 			monitor.getPetriNet().checkPlacesInvariants();
 
@@ -134,6 +108,15 @@ public class Log extends Thread {
 				lock.notify();
 			}
 		}
+
+		Matrix finalMarkingVector = monitor.getPetriNet().getCurrentMarkingVector();
+		
+		String finalMarking = "[ ";
+
+		for(int i=0; i<finalMarkingVector.getColumnDimension(); i++)
+			finalMarking += (int)finalMarkingVector.get(0,i) + " ";
+		
+		finalMarking += "]";
 		
 		logger.info("Se completaron exitosamente " + monitor.getPetriNet().getStopCondition() + " tareas." + 
 					"\n" + monitor.getPetriNet().getMemoriesLoad() + 
@@ -143,7 +126,8 @@ public class Log extends Thread {
 		
 		logger.info(transitionsSequence.toString());
 
-		logger.info("------------------------------------------------------------------------------" + 
+		logger.info("Marcado final:\n" + finalMarking + "\n" +
+					"------------------------------------------------------------------------------" + 
 					"\nFINISH LOGGING" + 
 					"\n------------------------------------------------------------------------------");
 
@@ -153,5 +137,7 @@ public class Log extends Thread {
 		
 		if(monitor.getEntryQueue().hasQueuedThreads())
 			monitor.getEntryQueue().release(monitor.getEntryQueue().getQueueLength());
+		
+		//TODO: Regex mode
 	}
 }
