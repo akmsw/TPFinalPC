@@ -96,14 +96,14 @@ public class Log extends Thread {
 		while(!monitor.getPetriNet().hasCompleted()) {
 			transitionInvariant = true;
 			
-			// synchronized(lock) {
-			// 	try {
-			// 		lock.wait();
-			// 	} catch(InterruptedException e) {
-			// 		e.printStackTrace();
-			// 		System.out.println("Error en espera en el log.");
-			// 	}
-			// }
+			synchronized(lock) {
+				try {
+					lock.wait();
+				} catch(InterruptedException e) {
+					e.printStackTrace();
+					System.out.println("Error en espera en el log.");
+				}
+			}
 
 			currentMark = monitor.getPetriNet().getCurrentMarkingVector();
 
@@ -130,9 +130,9 @@ public class Log extends Thread {
 							"\n" + monitor.getPetriNet().getProcessorsLoad() +
 							"\n" + monitor.getPetriNet().getProcessorsTasks() );	
 
-			// synchronized(lock) {
-			// 	lock.notify();
-			// }
+			synchronized(lock) {
+				lock.notify();
+			}
 		}
 		
 		logger.info("Se completaron exitosamente " + monitor.getPetriNet().getStopCondition() + " tareas." + 

@@ -178,15 +178,15 @@ public class Monitor {
      */
     public boolean tryFiring(Matrix firingVector) {
         try {
-            System.out.println(Thread.currentThread().getId() + ": Intento Cachear monitor");
+     //       System.out.println(Thread.currentThread().getId() + ": Intento Cachear monitor");
             catchMonitor();
-            System.out.println(Thread.currentThread().getId() + ": Cachie el monitor");
+    //        System.out.println(Thread.currentThread().getId() + ": Cachie el monitor");
         } catch(InterruptedException e) {
             e.printStackTrace();
         }
 
-        if(!pNet.stateEquationTest(firingVector)) {
-            System.out.println(Thread.currentThread().getId() + ": La transicion no esta sensibilizada, me voy a la cola de T" + getIndex(firingVector));
+        if(!pNet.stateEquationTest(firingVector) || pNet.somebodyIsWorkingOn(firingVector)) {
+      //      System.out.println(Thread.currentThread().getId() + ": No están dadas las condiciones para disparar, me voy a la cola de T" + getIndex(firingVector));
             
             exitMonitor();
             
@@ -198,17 +198,19 @@ public class Monitor {
                 e.printStackTrace();
             }
 
-            System.out.println(Thread.currentThread().getId() + ": Me despertaron, voy a disparar T" + getIndex(firingVector));            
+         //   System.out.println(Thread.currentThread().getId() + ": Me despertaron, voy a disparar T" + getIndex(firingVector));            
         }
 
-        System.out.println(Thread.currentThread().getId() + ": T" + getIndex(firingVector) + " esta sensibilizada" );
+      //  System.out.println(Thread.currentThread().getId() + ": T" + getIndex(firingVector) + " esta sensibilizada" );
 
-        if(alphaTimeCheck(firingVector)) { //nobody's working on(shereng)
+        if(pNet.hasCompleted()) return false;
+
+        if(alphaTimeCheck(firingVector)) {
             pNet.fireTransition(firingVector);
-            System.out.println(Thread.currentThread().getId() + ": Se disparo exitosamente T" + getIndex(firingVector));
+          //  System.out.println(Thread.currentThread().getId() + ": Se disparo exitosamente T" + getIndex(firingVector));
         } else {
-            System.out.println(Thread.currentThread().getId() + ": No paso alfa, salgo para trabajar");
-            pNet.setWorkingVector(firingVector, 1);
+         //   System.out.println(Thread.currentThread().getId() + ": No paso alfa, salgo para trabajar");
+            pNet.setWorkingVector(firingVector, (double)Thread.currentThread().getId());
             exitMonitor();
             return false;
         }

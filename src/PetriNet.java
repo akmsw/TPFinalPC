@@ -197,13 +197,15 @@ public class PetriNet {
     }
 
     /**
-     * En este método se setea un '1' en la posición correspondiente
-     * a la transición en la que el hilo está trabajando para evitar
-     * que hayan dos o más hilos trabajando en una misma transición.
+     * En este método se setea si hay alguien trabajando (y su ID)
+     * en la posición correspondiente a la transición en la que el hilo
+     * está trabajando para evitar que hayan dos o más hilos trabajando
+     * en una misma transición.
      * 
      * @param firingVector El vecto de disparo del hilo.
+     * @param value El valor a almacenar en dicha posición.
      */
-    public void setWorkingVector(Matrix firingVector, int value) {
+    public void setWorkingVector(Matrix firingVector, double value) {
         this.workingVector.set(0, getIndex(firingVector), value); //Se setea un "1" que indica que se está trabajando (tiempo alfa) en esa transicion
     }
 
@@ -235,6 +237,19 @@ public class PetriNet {
     }
 
     // ----------------------------------------Otros--------------------------------------------
+
+    /**
+     * @param firingVector El vector de firing actual del hilo.
+     * @return Si hay algún hilo trabajando su tiempo alfa en una transición.
+     */
+    public boolean somebodyIsWorkingOn(Matrix firingVector)
+    {
+        int index = getIndex(firingVector);
+
+        if(workingVector.get(0, index) == 0) return false;
+        else if(workingVector.get(0,index)!=Thread.currentThread().getId()) return true;
+        else return false;
+    }
 
     /**
      * Este método testea si es posible realizar el disparo de la transición
@@ -272,16 +287,16 @@ public class PetriNet {
 
         setWorkingVector(firingVector, 0);
 
-        // synchronized(lock) {
-        //     lock.notify();
+        synchronized(lock) {
+            lock.notify();
 
-        //     try {
-        //         lock.wait();
-        //     } catch(InterruptedException e) {
-        //         e.printStackTrace();
-        //         System.out.println("Interrupción en la espera del hilo Log.");
-        //     }
-        // }
+            try {
+                lock.wait();
+            } catch(InterruptedException e) {
+                e.printStackTrace();
+                System.out.println("Interrupción en la espera del hilo Log.");
+            }
+        }
         
         setEnabledTransitions();
 

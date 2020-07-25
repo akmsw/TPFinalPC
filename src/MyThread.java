@@ -86,20 +86,24 @@ public class MyThread extends Thread {
         while(!monitor.getPetriNet().hasCompleted()) {
             firingVector = myTransitions.get(i);
             
-            System.out.println(Thread.currentThread().getId() + ": Quiero disparar T" + monitor.getIndex(firingVector));
+           // System.out.println(Thread.currentThread().getId() + ": Quiero disparar T" + monitor.getIndex(firingVector));
             
             if(monitor.tryFiring(firingVector)) {
                 i++;
                 if(i>=myTransitions.size()) i = 0;
             } else {
                 try {
-                    System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime());
+                    if(monitor.getPetriNet().hasCompleted()) break;
+
+               //     System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime());
                     sleep(monitor.getWorkingTime());
                 } catch(InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
+
+        System.out.println(Thread.currentThread().getId() + ": TERMINÓ MI RUN");
     }
 
         // while(!monitor.getPetriNet().hasCompleted()) {
