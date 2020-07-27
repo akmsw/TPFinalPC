@@ -123,7 +123,7 @@ public class Log extends Thread {
 					"\n" + monitor.getPetriNet().getProcessorsLoad() + 
 					"\n" + monitor.getPetriNet().getProcessorsTasks() +
 					"\nSe dispararon "+ (transitionsSequence.size()-transitionInvariantsAmount) + " transiciones.");
-		
+		transitionsSequence.add("");
 		logger.info(transitionsSequence.toString());
 
 		logger.info("Marcado final:\n" + finalMarking + "\n" +
