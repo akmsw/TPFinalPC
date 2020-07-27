@@ -157,7 +157,7 @@ public class MainLauncher {
     public static void main(String args[]) {
         Matrix incidence = new Matrix(incidenceArray);
         Matrix incidenceBackwards = new Matrix(incidenceBackwardsArray);
-        Matrix initialMarking = new Matrix(iMark, 1); // '1' es la cantidad de filas que quiero en la matriz.
+        Matrix initialMarking = new Matrix(iMark, 1); //'1' es la cantidad de filas que quiero en la matriz.
         Matrix placesInvariants = new Matrix(pInvariants);
         Matrix transitionInvariants = new Matrix(tInvariants);
         Matrix alphaTimes = new Matrix(alphaTimesA, 1);

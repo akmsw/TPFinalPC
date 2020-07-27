@@ -58,24 +58,7 @@ public class MyThread extends Thread {
      * la cantidad de transiciones asociadas al hilo. Mientras no se haya concretado
      * la condición de corte del programa, se arma un vector de disparo con el
      * índice que indique el i-ésimo elemento obtenido del arreglo 'myTransitions'.
-     * Luego, se intenta tomar el mutex del monitor. Si no se logra, el hilo se
-     * encola en la entrada, cediendo el mutex. Si se logra entrar, se evalúa si la
-     * ecuación de estado es correcta (si la transición está sensibilizada). Si la
-     * transición no está sensibilizada, el hilo se encola en la transición que
-     * quiso disparar, cediendo el mutex. Si la transición está sensibilizada, el
-     * hilo noestuvo trabajando anteriormente pero hay un hilo trabajando en dicha
-     * transición (esperando el alfa de la misma), entonces se cede el mutex y el
-     * hilo se encola en la transición que quiso disparar. Si todas las condiciones
-     * para disparar se dan, entonces se procede a chequear si estamos en la ventana
-     * de tiempo para disparar la transición (entre alfa y beta). Si aún no pasó el
-     * tiempo alfa, el hilo cede el mutex, se lo setea como 'hilo trabajando' para
-     * evitar que otro hilo pueda intentar disparar esa transición para la cual él
-     * está esperando el alfa, y duerme durante el tiempo necesario para estar en la
-     * ventana de tiempo 'beta - alfa', teniendo que tomar el mutex del monitor
-     * cuando se despierte. Si estamos en la ventana de tiempo donde es posible
-     * disparar la transición, el hilo la dispara, se le quita el estado de 'hilo
-     * trabajando', y pasa a chequear si hay hilos encolados en transiciones
-     * sensibilizadas para llamar a la política o para simplemente ceder el mutex.
+     * Luego, se intenta disparar la misma por medio del monitor.
      */
     @Override
     public void run() {
@@ -86,7 +69,7 @@ public class MyThread extends Thread {
             
            // System.out.println(Thread.currentThread().getId() + ": Quiero disparar T" + monitor.getIndex(firingVector));
             
-            if(monitor.tryFiring(firingVector)) {
+            if(monitor.tryFiring(firingVector)){
                 i++;
                 if(i>=myTransitions.size()) i = 0;
             } else {
@@ -102,7 +85,7 @@ public class MyThread extends Thread {
             }
         }
 
-        System.out.println(Thread.currentThread().getId() + ": TERMINÓ MI RUN");
+        System.out.println(Thread.currentThread().getId() + ": Terminó mi run()");
     }
 
     // ----------------------------------------Otros--------------------------------------------

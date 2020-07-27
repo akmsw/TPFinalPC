@@ -140,11 +140,12 @@ public class PetriNet {
 
     /**
      * Este método devuelve el índice donde está el '1' en el
-     * vector de disparo del hilo (el índice de la transición que
-     * se quiere disparar).
+     * vector que recibe como parámetro. Si el vector recibido
+     * es un vector de disparo, se devuelve el índice de la
+     * transición a disparar.
      * 
      * @param vector El vector donde se buscará el índice de la transición a disparar.
-     * @return Índice de la transición a disparar.
+     * @return El índice de la transición a disparar.
      */
     public int getIndex(Matrix vector) {
         int index = 0;
@@ -182,15 +183,20 @@ public class PetriNet {
     // ----------------------------------------Setters------------------------------------------
 
     /**
-     * @param currentMarking El vector de marcado actual de la red de Petri.
+     * Este método cambia el vector de marcado actual de la red de Petri.
+     * 
+     * @param currentMarking El nuevo vector de marcado de la red de Petri.
      */
     public void setCurrentMarkingVector(Matrix currentMarking) {
         this.currentMarking = currentMarking;
     }
 
     /**
-     * @param index Índice de la transición que está sensibilizada.
-     * @param time Instante de tiempo en el que se sensibilizó la transición.
+     * Este método setea el instante de tiempo en el que se
+     * sensibiliza la transición cuyo índice es el recibido por parámetro.
+     * 
+     * @param index El índice de la transición que está sensibilizada.
+     * @param time El instante de tiempo en el que se sensibilizó la transición.
      */
     public void setEnabledAtTime(int index, long time) {
         enabledAtTime.set(0, index, (double)time);
@@ -239,11 +245,13 @@ public class PetriNet {
     // ----------------------------------------Otros--------------------------------------------
 
     /**
+     * Este método chequea si hay alguien trabajando en la transición que
+     * el hilo quiere disparar.
+     * 
      * @param firingVector El vector de firing actual del hilo.
      * @return Si hay algún hilo trabajando su tiempo alfa en una transición.
      */
-    public boolean somebodyIsWorkingOn(Matrix firingVector)
-    {
+    public boolean somebodyIsWorkingOn(Matrix firingVector) {
         int index = getIndex(firingVector);
 
         if(workingVector.get(0, index) == 0) return false;
@@ -297,6 +305,7 @@ public class PetriNet {
                 System.out.println("Interrupción en la espera del hilo Log.");
             }
         }
+        checkPlacesInvariants();
         
         setEnabledTransitions();
 

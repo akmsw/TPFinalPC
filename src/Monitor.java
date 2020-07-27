@@ -92,12 +92,32 @@ public class Monitor {
     }
 
     /**
-     * @param firingVector Vector de disparo del hilo.
+     * En este método se comienza tomando el mutex del monitor. Luego, mientras
+     * no se haya llegado a la condición de corte del programa, se chequea si
+     * la ecuación de estado da un resultado correcto y si además no hay nadie
+     * trabajando en la transición que el hilo quiere disparar. Si se dan las
+     * condiciones, se chequea el tiempo 'alfa' de la transición para ver si el
+     * hilo debería ir a dormir o no, y luego se dispara la transición. Si el hilo
+     * se debe ir a dormir, entonces se toma el índice i de la transición y se setea
+     * en '1' el i-ésimo elemento del vector de trabajo para indicar que ya hay
+     * alguien trabajando en esa transición y no debe meterse otro hilo. Luego de esto,
+     * el hilo libera el mutex para ir a dormir fuera del monitor.
+     * Antes de que el hilo libere el mutex del monitor, se chequea si hay algún hilo
+     * esperando en la cola de alguna transición sensibilizada. Si es así, se le pasa
+     * el mutex (si hay más de un hilo en estas condiciones se llama al objeto de tipo
+     * Politics y se decide de manera aleatoria uniforme). Si no hay nadie en esas condiciones,
+     * se libera el mutex del monitor.
+     * Cabe aclarar que antes de hacer el disparo de alguna transición se chequea nuevamente
+     * si se llegó a la condición de corte del programa, dado que puede darse el caso en el que
+     * mientras un hilo estaba durmiendo, otros hilos pueden haber ejecutado otras transiciones
+     * que hicieron llegar a la condición de corte del programa.
+     * 
+     * @param firingVector El vector de disparo del hilo.
      * @return Si la transición pudo ser disparada o no.
      */
     public boolean tryFiring(Matrix firingVector) {
         try {
-            catchMonitor();
+            catchMonitor(); //A partir de este punto, sólo un hilo continúa con la ejecución de este método porque catchMonitor() es synchronized.
   //          System.out.println(Thread.currentThread().getId() + ": Cachie el monitor");
         } catch(InterruptedException e) {
             e.printStackTrace();
@@ -152,6 +172,11 @@ public class Monitor {
     // ----------------------------------------Getters------------------------------------------
 
     /**
+     * Este método devuelve el índice donde está el '1' en el
+     * vector que recibe como parámetro. Si el vector recibido
+     * es un vector de disparo, se devuelve el índice de la
+     * transición a disparar.
+     * 
      * @param vector El vector donde se buscará el índice de la transición a disparar.
      * @return El índice de la transición a disparar.
      */
@@ -191,7 +216,6 @@ public class Monitor {
      * Este método calcula la cantidad de transiciones sensibilizadas que tienen
      * hilos esperando en sus colas.
      * 
-     * @see #getAnd()
      * @param and El vector resultado de la operación 'and'.
      * @return La cantidad de transiciones sensibilizadas en la red con hilos
      *         encolados.
