@@ -79,7 +79,7 @@ public class Monitor {
      * @throws InterruptedException Si el hilo que quiso hacer el acquire fue
      *                              interrumpido en el proceso.
      */
-    public synchronized void catchMonitor() throws InterruptedException {
+    public void catchMonitor() throws InterruptedException {
      //   System.out.println(Thread.currentThread().getId() + ": Intento Cachear monitor");
         entry.acquire();
     }
