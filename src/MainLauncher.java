@@ -13,7 +13,7 @@ import Jama.Matrix;
 public class MainLauncher {
 
     //Campos constantes privados.
-    private static final int stopCondition = 5; //Cantidad de tareas que se tienen que finalizar para terminar la ejecución del programa.
+    private static final int stopCondition = 1000; //Cantidad de tareas que se tienen que finalizar para terminar la ejecución del programa.
     private static final int stepToLog = 50; //Cada cuántas tareas se chequea el balance de carga en procesadores y memorias.
 
     //Campos privados.
@@ -124,14 +124,16 @@ public class MainLauncher {
 
     private static ArrayList<Matrix> threadPaths;
 
-    private static double[] p0 = { 0, 1, 3, 5, 9, 15 };
-    private static double[] p1 = { 0, 1, 3, 5, 10, 16 };
-    private static double[] p2 = { 0, 2, 4, 6, 11, 15 };
-    private static double[] p3 = { 0, 2, 4, 6, 12, 16 };
-    private static double[] p4 = { 0, 1, 3, 13, 7, 9, 15 };
-    private static double[] p5 = { 0, 1, 3, 13, 7, 10, 16 };
-    private static double[] p6 = { 0, 2, 4, 14, 8, 11, 15 };
-    private static double[] p7 = { 0, 2, 4, 14, 8, 12, 16 };
+    private static double[] p0 = {1, 3, 5, 9, 15 };
+    private static double[] p1 = {1, 3, 5, 10, 16 };
+    private static double[] p2 = {2, 4, 6, 11, 15 };
+    private static double[] p3 = {2, 4, 6, 12, 16 };
+    private static double[] p4 = {1, 3, 13, 7, 9, 15 };
+    private static double[] p5 = {1, 3, 13, 7, 10, 16 };
+    private static double[] p6 = {2, 4, 14, 8, 11, 15 };
+    private static double[] p7 = {2, 4, 14, 8, 12, 16 };
+    private static double[] p8 = {0};
+
      
     private static Matrix path1 = new Matrix(p0, 1);
     private static Matrix path2 = new Matrix(p1, 1);
@@ -141,6 +143,7 @@ public class MainLauncher {
     private static Matrix path6 = new Matrix(p5, 1);
     private static Matrix path7 = new Matrix(p6, 1);
     private static Matrix path8 = new Matrix(p7, 1);
+    private static Matrix path9 = new Matrix(p8, 1);
 
     //Los betas los tomamos como infinitos para que no se desensibilicen las transiciones.
     private static double[] alphaTimesA = { 2, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 7, 7, 4, 4 }; //Alfas de las transiciones.
@@ -162,10 +165,9 @@ public class MainLauncher {
         Matrix placesInvariants = new Matrix(pInvariants);
         Matrix transitionInvariants = new Matrix(tInvariants);
         Matrix alphaTimes = new Matrix(alphaTimesA, 1);
+        Object lock = new Object();
 
         threadPaths = new ArrayList<Matrix>();
-
-        Object lock = new Object();
 
         threadPaths.add(path1);
         threadPaths.add(path2);
@@ -175,6 +177,7 @@ public class MainLauncher {
         threadPaths.add(path6);
         threadPaths.add(path7);
         threadPaths.add(path8);
+        threadPaths.add(path9);
 
         pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, alphaTimes, stopCondition, lock);
 

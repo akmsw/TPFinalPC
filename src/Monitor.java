@@ -43,7 +43,7 @@ public class Monitor {
     // ----------------------------------------Getters------------------------------------------
 
     /**
-     * @return El tiempo de espera de la transición a disparar.
+     * @return El tiempo de espera para disparar una transición.
      */
     public long getWorkingTime() {
         if(workingTime<0) return 0;
@@ -85,7 +85,7 @@ public class Monitor {
     }
 
     /**
-     * @return Si se ha llegado a la condición de corte del programa.
+     * @return Si se ha llegado a la condición de corte del programa o no.
      */
     public boolean hasCompleted() {
         return pNet.hasCompleted();
@@ -231,7 +231,7 @@ public class Monitor {
 
     /**
      * Este método calcula la resta entre el tiempo de sensibilizado y el tiempo
-     * actual, para chequear si transcurrió el tiempo alfa y ya se puede disparar la
+     * actual para chequear si transcurrió el tiempo alfa y ya se puede disparar la
      * transición. Además, se setea el tiempo que debe esperar el hilo que quiere
      * disparar una transición cuyo alfa aún no ha transcurrido.
      * 

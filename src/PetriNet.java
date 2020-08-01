@@ -27,12 +27,12 @@ public class PetriNet {
 	 * Constructor.
 	 * 
      * @param incidence La matriz de incidencia de la red.
-     * @param incidenceBackwards Matriz 'backwards' de incidencia de la red.
+     * @param incidenceBackwards La matriz 'backwards' de incidencia de la red.
      * @param initialMarking El vector de marcado inicial de la red.
      * @param placesInvariants Los invariantes de plaza de la red.
      * @param alphaTimes Los tiempos 'alfa' asociados a cada transición.
-     * @param stopCondition Condición de corte del programa (cuántas tareas se deben finalizar para terminar el programa).
-     * @param lock Lock para sincronizar la escritura en el Log con el disparo de transiciones
+     * @param stopCondition La condición de corte del programa (cuántas tareas se deben finalizar para terminar el programa).
+     * @param lock El lock para sincronizar la escritura en el Log con el disparo de transiciones
      */
     public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes, int stopCondition, Object lock) {
         this.incidence = incidence;
@@ -338,8 +338,6 @@ public class PetriNet {
      * Para hacerlo, se itera en la matriz de invariantes de plaza comparándola con
      * las plazas del marcado actual, verificando si la cantidad de tokens encontrados
      * se corresponde con la cantidad de tokens que debería tener el invariante de plaza.
-     * 
-     * @return Si los invariantes de plaza se mantienen luego de cada disparo de cada transición.
      */
     public void checkPlacesInvariants() {
         int invariantAmount; //La cantidad de tokens que se mantiene invariante.

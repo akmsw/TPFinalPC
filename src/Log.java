@@ -32,11 +32,12 @@ public class Log extends Thread {
 	/**
 	 * Constructor.
 	 * 
-	 * @param fileName nombre del archivo log.
-	 * @param monitor Monitor que controla la red de Petri.
-	 * @param stepToLog Paso que se utilizará para escribir en el log
+	 * @param fileName El nombre del archivo log.
+	 * @param monitor El monitor que controla la red de Petri.
+	 * @param stepToLog El paso que se utilizará para escribir en el log
 	 * 					(cada cuántas transiciones disparadas escribiremos).
-	 * @param lock Lock que interactúa entre el Log y el hilo que disparó.
+	 * @param lock El lock que interactúa entre el Log y el hilo que disparó.
+	 * @param tInvariants Los invariantes de transición de la red.
 	 * @throws IOException Si hubo un error al crear el archivo log.
 	 */
 	public Log(String fileName, Monitor monitor, int stepToLog, Object lock, Matrix tInvariants) throws IOException {
@@ -137,7 +138,5 @@ public class Log extends Thread {
 		
 		if(monitor.getEntryQueue().hasQueuedThreads())
 			monitor.getEntryQueue().release(monitor.getEntryQueue().getQueueLength());
-		
-		//TODO: Regex mode
 	}
 }

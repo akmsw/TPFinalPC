@@ -36,7 +36,6 @@ public class MyThread extends Thread {
 
     // ----------------------------------------Getters------------------------------------------
 
-
     /**
      * @return El vector de disparo del hilo.
      */
