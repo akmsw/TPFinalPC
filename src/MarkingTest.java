@@ -40,7 +40,7 @@ public class MarkingTest {
 
         double[] leftT = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-        String leftTransitions = "0,1,0,2,0,2,0,1,0,2,0,1,0,2,0,4,1,0,14,8,";
+        String leftTransitions = "0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,4,1,0,6,";
         
         String aux = "";
 
@@ -48,7 +48,7 @@ public class MarkingTest {
             if(leftTransitions.charAt(i)!=',') {
                 aux = aux + leftTransitions.charAt(i);
             } else {
-                int index = (int)Integer.valueOf(aux);
+                int index = Integer.valueOf(aux);
                 leftT[index]++;
                 aux = "";
             }
