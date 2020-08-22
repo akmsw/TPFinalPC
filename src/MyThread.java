@@ -68,7 +68,7 @@ public class MyThread extends Thread {
             
            // System.out.println(Thread.currentThread().getId() + ": Quiero disparar T" + monitor.getIndex(firingVector));
             
-            if(monitor.tryFiring(firingVector)){
+            if(monitor.tryFiring(firingVector)) {
                 i++;
                 if(i>=myTransitions.size()) i = 0;
             } else {
@@ -77,7 +77,7 @@ public class MyThread extends Thread {
 
                //     System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime());
                     
-                    sleep(monitor.getWorkingTime());
+                    sleep(monitor.getWorkingTime(Thread.currentThread().getId()));
                 } catch(InterruptedException e) {
                     e.printStackTrace();
                 }

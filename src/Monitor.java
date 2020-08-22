@@ -6,6 +6,7 @@
  * @since 01/07/2020
  */
 
+import java.util.HashMap;
 import java.util.concurrent.Semaphore;
 
 import Jama.Matrix;
@@ -13,7 +14,7 @@ import Jama.Matrix;
 public class Monitor {
 
     // Campos privados.
-    private long workingTime;
+    private HashMap<Long,Long> workingTime;
     private ConditionQueues conditionQueues;
     private Semaphore entry;
     private PetriNet pNet;
@@ -36,6 +37,8 @@ public class Monitor {
         politics = new Politics();
 
         conditionQueues = new ConditionQueues(pNet.getIncidenceMatrix().getColumnDimension());
+
+        workingTime = new HashMap<Long,Long>();
     }
 
     // ----------------------------------------Métodos públicos---------------------------------
@@ -43,11 +46,13 @@ public class Monitor {
     // ----------------------------------------Getters------------------------------------------
 
     /**
+     * Este método retorna el tiempo de espera correspondiente al hilo que lo solicita.
+     * 
+     * @param id El identificador del hilo.
      * @return El tiempo de espera para disparar una transición.
      */
-    public long getWorkingTime() {
-        if(workingTime<0) return 0;
-        else return workingTime;
+    public synchronized long getWorkingTime(Long id) {
+        return workingTime.get(id);
     }
 
     /**
@@ -69,6 +74,18 @@ public class Monitor {
      */
     public Semaphore getEntryQueue() {
         return entry;
+    }
+
+    // ----------------------------------------Setters------------------------------------------
+
+    /**
+     * Este método almacena el tiempo de espera correspondiente a cada hilo.
+     * 
+     * @param id El identificador del hilo.
+     * @param timeEl tiempo de espera para disparar una transición.
+     */
+    public synchronized void setWorkingTime(Long id, Long time){
+        workingTime.put(id, time);
     }
 
     // ----------------------------------------Otros--------------------------------------------
@@ -149,7 +166,9 @@ public class Monitor {
         } else {
     //        System.out.println(Thread.currentThread().getId() + ": No paso alfa, salgo para trabajar");
             pNet.setWorkingVector(firingVector, (double)Thread.currentThread().getId());
+            
             exitMonitor();
+            
             return false;
         }
 
@@ -244,8 +263,10 @@ public class Monitor {
         long currentTime = System.currentTimeMillis();
         long enabledAtTime = (long) pNet.getEnabledAtTime().get(0, getIndex(firingVector));
 
-        workingTime = alpha - (currentTime - enabledAtTime);
-
-        return alpha < (currentTime - enabledAtTime);
+        if(alpha < (currentTime - enabledAtTime)) return true;
+        else {
+            setWorkingTime(Thread.currentThread().getId(),alpha - (currentTime - enabledAtTime));
+            return false;
+        }
     }
 }
