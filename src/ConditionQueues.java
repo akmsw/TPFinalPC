@@ -1,8 +1,9 @@
 /**
- * @author Luna, Lihué Leandro
- * @author Coronati, Federico Joaquín
- * @author Merino, Mateo
- * @author Bonino, Francisco Ignacio
+ * @author  Luna, Lihué Leandro
+ *          Coronati, Federico Joaquín
+ *          Merino, Mateo
+ *          Bonino, Francisco Ignacio
+ * 
  * @since 25/07/2020
  */
 
@@ -20,7 +21,7 @@ public class ConditionQueues {
     /**
      * Constructor.
      * 
-     * @param quantity Cantidad de colas a crear.
+     * @param   quantity    Cantidad de colas a crear.
      */
     public ConditionQueues(int quantity) {
         conditionQueues = new ArrayList<Semaphore>();
@@ -36,15 +37,16 @@ public class ConditionQueues {
     // ----------------------------------------Getters------------------------------------------
 
     /**
-     * @return El conjunto de colas de condición de las transiciones de la red.
+     * @return  El conjunto de colas de condición de las transiciones de la red.
      */
     public ArrayList<Semaphore> getConditionQueues() {
         return conditionQueues;
     }
 
     /** 
-     * @param firingVector El vector de disparo del hilo.
-     * @return La cola correspondiente a la transición que se quiso disparar.
+     * @param   firingVector    El vector de disparo del hilo.
+     * 
+     * @return  La cola correspondiente a la transición que se quiso disparar.
      */
     public int getQueue(Matrix firingVector) {
         int index = 0;
@@ -63,13 +65,13 @@ public class ConditionQueues {
      * En este método se calcula un vector que almacena las transiciones
      * que tienen hilos encolados.
      * 
-     * @return El vector de transiciones con hilos encolados.
+     * @return  El vector de transiciones con hilos encolados.
      */
     public Matrix whoAreQueued() {
         double[] aux = new double[this.quantity];
         
         for(Semaphore queue : conditionQueues) {
-            if(queue.hasQueuedThreads()) aux[conditionQueues.indexOf(queue)] = 1;    
+            if(queue.hasQueuedThreads()) aux[conditionQueues.indexOf(queue)] = 1;
             else aux[conditionQueues.indexOf(queue)] = 0;
         }
         

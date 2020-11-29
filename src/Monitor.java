@@ -1,8 +1,9 @@
 /**
- * @author Luna, Lihué Leandro
- * @author Coronati, Federico Joaquín
- * @author Merino, Mateo
- * @author Bonino, Francisco Ignacio
+ * @author  Luna, Lihué Leandro
+ *          Coronati, Federico Joaquín
+ *          Merino, Mateo
+ *          Bonino, Francisco Ignacio
+ * 
  * @since 01/07/2020
  */
 
@@ -18,23 +19,23 @@ public class Monitor {
     private ConditionQueues conditionQueues;
     private Semaphore entry;
     private PetriNet pNet;
-    private Politics politics;
+    private Policy Policy;
 
     /**
      * Constructor.
      * 
-     * Aquí se crea el objeto de tipo Politics que entrará en juego
+     * Aquí se crea el objeto de tipo Policy que entrará en juego
      * ante cualquier conflicto que se presente en la red y se crean las colas de
      * condición para las transiciones y la cola de entrada del monitor.
      * 
-     * @param pNet La red de Petri que será controlada por el monitor.
+     * @param   pNet    La red de Petri que será controlada por el monitor.
      */
     public Monitor(PetriNet pNet) {
         this.pNet = pNet;
 
         entry = new Semaphore(1, true);
 
-        politics = new Politics();
+        Policy = new Policy();
 
         conditionQueues = new ConditionQueues(pNet.getIncidenceMatrix().getColumnDimension());
 
@@ -48,29 +49,30 @@ public class Monitor {
     /**
      * Este método retorna el tiempo de espera correspondiente al hilo que lo solicita.
      * 
-     * @param id El identificador del hilo.
-     * @return El tiempo de espera para disparar una transición.
+     * @param   id  El identificador del hilo.
+     * 
+     * @return  El tiempo de espera para disparar una transición.
      */
     public synchronized long getWorkingTime(Long id) {
         return workingTime.get(id);
     }
 
     /**
-     * @return La red de Petri controlada por el monitor.
+     * @return  La red de Petri controlada por el monitor.
      */
     public PetriNet getPetriNet() {
         return pNet;
     }
 
     /**
-     * @return El conjunto de colas correspondientes a las transiciones de la red.
+     * @return  El conjunto de colas correspondientes a las transiciones de la red.
      */
     public ConditionQueues getConditionQueues() {
         return conditionQueues;
     }
 
     /**
-     * @return La cola de entrada del monitor.
+     * @return  La cola de entrada del monitor.
      */
     public Semaphore getEntryQueue() {
         return entry;
@@ -81,8 +83,8 @@ public class Monitor {
     /**
      * Este método almacena el tiempo de espera correspondiente a cada hilo.
      * 
-     * @param id El identificador del hilo.
-     * @param timeEl tiempo de espera para disparar una transición.
+     * @param   id      Identificador del hilo.
+     * @param   timeEl  Tiempo de espera para disparar una transición.
      */
     public synchronized void setWorkingTime(Long id, Long time){
         workingTime.put(id, time);
@@ -93,16 +95,16 @@ public class Monitor {
     /**
      * En este método se toma el mutex del monitor.
      * 
-     * @throws InterruptedException Si el hilo que quiso hacer el acquire fue
-     *                              interrumpido en el proceso.
+     * @throws  InterruptedException    Si el hilo que quiso hacer el acquire fue
+     *                                  interrumpido en el proceso.
      */
     public void catchMonitor() throws InterruptedException {
-     //   System.out.println(Thread.currentThread().getId() + ": Intento Cachear monitor");
+        //System.out.println(Thread.currentThread().getId() + ": Intento Cachear monitor");
         entry.acquire();
     }
 
     /**
-     * @return Si se ha llegado a la condición de corte del programa o no.
+     * @return  Si se ha llegado a la condición de corte del programa o no.
      */
     public boolean hasCompleted() {
         return pNet.hasCompleted();
@@ -122,26 +124,27 @@ public class Monitor {
      * Antes de que el hilo libere el mutex del monitor, se chequea si hay algún hilo
      * esperando en la cola de alguna transición sensibilizada. Si es así, se le pasa
      * el mutex (si hay más de un hilo en estas condiciones se llama al objeto de tipo
-     * Politics y se decide de manera aleatoria uniforme). Si no hay nadie en esas condiciones,
+     * Policy y se decide de manera aleatoria uniforme). Si no hay nadie en esas condiciones,
      * se libera el mutex del monitor.
      * Cabe aclarar que antes de hacer el disparo de alguna transición se chequea nuevamente
      * si se llegó a la condición de corte del programa, dado que puede darse el caso en el que
      * mientras un hilo estaba durmiendo, otros hilos pueden haber ejecutado otras transiciones
      * que hicieron llegar a la condición de corte del programa.
      * 
-     * @param firingVector El vector de disparo del hilo.
-     * @return Si la transición pudo ser disparada o no.
+     * @param   firingVector    El vector de disparo del hilo.
+     * 
+     * @return  Si la transición pudo ser disparada o no.
      */
     public boolean tryFiring(Matrix firingVector) {
         try {
             catchMonitor(); //A partir de este punto, sólo un hilo continúa con la ejecución de este método porque catchMonitor() es synchronized.
-  //          System.out.println(Thread.currentThread().getId() + ": Cachie el monitor");
+            //System.out.println(Thread.currentThread().getId() + ": Cachie el monitor");
         } catch(InterruptedException e) {
             e.printStackTrace();
         }
 
         if(!pNet.stateEquationTest(firingVector) || pNet.somebodyIsWorkingOn(firingVector)) {
-    //        System.out.println(Thread.currentThread().getId() + ": No están dadas las condiciones para disparar, me voy a la cola de T" + getIndex(firingVector));
+            //System.out.println(Thread.currentThread().getId() + ": No están dadas las condiciones para disparar, me voy a la cola de T" + getIndex(firingVector));
             
             exitMonitor();
             
@@ -153,18 +156,19 @@ public class Monitor {
                 e.printStackTrace();
             }
 
-      //      System.out.println(Thread.currentThread().getId() + ": Me despertaron, voy a disparar T" + getIndex(firingVector));            
+            //System.out.println(Thread.currentThread().getId() + ": Me despertaron, voy a disparar T" + getIndex(firingVector));
         }
 
-     //   System.out.println(Thread.currentThread().getId() + ": T" + getIndex(firingVector) + " esta sensibilizada" );
+        //System.out.println(Thread.currentThread().getId() + ": T" + getIndex(firingVector) + " está sensibilizada");
 
         if(pNet.hasCompleted()) return false;
 
         if(alphaTimeCheck(firingVector)) {
             pNet.fireTransition(firingVector);
-    //        System.out.println(Thread.currentThread().getId() + ": Se disparo exitosamente T" + getIndex(firingVector));
+            //System.out.println(Thread.currentThread().getId() + ": Se disparó exitosamente T" + getIndex(firingVector));
         } else {
-    //        System.out.println(Thread.currentThread().getId() + ": No paso alfa, salgo para trabajar");
+            //System.out.println(Thread.currentThread().getId() + ": No pasó alfa, salgo para trabajar");
+            
             pNet.setWorkingVector(firingVector, (double)Thread.currentThread().getId());
             
             exitMonitor();
@@ -177,7 +181,7 @@ public class Monitor {
         Matrix and = and(sensibilized,queued);
 
         if(enabledAndQueued(and)>0) {
-            int choice = politics.decide(and);
+            int choice = Policy.decide(and);
             conditionQueues.getConditionQueues().get(choice).release();
         } else {
             exitMonitor();
@@ -196,8 +200,9 @@ public class Monitor {
      * es un vector de disparo, se devuelve el índice de la
      * transición a disparar.
      * 
-     * @param vector El vector donde se buscará el índice de la transición a disparar.
-     * @return El índice de la transición a disparar.
+     * @param   vector  El vector donde se buscará el índice de la transición a disparar.
+     * 
+     * @return  El índice de la transición a disparar.
      */
     private int getIndex(Matrix vector) {
         int index = 0;
@@ -224,8 +229,8 @@ public class Monitor {
      * de transiciones sensibilizadas y el vector de transiciones con hilos
      * encolados.
      * 
-     * @return El vector que almacena las transiciones sensibilizadas con al menos
-     *         un hilo encolado en ellas.
+     * @return  El vector que almacena las transiciones sensibilizadas con al menos
+     *          un hilo encolado en ellas.
      */
     private Matrix and(Matrix a, Matrix b) {
         return a.arrayTimes(b);
@@ -235,9 +240,10 @@ public class Monitor {
      * Este método calcula la cantidad de transiciones sensibilizadas que tienen
      * hilos esperando en sus colas.
      * 
-     * @param and El vector resultado de la operación 'and'.
-     * @return La cantidad de transiciones sensibilizadas en la red con hilos
-     *         encolados.
+     * @param   and El vector resultado de la operación 'and'.
+     * 
+     * @return  La cantidad de transiciones sensibilizadas en la red con hilos
+     *          encolados.
      */
     private int enabledAndQueued(Matrix and) {
         int aux = 0;
@@ -254,9 +260,10 @@ public class Monitor {
      * transición. Además, se setea el tiempo que debe esperar el hilo que quiere
      * disparar una transición cuyo alfa aún no ha transcurrido.
      * 
-     * @param firingVector El vector de disparo del hilo, de donde se rescata la
-     *                     transición cuyo alfa se va a chequear.
-     * @return Si el tiempo alfa ya ha transcurrido o no.
+     * @param   firingVector    El vector de disparo del hilo, de donde se rescata la
+     *                          transición cuyo alfa se va a chequear.
+     * 
+     * @return  Si el tiempo alfa ya ha transcurrido o no.
      */
     private boolean alphaTimeCheck(Matrix firingVector) {
         long alpha = (long) pNet.getAlphaVector().get(0, getIndex(firingVector));

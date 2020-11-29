@@ -1,8 +1,9 @@
 /**
- * @author Luna, Lihué Leandro
- * @author Coronati, Federico Joaquín
- * @author Merino, Mateo
- * @author Bonino, Francisco Ignacio
+ * @author  Luna, Lihué Leandro
+ *          Coronati, Federico Joaquín
+ *          Merino, Mateo
+ *          Bonino, Francisco Ignacio
+ * 
  * @since 01/07/2020
  */
 
@@ -32,13 +33,14 @@ public class Log extends Thread {
 	/**
 	 * Constructor.
 	 * 
-	 * @param fileName El nombre del archivo log.
-	 * @param monitor El monitor que controla la red de Petri.
-	 * @param stepToLog El paso que se utilizará para escribir en el log
-	 * 					(cada cuántas transiciones disparadas escribiremos).
-	 * @param lock El lock que interactúa entre el Log y el hilo que disparó.
-	 * @param tInvariants Los invariantes de transición de la red.
-	 * @throws IOException Si hubo un error al crear el archivo log.
+	 * @param	fileName 	El nombre del archivo log.
+	 * @param	monitor		El monitor que controla la red de Petri.
+	 * @param	stepToLog	El paso que se utilizará para escribir en el log
+	 * 						(cada cuántas transiciones disparadas escribiremos).
+	 * @param	lock		El lock que interactúa entre el Log y el hilo que disparó.
+	 * @param	tInvariants Los invariantes de transición de la red.
+	 * 
+	 * @throws	IOException Si hubo un error al crear el archivo log.
 	 */
 	public Log(String fileName, Monitor monitor, int stepToLog, Object lock, Matrix tInvariants) throws IOException {
 		this.monitor = monitor;

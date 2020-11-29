@@ -1,8 +1,9 @@
 /**
- * @author Luna, Lihué Leandro
- * @author Coronati, Federico Joaquín
- * @author Merino, Mateo
- * @author Bonino, Francisco Ignacio
+ * @author  Luna, Lihué Leandro
+ *          Coronati, Federico Joaquín
+ *          Merino, Mateo
+ *          Bonino, Francisco Ignacio
+ * 
  * @since 07/07/2020
  */
 
@@ -20,8 +21,8 @@ public class MyThread extends Thread {
     /**
      * Constructor.
      * 
-     * @param sequence Secuencia de transiciones asociadas al hilo.
-     * @param monitor  Referencia al monitor que controla la red de Petri.
+     * @param   sequence    Secuencia de transiciones asociadas al hilo.
+     * @param   monitor     Referencia al monitor que controla la red de Petri.
      */
     public MyThread(Matrix sequence, Monitor monitor) {
         this.monitor = monitor;
@@ -37,14 +38,14 @@ public class MyThread extends Thread {
     // ----------------------------------------Getters------------------------------------------
 
     /**
-     * @return El vector de disparo del hilo.
+     * @return  El vector de disparo del hilo.
      */
     public Matrix getFiringVector() {
         return firingVector;
     }
 
     /**
-     * @return El vector de transiciones asociadas al hilo.
+     * @return  El vector de transiciones asociadas al hilo.
      */
     public ArrayList<Matrix> getAssociatedTransitions() {
         return myTransitions;
@@ -66,7 +67,7 @@ public class MyThread extends Thread {
         while(!monitor.hasCompleted()) {
             firingVector = myTransitions.get(i);
             
-           // System.out.println(Thread.currentThread().getId() + ": Quiero disparar T" + monitor.getIndex(firingVector));
+            //System.out.println(Thread.currentThread().getId() + ": Quiero disparar T" + monitor.getIndex(firingVector));
             
             if(monitor.tryFiring(firingVector)) {
                 i++;
@@ -75,7 +76,7 @@ public class MyThread extends Thread {
                 try {
                     if(monitor.hasCompleted()) break;
 
-               //     System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime());
+                    //System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime());
                     
                     sleep(monitor.getWorkingTime(Thread.currentThread().getId()));
                 } catch(InterruptedException e) {
@@ -94,8 +95,9 @@ public class MyThread extends Thread {
      * tenga la red. Luego, en base al índice que se recibe como parámetro, se setea un '1'
      * en esa posición, logrando así cualquier vector de disparo deseado.
      * 
-     * @param i Índice de la transición que se quiere setear en el vector de disparo.
-     * @return El vector con ceros y un '1' en la i-ésima transición.
+     * @param   i   Índice de la transición que se quiere setear en el vector de disparo.
+     * 
+     * @return  El vector con ceros y un '1' en la i-ésima transición.
      */
     public Matrix getTransitionVector(int i) {
         Matrix vector = new Matrix(1, monitor.getPetriNet().getIncidenceMatrix().getColumnDimension());

@@ -1,8 +1,9 @@
 /**
- * @author Luna, Lihué Leandro
- * @author Coronati, Federico Joaquín
- * @author Merino, Mateo
- * @author Bonino, Francisco Ignacio
+ * @author  Luna, Lihué Leandro
+ *          Coronati, Federico Joaquín
+ *          Merino, Mateo
+ *          Bonino, Francisco Ignacio
+ * 
  * @since 07/07/2020
  */
 
@@ -13,14 +14,14 @@ import java.util.ArrayList;
 
 import Jama.Matrix;
 
-public class Politics {
+public class Policy {
     
     //Campos privados.
     private ArrayList<Integer> indexes;
     private Random randomGenerator;
 
     //Constructor.
-    public Politics() {
+    public Policy() {
         indexes = new ArrayList<Integer>();
         randomGenerator = new Random();
     }
@@ -35,7 +36,9 @@ public class Politics {
      * elección aleatoria con distribución uniforme entre todos los índices que se hayan guardado.
      * 
      * @see Monitor#getAnd()
+     * 
      * @param and El vector con más de una transición sensibilizada que tienen al menos un hilo encolado.
+     * 
      * @return El índice de la transición elegida para disparar.
      */
     public int decide(Matrix and) {

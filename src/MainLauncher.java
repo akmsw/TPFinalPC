@@ -1,8 +1,9 @@
 /**
- * @author Luna, Lihué Leandro
- * @author Coronati, Federico Joaquín
- * @author Merino, Mateo
- * @author Bonino, Francisco Ignacio
+ * @author  Luna, Lihué Leandro
+ *          Coronati, Federico Joaquín
+ *          Merino, Mateo
+ *          Bonino, Francisco Ignacio
+ * 
  * @since 01/07/2020
  */
 
@@ -62,7 +63,7 @@ public class MainLauncher {
     };
 
 
-    /* Orden de plazas (izquierda a derecha):
+    /*  Orden de plazas (izquierda a derecha):
         0: P0
         1: ColaProcesos
         2: ColaP1
@@ -81,7 +82,7 @@ public class MainLauncher {
         15: M1
         16: M2
         17: DisponibleM1
-        18: DisponibleM2 */
+        18: DisponibleM2    */
     private static double[][] pInvariants = {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8, 0 }, // M1 + DisponibleM1  = 8
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8 }, // M2 + DisponibleM2 = 8
@@ -93,7 +94,7 @@ public class MainLauncher {
         { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 }  // RecursoTarea + ProcesandoP1 + ProcesandoP2 + Tarea2P1 + Tarea2P2 = 1
     };
 
-    /* Orden de transiciones (izquierda a derecha):
+    /*  Orden de transiciones (izquierda a derecha):
         0: ArrivalRate
         1: AsignarP1
         2: AsignarP2
@@ -110,7 +111,7 @@ public class MainLauncher {
         13: ProcesarT2P1 
         14: ProcesarT2P2 
         15: VaciarM1 
-        16: VaciarM2 */
+        16: VaciarM2    */
     private static double[][] tInvariants = {
         { 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0 }, //T0,T1,T3,T5,T9,T15
         { 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1 }, //T0,T1,T3,T5,T10,T16
@@ -134,7 +135,6 @@ public class MainLauncher {
     private static double[] p7 = {2, 4, 14, 8, 12, 16 };
     private static double[] p8 = {0};
 
-     
     private static Matrix path1 = new Matrix(p0, 1);
     private static Matrix path2 = new Matrix(p1, 1);
     private static Matrix path3 = new Matrix(p2, 1);
@@ -147,7 +147,7 @@ public class MainLauncher {
 
     //Los betas los tomamos como infinitos para que no se desensibilicen las transiciones.
     private static double[] alphaTimesA = { 2, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 7, 7, 4, 4 }; //Alfas de las transiciones.
-    /*private static double[] alphaTimesA = { 100, 0, 0, 0, 0, 80, 80, 80, 80, 0, 0, 0, 0, 170, 170, 250, 250};*/    
+    //private static double[] alphaTimesA = { 100, 0, 0, 0, 0, 80, 80, 80, 80, 0, 0, 0, 0, 170, 170, 250, 250};
 
     private static double[] iMark = { 1, 0, 0, 4, 0, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8 }; //Marcado inicial de la red.
 
