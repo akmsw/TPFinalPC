@@ -1,8 +1,8 @@
 /**
- * @author  Luna, Lihué Leandro
- *          Coronati, Federico Joaquín
- *          Merino, Mateo
- *          Bonino, Francisco Ignacio
+ * @author  Luna,       Lihué       Leandro
+ * @author  Coronati,   Federico    Joaquín
+ * @author  Merino,     Mateo
+ * @author  Bonino,     Francisco   Ignacio
  * 
  * @since 01/07/2020
  */
