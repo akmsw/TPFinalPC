@@ -180,7 +180,7 @@ public class Monitor {
         Matrix queued = conditionQueues.whoAreQueued();
         Matrix and = and(sensibilized,queued);
 
-        if(enabledAndQueued(and)>0) {
+        if(enabledAndQueued(and) > 0) {
             int choice = Policy.decide(and);
             conditionQueues.getConditionQueues().get(choice).release();
         } else {
@@ -248,8 +248,8 @@ public class Monitor {
     private int enabledAndQueued(Matrix and) {
         int aux = 0;
 
-        for(int i=0; i<and.getColumnDimension(); i++)
-            if(and.get(0,i)>0) aux++;
+        for(int i = 0; i < and.getColumnDimension(); i++)
+            if(and.get(0, i) > 0) aux++;
 
         return aux;
     }

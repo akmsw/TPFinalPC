@@ -71,7 +71,7 @@ public class MyThread extends Thread {
             
             if(monitor.tryFiring(firingVector)) {
                 i++;
-                if(i>=myTransitions.size()) i = 0;
+                if(i >= myTransitions.size()) i = 0;
             } else {
                 try {
                     if(monitor.hasCompleted()) break;

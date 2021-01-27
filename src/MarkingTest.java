@@ -45,8 +45,8 @@ public class MarkingTest {
         
         String aux = "";
 
-        for(int i=0;i<leftTransitions.length();i++) {
-            if(leftTransitions.charAt(i)!=',') {
+        for(int i = 0; i < leftTransitions.length(); i++) {
+            if(leftTransitions.charAt(i) != ',') {
                 aux = aux + leftTransitions.charAt(i);
             } else {
                 int index = Integer.valueOf(aux);

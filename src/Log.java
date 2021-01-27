@@ -55,7 +55,7 @@ public class Log extends Thread {
 		
 		SimpleFormatter formatter = new SimpleFormatter();		
 
-		FH = new FileHandler(fileName,true);
+		FH = new FileHandler(fileName, true);
 		
 		FH.setFormatter(formatter);
 	}
@@ -116,7 +116,7 @@ public class Log extends Thread {
 		
 		String finalMarking = "[ ";
 
-		for(int i=0; i<finalMarkingVector.getColumnDimension(); i++)
+		for(int i = 0; i < finalMarkingVector.getColumnDimension(); i++)
 			finalMarking += (int)finalMarkingVector.get(0,i) + " ";
 		
 		finalMarking += "]";

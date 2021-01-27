@@ -206,7 +206,7 @@ public class MainLauncher {
         
         pNet.setEnabledTransitions(); //Seteo de las transiciones sensibilizadas dado el marcado inicial de la red.
         
-        for(int i=0; i<threadQuantity; i++) {
+        for(int i = 0; i < threadQuantity; i++) {
             threads[i] = new MyThread(threadPaths.get(i), monitor);
             threads[i].start();
         }

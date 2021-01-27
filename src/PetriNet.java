@@ -121,22 +121,22 @@ public class PetriNet {
      * @return  La carga de las memorias.
      */
     public String getMemoriesLoad() {
-        return "Cantidad de escrituras en memoria 1: " + (firedTransitions.get(0,9) + firedTransitions.get(0,11)) + "\nCantidad de escrituras en memoria 2: " + (firedTransitions.get(0,10) + firedTransitions.get(0,12));
+        return "Cantidad de escrituras en memoria 1: " + (firedTransitions.get(0, 9) + firedTransitions.get(0, 11)) + "\nCantidad de escrituras en memoria 2: " + (firedTransitions.get(0, 10) + firedTransitions.get(0, 12));
     }
     
     /**
      * @return  La carga de los procesadores (AsignarP1 y AsignarP2).
      */
     public String getProcessorsLoad() {
-        return "Carga del procesador 1: " + firedTransitions.get(0,1) + "\nCarga del procesador 2: " + firedTransitions.get(0,2);
+        return "Carga del procesador 1: " + firedTransitions.get(0, 1) + "\nCarga del procesador 2: " + firedTransitions.get(0,2);
     }
 
     /**
      * @return  La cantidad de tareas ejecutadas en cada procesador individualmente (FinalizarTXPX).
      */
     public String getProcessorsTasks() {
-        return "Cantidad de ejecuciones de T1 en procesador 1: " + firedTransitions.get(0,5) + "\nCantidad de ejecuciones de T2 en procesador 1: " + firedTransitions.get(0,7) +
-               "\nCantidad de ejecuciones de T1 en procesador 2: " + firedTransitions.get(0,6) + "\nCantidad de ejecuciones de T2 en procesador 2: " + firedTransitions.get(0,8);
+        return "Cantidad de ejecuciones de T1 en procesador 1: " + firedTransitions.get(0, 5) + "\nCantidad de ejecuciones de T2 en procesador 1: " + firedTransitions.get(0, 7) +
+               "\nCantidad de ejecuciones de T1 en procesador 2: " + firedTransitions.get(0, 6) + "\nCantidad de ejecuciones de T2 en procesador 2: " + firedTransitions.get(0, 8);
     }
 
     /**
@@ -152,8 +152,8 @@ public class PetriNet {
     public int getIndex(Matrix vector) {
         int index = 0;
         
-        for(int i=0; i<vector.getColumnDimension(); i++) {
-            if(vector.get(0,i)==1) break;
+        for(int i = 0; i < vector.getColumnDimension(); i++) {
+            if(vector.get(0, i) == 1) break;
             else index++;
         }
         
@@ -229,19 +229,19 @@ public class PetriNet {
 
         long currentTime = System.currentTimeMillis(); //Establezco el tiempo una sola vez para denotar que todas las transiciones se sensibilizaron "al mismo tiempo".
 
-        for(int j=0; j<incidenceBackwards.getColumnDimension(); j++) {
+        for(int j = 0; j < incidenceBackwards.getColumnDimension(); j++) {
             currentTransitionEnabled = true;
             
-            for(int i=0; i<incidenceBackwards.getRowDimension(); i++)
-                if(incidenceBackwards.get(i,j)>currentMarking.get(0,i)) {
+            for(int i = 0; i < incidenceBackwards.getRowDimension(); i++)
+                if(incidenceBackwards.get(i,j) > currentMarking.get(0, i)) {
                     currentTransitionEnabled = false;
                     break;
                 }
             
             if(currentTransitionEnabled) {
-                enabledTransitions.set(0,j,1);
-                setEnabledAtTime(j,currentTime);
-            } else enabledTransitions.set(0,j,0);
+                enabledTransitions.set(0, j, 1);
+                setEnabledAtTime(j, currentTime);
+            } else enabledTransitions.set(0, j, 0);
         }
     }
 
@@ -259,7 +259,7 @@ public class PetriNet {
         int index = getIndex(firingVector);
 
         if(workingVector.get(0, index) == 0) return false;
-        else if(workingVector.get(0,index)!=Thread.currentThread().getId()) return true;
+        else if(workingVector.get(0, index) != Thread.currentThread().getId()) return true;
         else return false;
     }
 
@@ -276,7 +276,7 @@ public class PetriNet {
         aux = stateEquation(firingVector);
         
         for(int i=0; i<this.aux.getColumnDimension(); i++)
-            if(this.aux.get(0,i)<0) return false;
+            if(this.aux.get(0, i) < 0) return false;
         
         return true;
     }
@@ -310,6 +310,7 @@ public class PetriNet {
                 System.out.println("Interrupción en la espera del hilo Log.");
             }
         }
+
         checkPlacesInvariants();
         
         setEnabledTransitions();
@@ -350,16 +351,16 @@ public class PetriNet {
         int tokensAmount; //La cantidad de tokens que se van contando en las plazas.
 
         //Validacion de tamaños
-        if(placesInvariants.getColumnDimension()!=currentMarking.getColumnDimension()) {
+        if(placesInvariants.getColumnDimension() != currentMarking.getColumnDimension()) {
             System.out.println("Error. Dimensiones no coincidentes para validación de invariantes de plaza.");
             return;
         }
         
-        for(int j=0; j<placesInvariants.getRowDimension(); j++) {
+        for(int j = 0; j < placesInvariants.getRowDimension(); j++) {
             invariantAmount = 0;
             tokensAmount = 0;
 
-            for(int i=0; i<currentMarking.getColumnDimension(); i++)
+            for(int i = 0; i < currentMarking.getColumnDimension(); i++)
                 if(placesInvariants.get(j, i) > 0) {
                     invariantAmount = (int)placesInvariants.get(j, i);
                     tokensAmount = tokensAmount + (int)currentMarking.get(0, i);

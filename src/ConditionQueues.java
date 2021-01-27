@@ -28,7 +28,7 @@ public class ConditionQueues {
         
         this.quantity = quantity;
         
-        for(int i=0; i<(quantity); i++)
+        for(int i = 0; i < quantity; i++)
             conditionQueues.add(new Semaphore(0));
     }
 
@@ -75,7 +75,7 @@ public class ConditionQueues {
             else aux[conditionQueues.indexOf(queue)] = 0;
         }
         
-        Matrix waitingThreads = new Matrix(aux,1);
+        Matrix waitingThreads = new Matrix(aux, 1);
         
         return waitingThreads;
     }
