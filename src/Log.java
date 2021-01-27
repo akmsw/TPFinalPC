@@ -117,7 +117,7 @@ public class Log extends Thread {
 		String finalMarking = "[ ";
 
 		for(int i = 0; i < finalMarkingVector.getColumnDimension(); i++)
-			finalMarking += (int)finalMarkingVector.get(0,i) + " ";
+			finalMarking += (int)finalMarkingVector.get(0, i) + " ";
 		
 		finalMarking += "]";
 		
