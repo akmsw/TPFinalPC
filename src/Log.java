@@ -105,7 +105,7 @@ public class Log extends Thread {
 			if(monitor.getPetriNet().getTotalFired() % stepToLog == 0)
 				logger.info("\n" + monitor.getPetriNet().getMemoriesLoad() + 
 							"\n" + monitor.getPetriNet().getProcessorsLoad() + 
-							"\n" + monitor.getPetriNet().getProcessorsTasks() );	
+							"\n" + monitor.getPetriNet().getProcessorsTasks());
 
 			synchronized(lock) {
 				lock.notify();
