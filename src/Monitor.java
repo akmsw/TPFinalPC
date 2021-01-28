@@ -15,7 +15,7 @@ import Jama.Matrix;
 public class Monitor {
 
     // Campos privados.
-    private HashMap<Long,Long> workingTime;
+    private HashMap<Long, Long> workingTime;
     private ConditionQueues conditionQueues;
     private Semaphore entry;
     private PetriNet pNet;
@@ -39,7 +39,7 @@ public class Monitor {
 
         conditionQueues = new ConditionQueues(pNet.getIncidenceMatrix().getColumnDimension());
 
-        workingTime = new HashMap<Long,Long>();
+        workingTime = new HashMap<Long, Long>();
     }
 
     // ----------------------------------------Métodos públicos---------------------------------
@@ -84,7 +84,7 @@ public class Monitor {
      * Este método almacena el tiempo de espera correspondiente a cada hilo.
      * 
      * @param   id      Identificador del hilo.
-     * @param   timeEl  Tiempo de espera para disparar una transición.
+     * @param   time    El tiempo de espera para disparar una transición.
      */
     public synchronized void setWorkingTime(Long id, Long time){
         workingTime.put(id, time);
@@ -178,7 +178,7 @@ public class Monitor {
 
         Matrix sensibilized = pNet.getEnabledTransitions();
         Matrix queued = conditionQueues.whoAreQueued();
-        Matrix and = and(sensibilized,queued);
+        Matrix and = and(sensibilized, queued);
 
         if(enabledAndQueued(and) > 0) {
             int choice = Policy.decide(and);
@@ -266,9 +266,9 @@ public class Monitor {
      * @return  Si el tiempo alfa ya ha transcurrido o no.
      */
     private boolean alphaTimeCheck(Matrix firingVector) {
-        long alpha = (long) pNet.getAlphaVector().get(0, getIndex(firingVector));
+        long alpha = (long)pNet.getAlphaVector().get(0, getIndex(firingVector));
         long currentTime = System.currentTimeMillis();
-        long enabledAtTime = (long) pNet.getEnabledAtTime().get(0, getIndex(firingVector));
+        long enabledAtTime = (long)pNet.getEnabledAtTime().get(0, getIndex(firingVector));
 
         if(alpha < (currentTime - enabledAtTime)) return true;
         else {
