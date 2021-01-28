@@ -208,7 +208,7 @@ public class Monitor {
         int index = 0;
 
         for(int i = 0; i < vector.getColumnDimension(); i++) {
-            if(vector.get(0, i)==1) break;
+            if(vector.get(0, i) == 1) break;
             else index++;
         }
 
