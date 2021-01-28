@@ -151,7 +151,7 @@ public class Monitor {
             int queue = conditionQueues.getQueue(firingVector);
             
             try {
-                conditionQueues.getConditionQueues().get(queue).acquire();
+                conditionQueues.getSemaphore().get(queue).acquire();
             } catch(InterruptedException e) {
                 e.printStackTrace();
             }
@@ -182,7 +182,7 @@ public class Monitor {
 
         if(enabledAndQueued(and) > 0) {
             int choice = Policy.decide(and);
-            conditionQueues.getConditionQueues().get(choice).release();
+            conditionQueues.getSemaphore().get(choice).release();
         } else {
             exitMonitor();
         }

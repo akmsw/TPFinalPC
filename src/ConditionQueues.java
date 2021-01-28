@@ -39,7 +39,7 @@ public class ConditionQueues {
     /**
      * @return  El conjunto de colas de condición de las transiciones de la red.
      */
-    public ArrayList<Semaphore> getConditionQueues() {
+    public ArrayList<Semaphore> getSemaphore() {
         return conditionQueues;
     }
 

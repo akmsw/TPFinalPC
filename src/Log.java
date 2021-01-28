@@ -134,8 +134,8 @@ public class Log extends Thread {
 					"\nFINISH LOGGING" + 
 					"\n------------------------------------------------------------------------------");
 
-		//Siempre debemos comentar
-		for(Semaphore queue : monitor.getConditionQueues().getConditionQueues())
+		//Recorrermos las colas de la red de Petri para despertar y terminar la ejecución de los hilos que hayan quedado durmiendo.
+		for(Semaphore queue : monitor.getConditionQueues().getSemaphore())
 			if(queue.hasQueuedThreads())
 				queue.release(queue.getQueueLength());
 		
