@@ -39,7 +39,7 @@ public class MarkingTest {
         Matrix incidence = new Matrix(incidenceArray);
         Matrix initialMarking = new Matrix(iMark, 1);
 
-        double[] leftT = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        double[] leftT = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         String leftTransitions = "0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,4,1,0,6,";
         

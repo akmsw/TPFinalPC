@@ -233,7 +233,7 @@ public class PetriNet {
             currentTransitionEnabled = true;
             
             for(int i = 0; i < incidenceBackwards.getRowDimension(); i++)
-                if(incidenceBackwards.get(i,j) > currentMarking.get(0, i)) {
+                if(incidenceBackwards.get(i, j) > currentMarking.get(0, i)) {
                     currentTransitionEnabled = false;
                     break;
                 }
@@ -275,7 +275,7 @@ public class PetriNet {
     public boolean stateEquationTest(Matrix firingVector) {
         aux = stateEquation(firingVector);
         
-        for(int i=0; i<this.aux.getColumnDimension(); i++)
+        for(int i = 0; i < this.aux.getColumnDimension(); i++)
             if(this.aux.get(0, i) < 0) return false;
         
         return true;
@@ -337,7 +337,7 @@ public class PetriNet {
 
         aux += firedTransitions.get(0, 5) + firedTransitions.get(0, 6) + firedTransitions.get(0, 7) + firedTransitions.get(0, 8);
         
-        return aux>=stopCondition;
+        return aux >= stopCondition;
     }
 
     /**
@@ -366,7 +366,7 @@ public class PetriNet {
                     tokensAmount = tokensAmount + (int)currentMarking.get(0, i);
                 }
 
-            if(tokensAmount!=invariantAmount) 
+            if(tokensAmount != invariantAmount) 
                 System.out.println("Error en el invariante de plaza: IP" + j);
         }
     }

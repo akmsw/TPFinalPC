@@ -18,7 +18,7 @@ public class MainLauncher {
     private static final int stepToLog = 50; //Cada cuántas tareas se chequea el balance de carga en procesadores y memorias.
 
     //Campos privados.
-    private static double[][] incidenceArray = {
+    private static double[][] incidenceArray = { //Matriz I
         {-1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 1,-1,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 1, 0,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -40,7 +40,7 @@ public class MainLauncher {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,-1, 0,-1, 0, 0, 0, 1 }
     };
 
-    private static double[][] incidenceBackwardsArray = {
+    private static double[][] incidenceBackwardsArray = { //Matriz I-
         { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -125,15 +125,15 @@ public class MainLauncher {
 
     private static ArrayList<Matrix> threadPaths;
 
-    private static double[] p0 = {1, 3, 5, 9, 15 };
-    private static double[] p1 = {1, 3, 5, 10, 16 };
-    private static double[] p2 = {2, 4, 6, 11, 15 };
-    private static double[] p3 = {2, 4, 6, 12, 16 };
-    private static double[] p4 = {1, 3, 13, 7, 9, 15 };
-    private static double[] p5 = {1, 3, 13, 7, 10, 16 };
-    private static double[] p6 = {2, 4, 14, 8, 11, 15 };
-    private static double[] p7 = {2, 4, 14, 8, 12, 16 };
-    private static double[] p8 = {0};
+    private static double[] p0 = { 1, 3, 5, 9, 15 };
+    private static double[] p1 = { 1, 3, 5, 10, 16 };
+    private static double[] p2 = { 2, 4, 6, 11, 15 };
+    private static double[] p3 = { 2, 4, 6, 12, 16 };
+    private static double[] p4 = { 1, 3, 13, 7, 9, 15 };
+    private static double[] p5 = { 1, 3, 13, 7, 10, 16 };
+    private static double[] p6 = { 2, 4, 14, 8, 11, 15 };
+    private static double[] p7 = { 2, 4, 14, 8, 12, 16 };
+    private static double[] p8 = { 0 };
 
     private static Matrix path1 = new Matrix(p0, 1);
     private static Matrix path2 = new Matrix(p1, 1);

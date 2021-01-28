@@ -1,7 +1,7 @@
 /**
  * @author  Luna,       Lihué       Leandro
  * @author  Coronati,   Federico    Joaquín
- * @author  Merino,     Mateo
+ * @author  Merino,     Mateo		Marcelo
  * @author  Bonino,     Francisco   Ignacio
  * 
  * @since 01/07/2020
@@ -71,7 +71,7 @@ public class Log extends Thread {
 	 * en los procesadores. Esto se escribe cada 'stepToLog' transiciones disparadas y mientras
 	 * no se haya llegado a la condición de corte del programa.
 	 * Además, se almacena en un arreglo cada transición disparada por cada hilo para luego
-	 * imprimirla en el archivo .txt y poder analizar en él los invariantes de transición más adelante.
+	 * imprimirla en el archivo .txt y poder analizar en él los invariantes de transición al finalizar.
 	 * Por cada transición disparada y escrita, se chequea que se cumplan los invariantes
 	 * de plaza de la red.
 	 */
@@ -102,9 +102,9 @@ public class Log extends Thread {
 			
 			monitor.getPetriNet().checkPlacesInvariants();
 
-			if(monitor.getPetriNet().getTotalFired()%stepToLog==0)
-				logger.info("\n" + monitor.getPetriNet().getMemoriesLoad() +
-							"\n" + monitor.getPetriNet().getProcessorsLoad() +
+			if(monitor.getPetriNet().getTotalFired() % stepToLog == 0)
+				logger.info("\n" + monitor.getPetriNet().getMemoriesLoad() + 
+							"\n" + monitor.getPetriNet().getProcessorsLoad() + 
 							"\n" + monitor.getPetriNet().getProcessorsTasks() );	
 
 			synchronized(lock) {
@@ -124,21 +124,22 @@ public class Log extends Thread {
 		logger.info("Se completaron exitosamente " + monitor.getPetriNet().getStopCondition() + " tareas." + 
 					"\n" + monitor.getPetriNet().getMemoriesLoad() + 
 					"\n" + monitor.getPetriNet().getProcessorsLoad() + 
-					"\n" + monitor.getPetriNet().getProcessorsTasks() +
+					"\n" + monitor.getPetriNet().getProcessorsTasks() + 
 					"\nSe dispararon "+ (transitionsSequence.size()-transitionInvariantsAmount) + " transiciones.");
 		transitionsSequence.add("");
 		logger.info(transitionsSequence.toString());
 
-		logger.info("Marcado final:\n" + finalMarking + "\n" +
+		logger.info("Marcado final:\n" + finalMarking + "\n" + 
 					"------------------------------------------------------------------------------" + 
 					"\nFINISH LOGGING" + 
 					"\n------------------------------------------------------------------------------");
 
+		//Siempre debemos comentar
 		for(Semaphore queue : monitor.getConditionQueues().getConditionQueues())
 			if(queue.hasQueuedThreads())
 				queue.release(queue.getQueueLength());
 		
-		if(monitor.getEntryQueue().hasQueuedThreads())
+		if(monitor.getEntryQueue().hasQueuedThreads()) //Para ArrivalRate
 			monitor.getEntryQueue().release(monitor.getEntryQueue().getQueueLength());
 	}
 }

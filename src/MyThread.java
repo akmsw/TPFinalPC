@@ -54,7 +54,7 @@ public class MyThread extends Thread {
     // ----------------------------------------Overrides----------------------------------------
 
     /**
-     * En este método, cada hilo tiene un indice que comienza en '0' e itera entre
+     * En este método, cada hilo tiene un índice que comienza en '0' e itera entre
      * la cantidad de transiciones asociadas al hilo. Mientras no se haya concretado
      * la condición de corte del programa, se arma un vector de disparo con el
      * índice que indique el i-ésimo elemento obtenido del arreglo 'myTransitions'.
