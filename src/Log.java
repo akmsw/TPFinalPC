@@ -40,7 +40,6 @@ public class Log extends Thread {
 	 */
 	public Log(String fileName, Monitor monitor, int stepToLog, Object lock, Matrix tInvariants) throws IOException {
 		this.monitor = monitor;
-		this.stepToLog = stepToLog;
 		this.lock = lock;
 
 		f = new File(fileName);
