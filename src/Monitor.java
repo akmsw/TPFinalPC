@@ -9,6 +9,7 @@
 
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
+import java.util.ArrayList;
 
 import Jama.Matrix;
 
@@ -17,6 +18,7 @@ public class Monitor {
     // Campos privados.
     private HashMap<Long, Long> workingTime;
     private ConditionQueues conditionQueues;
+    private ArrayList<String> transitionsSequence;
     private Semaphore entry;
     private PetriNet pNet;
     private Policy Policy;
@@ -40,6 +42,8 @@ public class Monitor {
         conditionQueues = new ConditionQueues(pNet.getIncidenceMatrix().getColumnDimension());
 
         workingTime = new HashMap<Long, Long>();
+
+        transitionsSequence = new ArrayList<String>();
     }
 
     // ----------------------------------------Métodos públicos---------------------------------
@@ -76,6 +80,13 @@ public class Monitor {
      */
     public Semaphore getEntryQueue() {
         return entry;
+    }
+
+    /**
+     * @return  La secuencia de transiciones disparadas.
+     */
+    public ArrayList<String> getTransitionsSequence() {
+        return transitionsSequence;
     }
 
     // ----------------------------------------Setters------------------------------------------
@@ -165,6 +176,7 @@ public class Monitor {
 
         if(alphaTimeCheck(firingVector)) {
             pNet.fireTransition(firingVector);
+            transitionsSequence.add("T" + getPetriNet().getLastFiredTransition() + "");
             //System.out.println(Thread.currentThread().getId() + ": Se disparó exitosamente T" + getIndex(firingVector));
         } else {
             //System.out.println(Thread.currentThread().getId() + ": No pasó alfa, salgo para trabajar");

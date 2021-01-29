@@ -13,7 +13,7 @@ public class PetriNet {
 
     //Campos privados.
     private Object lock;
-    private int lastFiredTransition, totalFired, stopCondition;
+    private int lastFiredTransition, totalFired, stopCondition, stepToLog;
     private double[] auxVector = {};
     private Matrix incidence, incidenceBackwards; //Matrices a utilizar.
     private Matrix initialMarking, currentMarking; //Vectores relativos al marcado de la red.
@@ -35,7 +35,7 @@ public class PetriNet {
      * @param   stopCondition       La condición de corte del programa (cuántas tareas se deben finalizar para terminar el programa).
      * @param   lock                El lock para sincronizar la escritura en el Log con el disparo de transiciones
      */
-    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes, int stopCondition, Object lock) {
+    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes, int stopCondition, Object lock, int stepToLog) {
         this.incidence = incidence;
         this.incidenceBackwards = incidenceBackwards;
         this.initialMarking = initialMarking;
@@ -43,6 +43,7 @@ public class PetriNet {
         this.alphaTimes = alphaTimes;
         this.stopCondition = stopCondition;
         this.lock = lock;
+        this.stepToLog = stepToLog;
 
         firedTransitions = new Matrix(1, incidence.getColumnDimension());
 
@@ -128,7 +129,7 @@ public class PetriNet {
      * @return  La carga de los procesadores (AsignarP1 y AsignarP2).
      */
     public String getProcessorsLoad() {
-        return "Carga del procesador 1: " + firedTransitions.get(0, 1) + "\nCarga del procesador 2: " + firedTransitions.get(0,2);
+        return "Carga del procesador 1: " + firedTransitions.get(0, 1) + "\nCarga del procesador 2: " + firedTransitions.get(0, 2);
     }
 
     /**
@@ -300,22 +301,29 @@ public class PetriNet {
 
         setWorkingVector(firingVector, 0);
 
-        synchronized(lock) {
-            lock.notify();
-
-            try {
-                lock.wait();
-            } catch(InterruptedException e) {
-                e.printStackTrace();
-                System.out.println("Interrupción en la espera del hilo Log.");
-            }
-        }
-
         checkPlacesInvariants();
         
         setEnabledTransitions();
 
         totalFired++;
+
+        if(getTotalFired() % stepToLog == 0) {
+            synchronized(lock) {
+                lock.notifyAll();
+
+                try {
+                    lock.wait();
+                } catch(InterruptedException e) {
+                    e.printStackTrace();
+                    System.out.println("\nError esperando en fireTransition.\n");
+                }
+            }
+        }
+        else if(hasCompleted()) {
+            synchronized(lock) {
+                lock.notifyAll();
+            }
+        }
     }
 
     /**
@@ -352,7 +360,7 @@ public class PetriNet {
 
         //Validacion de tamaños
         if(placesInvariants.getColumnDimension() != currentMarking.getColumnDimension()) {
-            System.out.println("Error. Dimensiones no coincidentes para validación de invariantes de plaza.");
+            //System.out.println("Error. Dimensiones no coincidentes para validación de invariantes de plaza.");
             return;
         }
         

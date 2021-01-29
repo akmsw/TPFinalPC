@@ -76,7 +76,7 @@ public class MyThread extends Thread {
                 try {
                     if(monitor.hasCompleted()) break;
 
-                    //System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime());
+                    //System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime(Thread.currentThread().getId()));
                     
                     sleep(monitor.getWorkingTime(Thread.currentThread().getId()));
                 } catch(InterruptedException e) {

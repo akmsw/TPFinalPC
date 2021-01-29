@@ -7,7 +7,6 @@
  * @since 01/07/2020
  */
 
-import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,8 +22,6 @@ public class Log extends Thread {
 
 	//Campos privados.
 	private Object lock;
-	private int stepToLog;
-	private ArrayList<String> transitionsSequence;
 	private File f;
 	private FileHandler FH;
 	private Logger logger;
@@ -37,7 +34,6 @@ public class Log extends Thread {
 	 * @param	monitor		El monitor que controla la red de Petri.
 	 * @param	stepToLog	El paso que se utilizará para escribir en el log
 	 * 						(cada cuántas transiciones disparadas escribiremos).
-	 * @param	lock		El lock que interactúa entre el Log y el hilo que disparó.
 	 * @param	tInvariants Los invariantes de transición de la red.
 	 * 
 	 * @throws	IOException Si hubo un error al crear el archivo log.
@@ -46,8 +42,6 @@ public class Log extends Thread {
 		this.monitor = monitor;
 		this.stepToLog = stepToLog;
 		this.lock = lock;
-
-		transitionsSequence = new ArrayList<String>();
 
 		f = new File(fileName);
 		
@@ -92,23 +86,16 @@ public class Log extends Thread {
 			synchronized(lock) {
 				try {
 					lock.wait();
-				} catch(InterruptedException e) {
+				} catch (InterruptedException e) {
 					e.printStackTrace();
-					System.out.println("Error en espera en el log.");
+					System.out.println("\nError esperando en el Log.\n");
 				}
-			}
-			
-			transitionsSequence.add("T" + monitor.getPetriNet().getLastFiredTransition() + "");
-			
-			monitor.getPetriNet().checkPlacesInvariants();
 
-			if(monitor.getPetriNet().getTotalFired() % stepToLog == 0)
 				logger.info("\n" + monitor.getPetriNet().getMemoriesLoad() + 
 							"\n" + monitor.getPetriNet().getProcessorsLoad() + 
 							"\n" + monitor.getPetriNet().getProcessorsTasks());
-
-			synchronized(lock) {
-				lock.notify();
+				
+				lock.notifyAll();
 			}
 		}
 
@@ -125,9 +112,11 @@ public class Log extends Thread {
 					"\n" + monitor.getPetriNet().getMemoriesLoad() + 
 					"\n" + monitor.getPetriNet().getProcessorsLoad() + 
 					"\n" + monitor.getPetriNet().getProcessorsTasks() + 
-					"\nSe dispararon "+ (transitionsSequence.size()-transitionInvariantsAmount) + " transiciones.");
-		transitionsSequence.add("");
-		logger.info(transitionsSequence.toString());
+					"\nSe dispararon "+ (monitor.getTransitionsSequence().size() - transitionInvariantsAmount) + " transiciones.");
+		
+		monitor.getTransitionsSequence().add("");
+		
+		logger.info(monitor.getTransitionsSequence().toString());
 
 		logger.info("Marcado final:\n" + finalMarking + "\n" + 
 					"------------------------------------------------------------------------------" + 

@@ -147,7 +147,7 @@ public class MainLauncher {
 
     //Los betas los tomamos como infinitos para que no se desensibilicen las transiciones.
     private static double[] alphaTimesA = { 2, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 7, 7, 4, 4 }; //Alfas de las transiciones.
-    //private static double[] alphaTimesA = { 100, 0, 0, 0, 0, 80, 80, 80, 80, 0, 0, 0, 0, 170, 170, 250, 250};
+    //private static double[] alphaTimesA = { 100, 0, 0, 0, 0, 80, 80, 80, 80, 0, 0, 0, 0, 170, 170, 250, 250 };
 
     private static double[] iMark = { 1, 0, 0, 4, 0, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8 }; //Marcado inicial de la red.
 
@@ -179,7 +179,7 @@ public class MainLauncher {
         threadPaths.add(path8);
         threadPaths.add(path9);
 
-        pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, alphaTimes, stopCondition, lock);
+        pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, alphaTimes, stopCondition, lock, stepToLog);
 
         monitor = new Monitor(pNet);
 
@@ -189,7 +189,7 @@ public class MainLauncher {
             myLog.start();
         } catch(Exception e) {
             e.printStackTrace();
-            System.out.println("Error al crear el log.");
+            //System.out.println("Error al crear el log.");
         }
 
         //Sleep para que el hilo Log y los hilos de tareas se sincronicen.
@@ -197,7 +197,7 @@ public class MainLauncher {
             java.lang.Thread.sleep(1000);
         } catch(InterruptedException e) {
             e.printStackTrace();
-            System.out.println("Error en sincronización de hilo Log e hilos de tareas.");
+            //System.out.println("Error en sincronización de hilo Log e hilos de tareas.");
         }
 
         int threadQuantity = threadPaths.size(); //Cantidad de hilos a crear: uno por cada invariante de transicion (sin las transiciones del vaciado) + 2 hilos extra para vaciar memorias.
