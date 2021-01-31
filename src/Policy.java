@@ -35,8 +35,6 @@ public class Policy {
      * Se almacena el índice de estas transiciones en un arreglo y se hace una
      * elección aleatoria con distribución uniforme entre todos los índices que se hayan guardado.
      * 
-     * @see Monitor#getAnd()
-     * 
      * @param and El vector con más de una transición sensibilizada que tienen al menos un hilo encolado.
      * 
      * @return El índice de la transición elegida para disparar.
