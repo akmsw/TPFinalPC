@@ -34,7 +34,7 @@ public class PetriNet {
      * @param   alphaTimes          Los tiempos 'alfa' asociados a cada transición.
      * @param   stopCondition       La condición de corte del programa (cuántas tareas se deben finalizar para terminar el programa).
      * @param   lock                El lock para sincronizar la escritura en el Log con el disparo de transiciones
-     * @param   stepToLog           Cada cuántas transiciones disparadas se debe dar permiso al hilo Log para mostrar las estadísticas de la red.
+     * @param   stepToLog           Cada cuántas transiciones disparadas se debe dar permiso al hilo Log para tomar registro de las estadísticas de la red.
      */
     public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes, int stopCondition, Object lock, int stepToLog) {
         this.incidence = incidence;
