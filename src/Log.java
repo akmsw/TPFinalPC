@@ -46,7 +46,7 @@ public class Log extends Thread {
 		
 		if(!f.exists()) f.createNewFile();
 		
-		SimpleFormatter formatter = new SimpleFormatter();		
+		SimpleFormatter formatter = new SimpleFormatter();
 
 		FH = new FileHandler(fileName, true);
 		
@@ -94,7 +94,7 @@ public class Log extends Thread {
 							"\n" + monitor.getPetriNet().getProcessorsLoad() + 
 							"\n" + monitor.getPetriNet().getProcessorsTasks());
 				
-				lock.notifyAll();
+				lock.notify();
 			}
 		}
 

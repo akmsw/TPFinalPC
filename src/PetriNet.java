@@ -50,7 +50,7 @@ public class PetriNet {
 
         enabledTransitions = new Matrix(1, incidence.getColumnDimension());
         
-        aux = new Matrix(auxVector,1);
+        aux = new Matrix(auxVector, 1);
 
         enabledAtTime = new Matrix(1, incidence.getColumnDimension()); //Vector que almacena los instantes de sensiblizado de cada transición.
 
@@ -310,7 +310,7 @@ public class PetriNet {
 
         if(getTotalFired() % stepToLog == 0) {
             synchronized(lock) {
-                lock.notifyAll();
+                lock.notify();
 
                 try {
                     lock.wait();
@@ -322,7 +322,7 @@ public class PetriNet {
         }
         else if(hasCompleted()) {
             synchronized(lock) {
-                lock.notifyAll();
+                lock.notify();
             }
         }
     }

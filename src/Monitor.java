@@ -284,7 +284,7 @@ public class Monitor {
 
         if(alpha < (currentTime - enabledAtTime)) return true;
         else {
-            setWorkingTime(Thread.currentThread().getId(),alpha - (currentTime - enabledAtTime));
+            setWorkingTime(Thread.currentThread().getId(), alpha - (currentTime - enabledAtTime));
             return false;
         }
     }
