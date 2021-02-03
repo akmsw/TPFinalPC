@@ -37,7 +37,9 @@ public class Despertador extends Thread {
 		logger.addHandler(FH);
         logger.setLevel(Level.INFO);
         
-        while(!pNet.hasCompleted()) {}
+        while(!pNet.hasCompleted()) { }
+
+        System.out.println("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
 
         //Recorrermos las colas de la red de Petri para despertar y terminar la ejecución de los hilos que hayan quedado durmiendo.
 		for(Semaphore queue : monitor.getConditionQueues().getSemaphore())
