@@ -314,7 +314,7 @@ public class PetriNet {
 
                 try {
                     lock.wait();
-                } catch(InterruptedException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                     System.out.println("\nError esperando en fireTransition.\n");
                 }

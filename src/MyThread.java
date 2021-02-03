@@ -79,7 +79,7 @@ public class MyThread extends Thread {
                     //System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime(Thread.currentThread().getId()));
                     
                     sleep(monitor.getWorkingTime(Thread.currentThread().getId()));
-                } catch(InterruptedException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }

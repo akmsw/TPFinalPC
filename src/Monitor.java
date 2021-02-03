@@ -150,7 +150,7 @@ public class Monitor {
         try {
             catchMonitor(); //A partir de este punto, sólo un hilo continúa con la ejecución de este método porque catchMonitor() es synchronized.
             //System.out.println(Thread.currentThread().getId() + ": Cachie el monitor");
-        } catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -163,7 +163,7 @@ public class Monitor {
             
             try {
                 conditionQueues.getSemaphore().get(queue).acquire();
-            } catch(InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 

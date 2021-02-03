@@ -187,7 +187,7 @@ public class MainLauncher {
         try {
             myLog = new Log("ReportMonitor.txt", monitor, stepToLog, lock, transitionInvariants);
             myLog.start();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             //System.out.println("Error al crear el log.");
         }
@@ -195,7 +195,7 @@ public class MainLauncher {
         //Sleep para que el hilo Log y los hilos de tareas se sincronicen.
         try {
             java.lang.Thread.sleep(1000);
-        } catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
             //System.out.println("Error en sincronización de hilo Log e hilos de tareas.");
         }
