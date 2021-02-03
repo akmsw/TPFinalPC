@@ -1,3 +1,4 @@
+
 /**
  * @author  Luna,       Lihué       Leandro
  * @author  Coronati,   Federico    Joaquín
@@ -7,13 +8,14 @@
  * @since 01/07/2020
  */
 
+import java.util.ArrayList;
+
 import Jama.Matrix;
 
 public class PetriNet {
 
     //Campos privados.
-    private Object lock;
-    private int lastFiredTransition, totalFired, stopCondition, stepToLog;
+    private int lastFiredTransition, totalFired, stopCondition;
     private double[] auxVector = {};
     private Matrix incidence, incidenceBackwards; //Matrices a utilizar.
     private Matrix initialMarking, currentMarking; //Vectores relativos al marcado de la red.
@@ -23,6 +25,7 @@ public class PetriNet {
     private Matrix alphaTimes; //Vector con los alfas de cada transición.
     private Matrix workingVector; //Vector que indica los hilos que están trabajando en las transiciones.
     private Matrix firedTransitions; //Vectores que almacena el número de veces que se disparó cada transición.
+    private ArrayList<String> transitionsSequence;
 
     /**
 	 * Constructor.
@@ -36,19 +39,19 @@ public class PetriNet {
      * @param   lock                El lock para sincronizar la escritura en el Log con el disparo de transiciones
      * @param   stepToLog           Cada cuántas transiciones disparadas se debe dar permiso al hilo Log para tomar registro de las estadísticas de la red.
      */
-    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes, int stopCondition, Object lock, int stepToLog) {
+    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes, int stopCondition) {
         this.incidence = incidence;
         this.incidenceBackwards = incidenceBackwards;
         this.initialMarking = initialMarking;
         this.placesInvariants = placesInvariants;
         this.alphaTimes = alphaTimes;
         this.stopCondition = stopCondition;
-        this.lock = lock;
-        this.stepToLog = stepToLog;
 
         firedTransitions = new Matrix(1, incidence.getColumnDimension());
 
         enabledTransitions = new Matrix(1, incidence.getColumnDimension());
+
+        transitionsSequence = new ArrayList<String>();
         
         aux = new Matrix(auxVector, 1);
 
@@ -96,6 +99,13 @@ public class PetriNet {
      */
     public Matrix getTransitionsFired() {
         return firedTransitions;
+    }
+
+    /**
+     * @return  La secuencia de transiciones disparadas.
+     */
+    public ArrayList<String> getTransitionsSequence() {
+        return transitionsSequence;
     }
 
     /**
@@ -295,6 +305,8 @@ public class PetriNet {
      */
     public void fireTransition(Matrix firingVector) {
         setCurrentMarkingVector(stateEquation(firingVector));
+
+        transitionsSequence.add("T" + getLastFiredTransition() + "");
         
         firedTransitions = firedTransitions.plus(firingVector); //Aumento las transiciones disparadas.
 
@@ -307,24 +319,6 @@ public class PetriNet {
         setEnabledTransitions();
 
         totalFired++;
-
-        if(getTotalFired() % stepToLog == 0) {
-            synchronized(lock) {
-                lock.notify();
-
-                try {
-                    lock.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    System.out.println("\nError esperando en fireTransition.\n");
-                }
-            }
-        }
-        else if(hasCompleted()) {
-            synchronized(lock) {
-                lock.notify();
-            }
-        }
     }
 
     /**

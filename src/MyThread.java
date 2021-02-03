@@ -30,7 +30,7 @@ public class MyThread extends Thread {
         myTransitions = new ArrayList<Matrix>();
 
         for(int i = 0; i < sequence.getColumnDimension(); i++)
-            myTransitions.add(getTransitionVector((int) sequence.get(0, i)));
+            myTransitions.add(getTransitionVector((int)sequence.get(0, i)));
     }
 
     // ----------------------------------------Métodos públicos---------------------------------
@@ -49,6 +49,23 @@ public class MyThread extends Thread {
      */
     public ArrayList<Matrix> getAssociatedTransitions() {
         return myTransitions;
+    }
+
+    /**
+     * En este método se crea un vector de una fila y con tantas columnas como transiciones
+     * tenga la red. Luego, en base al índice que se recibe como parámetro, se setea un '1'
+     * en esa posición, logrando así cualquier vector de disparo deseado.
+     * 
+     * @param   i   Índice de la transición que se quiere setear en el vector de disparo.
+     * 
+     * @return  El vector con ceros y un '1' en la i-ésima transición.
+     */
+    public Matrix getTransitionVector(int i) {
+        Matrix vector = new Matrix(1, monitor.getPetriNet().getIncidenceMatrix().getColumnDimension());
+        
+        vector.set(0, i, 1);
+        
+        return vector;
     }
 
     // ----------------------------------------Overrides----------------------------------------
@@ -71,11 +88,10 @@ public class MyThread extends Thread {
             
             if(monitor.tryFiring(firingVector)) {
                 i++;
+
                 if(i >= myTransitions.size()) i = 0;
             } else {
                 try {
-                    if(monitor.hasCompleted()) break;
-
                     //System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime(Thread.currentThread().getId()));
                     
                     sleep(monitor.getWorkingTime(Thread.currentThread().getId()));
@@ -86,24 +102,5 @@ public class MyThread extends Thread {
         }
 
         System.out.println(Thread.currentThread().getId() + ": Terminó mi run()");
-    }
-
-    // ----------------------------------------Otros--------------------------------------------
-
-    /**
-     * En este método se crea un vector de una fila y con tantas columnas como transiciones
-     * tenga la red. Luego, en base al índice que se recibe como parámetro, se setea un '1'
-     * en esa posición, logrando así cualquier vector de disparo deseado.
-     * 
-     * @param   i   Índice de la transición que se quiere setear en el vector de disparo.
-     * 
-     * @return  El vector con ceros y un '1' en la i-ésima transición.
-     */
-    public Matrix getTransitionVector(int i) {
-        Matrix vector = new Matrix(1, monitor.getPetriNet().getIncidenceMatrix().getColumnDimension());
-        
-        vector.set(0, i, 1);
-        
-        return vector;
     }
 }
