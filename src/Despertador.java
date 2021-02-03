@@ -37,7 +37,7 @@ public class Despertador extends Thread {
 		logger.addHandler(FH);
         logger.setLevel(Level.INFO);
         
-        while(!pNet.hasCompleted()) { }
+        while(!pNet.hasCompleted()) {System.out.println("AAAAAAAAAAAAAAAA");}
 
         System.out.println("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
 
@@ -50,7 +50,8 @@ public class Despertador extends Thread {
             monitor.getEntryQueue().release(monitor.getEntryQueue().getQueueLength());
         
         System.out.println("DESPERTÉ A TOOELMUNDOOO -- fin del programa");
-
+        System.out.println("final shit: ");
+        pNet.getCurrentMarkingVector().print(1, 0);
         logger.info(pNet.getTransitionsSequence().toString());
     }
 }

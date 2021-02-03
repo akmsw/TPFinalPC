@@ -41,7 +41,7 @@ public class MarkingTest {
 
         double[] leftT = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-        String leftTransitions = "0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,4,1,0,6,";
+        String leftTransitions = "1,0,0,2,0,2,0,1,0,2,0,1,0,2,0,4,1,0,14,8,";
         
         String aux = "";
 

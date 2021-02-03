@@ -305,12 +305,12 @@ public class PetriNet {
      */
     public void fireTransition(Matrix firingVector) {
         setCurrentMarkingVector(stateEquation(firingVector));
-
-        transitionsSequence.add("T" + getLastFiredTransition() + "");
         
         firedTransitions = firedTransitions.plus(firingVector); //Aumento las transiciones disparadas.
 
         lastFiredTransition = getIndex(firingVector);
+
+        transitionsSequence.add("T" + getLastFiredTransition() + "");
 
         setWorkingVector(firingVector, 0);
 

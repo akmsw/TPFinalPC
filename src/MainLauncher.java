@@ -15,7 +15,7 @@ import Jama.Matrix;
 public class MainLauncher {
 
     // Campos constantes privados.
-    private static final int stopCondition = 1000; // Cantidad de tareas que se tienen que finalizar para terminar la
+    private static final int stopCondition = 100; // Cantidad de tareas que se tienen que finalizar para terminar la
                                                    // ejecución del programa.
     private static final int stepToLog = 50; // Cada cuántas tareas se chequea el balance de carga en procesadores y
                                              // memorias.
