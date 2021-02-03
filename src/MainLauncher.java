@@ -15,10 +15,8 @@ import Jama.Matrix;
 public class MainLauncher {
 
     // Campos constantes privados.
-    private static final int stopCondition = 100; // Cantidad de tareas que se tienen que finalizar para terminar la
+    private static final int stopCondition = 1000; // Cantidad de tareas que se tienen que finalizar para terminar la
                                                    // ejecución del programa.
-    private static final int stepToLog = 50; // Cada cuántas tareas se chequea el balance de carga en procesadores y
-                                             // memorias.
 
     // Campos privados.
     private static double[][] incidenceArray = { // Matriz I
@@ -84,22 +82,6 @@ public class MainLauncher {
                                                                         // Tarea2P1 + Tarea2P2 = 1
     };
 
-    /*
-     * Orden de transiciones (izquierda a derecha): 0: ArrivalRate 1: AsignarP1 2:
-     * AsignarP2 3: EmpezarP1 4: EmpezarP2 5: FinalizarT1P1 6: FinalizarT1P2 7:
-     * FinalizarT2P1 8: FinalizarT2P2 9: P1M1 10: P1M2 11: P2M1 12: P2M2 13:
-     * ProcesarT2P1 14: ProcesarT2P2 15: VaciarM1 16: VaciarM2
-     */
-    private static double[][] tInvariants = { { 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0 }, // T0,T1,T3,T5,T9,T15
-            { 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1 }, // T0,T1,T3,T5,T10,T16
-            { 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0 }, // T0,T2,T4,T6,T11,T15
-            { 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1 }, // T0,T2,T4,T6,T12,T16
-            { 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0 }, // T0,T1,T3,T7,T13,T15
-            { 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1 }, // T0,T1,T3,T7,T13,T16
-            { 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0 }, // T0,T2,T4,T8,T14,T15
-            { 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1 } // T0,T2,T4,T8,T14,T16
-    };
-
     private static ArrayList<Matrix> threadPaths;
 
     private static double[] p0 = { 1, 3, 5, 9, 15 };
@@ -145,7 +127,6 @@ public class MainLauncher {
         Matrix incidenceBackwards = new Matrix(incidenceBackwardsArray);
         Matrix initialMarking = new Matrix(iMark, 1); //'1' es la cantidad de filas que quiero en la matriz.
         Matrix placesInvariants = new Matrix(pInvariants);
-        Matrix transitionInvariants = new Matrix(tInvariants);
         Matrix alphaTimes = new Matrix(alphaTimesA, 1);
 
         threadPaths = new ArrayList<Matrix>();
@@ -171,14 +152,14 @@ public class MainLauncher {
         pNet.setEnabledTransitions(); //Seteo de las transiciones sensibilizadas dado el marcado inicial de la red.
         
         for(int i = 0; i < threadQuantity; i++) {
-            threads[i] = new MyThread(threadPaths.get(i), monitor);
+            threads[i] = new MyThread(threadPaths.get(i), monitor,pNet);
             threads[i].start();
         }
 
         //Creación y ejecución del hilo Log.
         try {
-            Despertador despertador = new Despertador("ReportMonitor.txt", pNet, monitor);
-            despertador.start();
+            MyLogger log = new MyLogger("ReportMonitor.txt", pNet, monitor);
+            log.start();
         } catch (Exception e) {
             e.printStackTrace();
             //System.out.println("Error al crear el log.");
