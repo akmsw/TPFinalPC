@@ -1,3 +1,11 @@
+# En este archivo se trabaja con la cadena 'leftTransitions', que representa la secuencia de transiciones disparadas
+# a lo largo de toda la ejecución del programa. El algoritmo se encarga de tomar la expresión regular declarada a
+# continuación y en base a ella retirar de 'leftTransitions' todos los invariantes de transición que se completaron
+# en la ejecución del programa, quedándonos con una secuencia de transiciones que no completan un invariante de
+# transición y que, de ser ejecutadas en orden en base al marcado inicial de la red, deberían llevarnos de igual modo
+# al marcado final en el que quedó la red luego de la ejecución del programa, ya que los invariantes de transición
+# no afectan porque nos llevan a un estado en el que el marcado de la red es igual al marcado inicial de la misma.
+
 import re
 
 regex = r"(T0,)(.*?)(((T1,)(.*?)(T3,)(.*?)(((T5,)(.*?)(((T9,)(.*?)(T15,))|((T10,)(.*?)(T16,))))|((T13,)(.*?)(T7,))(.*?)(((T9,)(.*?)(T15,))|((T10,)(.*?)(T16,)))))|()(T2,)(.*?)(T4,)(.*?)(((T6,)(.*?)(((T11,)(.*?)(T15,))|((T12,)(.*?)(T16,))))|((T14,)(.*?)(T8,)(.*?)(((T11,)(.*?)(T15,))|((T12,)(.*?)(T16,))))))"
