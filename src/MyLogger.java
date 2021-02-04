@@ -98,7 +98,7 @@ public class MyLogger extends Thread {
 
         finalMarking += "]";
 
-        logger.info(finalMarking);
+        logger.info("Marcado final de la red: " + finalMarking);
 
 		for(Semaphore queue : monitor.getConditionQueues().getSemaphore())
             if(queue.hasQueuedThreads())
@@ -107,6 +107,6 @@ public class MyLogger extends Thread {
         if(monitor.getEntryQueue().hasQueuedThreads()) //Chequeo de hilos encolados en ArrivalRate.
             monitor.getEntryQueue().release(monitor.getEntryQueue().getQueueLength());
         
-        logger.info("Marcado final de la red: " + pNet.getTransitionsSequence().toString());
+        logger.info("Secuencia de transiciones disparadas: " + pNet.getTransitionsSequence().toString());
     }
 }
