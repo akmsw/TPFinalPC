@@ -74,7 +74,7 @@ public class MyLogger extends Thread {
         logger.addHandler(FH);
         logger.setLevel(Level.INFO);
 
-        while (!pNet.hasCompleted()) {
+        while(!pNet.hasCompleted()) {
             try {
                 sleep(1000);
                 logger.info("\n" + pNet.getMemoriesLoad() + 
