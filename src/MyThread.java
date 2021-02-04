@@ -18,6 +18,7 @@ public class MyThread extends Thread {
     private Matrix firingVector; // Este vector indica la transicion que se disparará o que se intentó disparar.
     private Monitor monitor;
     private PetriNet pNet;
+    private int transition;
 
     /**
      * Constructor.
@@ -70,6 +71,16 @@ public class MyThread extends Thread {
         return vector;
     }
 
+     /**
+     * Este metodo cambia a la siguiente transicion
+     */
+    public void nextTransition() {
+        transition++;
+        if(transition >= myTransitions.size()) transition = 0;
+    }
+
+
+
     // ----------------------------------------Overrides----------------------------------------
 
     /**
@@ -81,17 +92,14 @@ public class MyThread extends Thread {
      */
     @Override
     public void run() {
-        int i = 0;
 
         while(!pNet.hasCompleted()) {
-            firingVector = myTransitions.get(i);
+            firingVector = myTransitions.get(transition);
             
             //System.out.println(Thread.currentThread().getId() + ": Quiero disparar T" + monitor.getIndex(firingVector));
             
             if(monitor.tryFiring(firingVector)) {
-                i++;
-
-                if(i >= myTransitions.size()) i = 0;
+                nextTransition();
             } else {
                 try {
                     //System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime(Thread.currentThread().getId()));
