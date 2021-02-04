@@ -103,7 +103,7 @@ public class MyThread extends Thread {
             else {
                 try {
                     sleep(monitor.getWorkingTime(Thread.currentThread().getId()));
-                } catch (InterruptedException e) {
+                } catch(InterruptedException e) {
                     e.printStackTrace();
                 }
             }

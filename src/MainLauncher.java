@@ -173,7 +173,7 @@ public class MainLauncher {
         try {
             MyLogger log = new MyLogger("ReportMonitor.txt", pNet, monitor);
             log.start();
-        } catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
             System.out.println("Error al crear el hilo logger.");
         }

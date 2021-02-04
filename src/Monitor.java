@@ -132,7 +132,7 @@ public class Monitor {
     public boolean tryFiring(Matrix firingVector) {
         try {
             catchMonitor();
-        } catch (InterruptedException e) {
+        } catch(InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -144,7 +144,7 @@ public class Monitor {
             try {
                 conditionQueues.getSemaphore().get(queue).acquire();
                 if(pNet.hasCompleted()) return false; //Si un hilo se despierta en este punto y ya se completaron 1000 tareas, debe salir sin disparar nada.
-            } catch (InterruptedException e) {
+            } catch(InterruptedException e) {
                 e.printStackTrace();
             }
         }

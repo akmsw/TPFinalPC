@@ -79,7 +79,7 @@ public class MyLogger extends Thread {
                 logger.info("\n" + pNet.getMemoriesLoad() + 
                             "\n" + pNet.getProcessorsLoad() + 
                             "\n" + pNet.getProcessorsTasks());
-            } catch (InterruptedException e) {
+            } catch(InterruptedException e) {
                 e.printStackTrace();
             }
         }
