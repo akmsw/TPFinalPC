@@ -96,9 +96,7 @@ public class MyLogger extends Thread {
         for(int i = 0; i < finalMarkingVector.getColumnDimension(); i++)
             finalMarking += (int)finalMarkingVector.get(0, i) + " ";
 
-        finalMarking += "]";
-
-        logger.info("Marcado final de la red: " + finalMarking);
+        finalMarking += "]";        
 
 		for(Semaphore queue : monitor.getConditionQueues().getSemaphore())
             if(queue.hasQueuedThreads())
@@ -108,5 +106,6 @@ public class MyLogger extends Thread {
             monitor.getEntryQueue().release(monitor.getEntryQueue().getQueueLength());
         
         logger.info("Secuencia de transiciones disparadas: " + pNet.getTransitionsSequence().toString());
+        logger.info("Marcado final de la red: " + finalMarking);
     }
 }

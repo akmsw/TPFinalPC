@@ -74,11 +74,11 @@ public class MarkingTest {
         }
         
         Matrix firing = new Matrix(leftT, 1);
-
+        System.out.println("Firing: ");
         firing.print(0, 0);
 
         Matrix result = (initialMarking.transpose().plus(incidence.times(firing.transpose()))).transpose();
-
+        System.out.println("Result: ");
         result.print(0, 0);
     }
 }
