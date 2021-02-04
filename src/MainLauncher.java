@@ -14,7 +14,7 @@ import Jama.Matrix;
 public class MainLauncher {
 
     // Campos constantes privados.
-    private static final int stopCondition = 1000; // Cantidad de tareas que se tienen que finalizar para terminar la ejecución del programa.
+    private static final int stopCondition = 200; // Cantidad de tareas que se tienen que finalizar para terminar la ejecución del programa.
 
     // Campos privados.
     private static double[][] incidenceArray = { // Matriz I

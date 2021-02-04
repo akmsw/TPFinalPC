@@ -105,7 +105,7 @@ public class MyLogger extends Thread {
         if(monitor.getEntryQueue().hasQueuedThreads()) //Chequeo de hilos encolados en ArrivalRate.
             monitor.getEntryQueue().release(monitor.getEntryQueue().getQueueLength());
         
-        logger.info("Secuencia de transiciones disparadas: " + pNet.getTransitionsSequence().toString());
+        logger.info("Secuencia de transiciones disparadas: \"" + pNet.getTransitionsSequence().toString() + "\"");
         logger.info("Marcado final de la red: " + finalMarking);
     }
 }
