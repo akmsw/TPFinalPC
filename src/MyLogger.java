@@ -107,6 +107,6 @@ public class MyLogger extends Thread {
         if(monitor.getEntryQueue().hasQueuedThreads()) //Chequeo de hilos encolados en ArrivalRate.
             monitor.getEntryQueue().release(monitor.getEntryQueue().getQueueLength());
         
-        logger.info(pNet.getTransitionsSequence().toString());
+        logger.info("Marcado final de la red: " + pNet.getTransitionsSequence().toString());
     }
 }
