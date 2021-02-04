@@ -19,7 +19,7 @@ public class Monitor {
     private ConditionQueues conditionQueues;
     private Semaphore entry;
     private PetriNet pNet;
-    private Policy Policy;
+    private Policy policy;
 
     /**
      * Constructor.
@@ -35,7 +35,7 @@ public class Monitor {
 
         entry = new Semaphore(1, true);
 
-        Policy = new Policy();
+        policy = new Policy();
 
         conditionQueues = new ConditionQueues(pNet.getIncidenceMatrix().getColumnDimension());
 
@@ -174,7 +174,7 @@ public class Monitor {
         Matrix and = and(sensibilized, queued);
 
         if(enabledAndQueued(and) > 0) {
-            int choice = Policy.decide(and);
+            int choice = policy.decide(and);
             conditionQueues.getSemaphore().get(choice).release();
         } else {
             exitMonitor();

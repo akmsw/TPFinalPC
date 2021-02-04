@@ -27,7 +27,7 @@ public class PetriNet {
     private Matrix aux; //Vector auxiliar para el cálculo de la ecuación de estado de la red.
     private Matrix alphaTimes; //Vector con los alfas de cada transición.
     private Matrix workingVector; //Vector que almacena la ID de los hilos que están trabajando en cada transición.
-    private Matrix firedTransitions; //Vectores que almacena el número de veces que se disparó cada transición.
+    private Matrix firedTransitions; //Vector que almacena el número de veces que se disparó cada transición.
     private ArrayList<String> transitionsSequence;
 
     /**
