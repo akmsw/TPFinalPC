@@ -7,7 +7,6 @@
  * @since 01/07/2020
  */
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import Jama.Matrix;
@@ -15,8 +14,7 @@ import Jama.Matrix;
 public class MainLauncher {
 
     // Campos constantes privados.
-    private static final int stopCondition = 1000; // Cantidad de tareas que se tienen que finalizar para terminar la
-                                                   // ejecución del programa.
+    private static final int stopCondition = 1000; // Cantidad de tareas que se tienen que finalizar para terminar la ejecución del programa.
 
     // Campos privados.
     private static double[][] incidenceArray = { // Matriz I
@@ -82,7 +80,7 @@ public class MainLauncher {
                                                                         // Tarea2P1 + Tarea2P2 = 1
     };
 
-    private static ArrayList<Matrix> threadPaths;
+    private static ArrayList<Matrix> threadPaths; //Arreglo que contiene los caminos de cada hilo.
 
     private static double[] p0 = { 1, 3, 5, 9, 15 };
     private static double[] p1 = { 1, 3, 5, 10, 16 };
@@ -104,28 +102,26 @@ public class MainLauncher {
     private static Matrix path8 = new Matrix(p7, 1);
     private static Matrix path9 = new Matrix(p8, 1);
 
-    // Los betas los tomamos como infinitos para que no se desensibilicen las
-    // transiciones.
-    private static double[] alphaTimesA = { 2, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 7, 7, 4, 4 }; // Alfas de las
-                                                                                                 // transiciones.
-    // private static double[] alphaTimesA = { 100, 0, 0, 0, 0, 80, 80, 80, 80, 0,
-    // 0, 0, 0, 170, 170, 250, 250 };
+    // Los betas los tomamos como infinitos para que no se desensibilicen las transiciones.
+    private static double[] alphaTimesA = { 2, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 7, 7, 4, 4 }; // Alfas de las transiciones.
+    // private static double[] alphaTimes = { 100, 0, 0, 0, 0, 80, 80, 80, 80, 0, 0, 0, 0, 170, 170, 250, 250 };
 
-    private static double[] iMark = { 1, 0, 0, 4, 0, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8 }; // Marcado inicial de
-                                                                                                 // la red.
+    private static double[] iMark = { 1, 0, 0, 4, 0, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8 }; // Marcado inicial de la red.
 
-    private static Monitor monitor;
-    private static PetriNet pNet;
+    private static PetriNet pNet;   //Red de petri representativa del sistema.
+    private static Monitor monitor; //Monitor que controlará la red de Petri que modela el sistema.
 
     /**
-     * Método principal. Aquí sólo se instancian y ejecutan los hilos.
+     * Método principal.
      * 
-     * @throws IOException
+     * Aquí se instancian y ejecutan los hilos con sus caminos asociados.
+     * También se inicializan tanto la red de Petri como el monitor y el
+     * hilo logger.
      */
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) {
         Matrix incidence = new Matrix(incidenceArray);
         Matrix incidenceBackwards = new Matrix(incidenceBackwardsArray);
-        Matrix initialMarking = new Matrix(iMark, 1); //'1' es la cantidad de filas que quiero en la matriz.
+        Matrix initialMarking = new Matrix(iMark, 1);
         Matrix placesInvariants = new Matrix(pInvariants);
         Matrix alphaTimes = new Matrix(alphaTimesA, 1);
 
@@ -162,7 +158,7 @@ public class MainLauncher {
             log.start();
         } catch (Exception e) {
             e.printStackTrace();
-            //System.out.println("Error al crear el log.");
+            System.out.println("Error al crear el log.");
         }
     }
 }
