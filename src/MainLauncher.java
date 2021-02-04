@@ -65,19 +65,15 @@ public class MainLauncher {
      * RecursoTareas 9: ProcesandoP1 10: ProcesandoP2 11: Tarea2P1 12: Tarea2P2 13:
      * ListoP1 14: ListoP2 15: M1 16: M2 17: DisponibleM1 18: DisponibleM2
      */
-    private static double[][] pInvariants = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8, 0 }, // M1 +
-                                                                                                           // DisponibleM1
-                                                                                                           // = 8
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8 }, // M2 + DisponibleM2 = 8
-            { 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // ColaP1 + LimiteColaP1 = 4
-            { 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // ColaP2 + LimiteColaP2 = 4
-            { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // P0 + ColaProcesos = 1
-            { 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0 }, // Procesador1 + ProcesandoP1 + Tarea2P1 +
-                                                                         // ListoP1 = 1
-            { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0 }, // Procesador2 + ProcesandoP2 + Tarea2P2 +
-                                                                         // ListoP2 = 1
-            { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 } // RecursoTarea + ProcesandoP1 + ProcesandoP2 +
-                                                                        // Tarea2P1 + Tarea2P2 = 1
+    private static double[][] pInvariants = {
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8, 0 }, // M1 + DisponibleM1 = 8
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8 }, // M2 + DisponibleM2 = 8
+        { 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // ColaP1 + LimiteColaP1 = 4
+        { 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // ColaP2 + LimiteColaP2 = 4
+        { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // P0 + ColaProcesos = 1
+        { 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0 }, // Procesador1 + ProcesandoP1 + Tarea2P1 + ListoP1 = 1
+        { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0 }, // Procesador2 + ProcesandoP2 + Tarea2P2 + ListoP2 = 1
+        { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 }  // RecursoTarea + ProcesandoP1 + ProcesandoP2 + Tarea2P1 + Tarea2P2 = 1
     };
 
     private static ArrayList<Matrix> threadPaths; //Arreglo que contiene los caminos de cada hilo.
