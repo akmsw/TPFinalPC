@@ -13,11 +13,13 @@ import Jama.Matrix;
 
 public class MainLauncher {
 
-    // Campos constantes privados.
-    private static final int stopCondition = 200; // Cantidad de tareas que se tienen que finalizar para terminar la ejecución del programa.
+    //Campos constantes privados.
+    private static final int stopCondition = 200; //Cantidad de tareas que se tienen que finalizar para terminar la ejecución del programa.
 
-    // Campos privados.
-    private static double[][] incidenceArray = { // Matriz I
+    //Campos privados.
+
+    //Matriz I
+    private static double[][] incidenceArray = {
             { -1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -38,7 +40,8 @@ public class MainLauncher {
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 1, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 1 } };
 
-    private static double[][] incidenceBackwardsArray = { // Matriz I-
+    //Matriz I-
+    private static double[][] incidenceBackwardsArray = {
             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -59,24 +62,42 @@ public class MainLauncher {
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 } };
 
-    /*
-     * Orden de plazas (izquierda a derecha): 0: P0 1: ColaProcesos 2: ColaP1 3:
-     * LimiteColaP1 4: ColaP2 5: LimiteColaP2 6: Procesador1 7: Procesador2 8:
-     * RecursoTareas 9: ProcesandoP1 10: ProcesandoP2 11: Tarea2P1 12: Tarea2P2 13:
-     * ListoP1 14: ListoP2 15: M1 16: M2 17: DisponibleM1 18: DisponibleM2
+    /**
+     * Matriz con los invariantes de plaza de la red.
+     * 
+     * Orden de plazas (izquierda a derecha):
+     * 0: P0
+     * 1: ColaProcesos
+     * 2: ColaP1
+     * 3: LimiteColaP1
+     * 4: ColaP2
+     * 5: LimiteColaP2
+     * 6: Procesador1
+     * 7: Procesador2
+     * 8: RecursoTareas
+     * 9: ProcesandoP1
+     * 10: ProcesandoP2
+     * 11: Tarea2P1
+     * 12: Tarea2P2
+     * 13: ListoP1
+     * 14: ListoP2
+     * 15: M1
+     * 16: M2
+     * 17: DisponibleM1
+     * 18: DisponibleM2
      */
     private static double[][] pInvariants = {
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8, 0 }, // M1 + DisponibleM1 = 8
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8 }, // M2 + DisponibleM2 = 8
-        { 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // ColaP1 + LimiteColaP1 = 4
-        { 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // ColaP2 + LimiteColaP2 = 4
-        { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // P0 + ColaProcesos = 1
-        { 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0 }, // Procesador1 + ProcesandoP1 + Tarea2P1 + ListoP1 = 1
-        { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0 }, // Procesador2 + ProcesandoP2 + Tarea2P2 + ListoP2 = 1
-        { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 }  // RecursoTarea + ProcesandoP1 + ProcesandoP2 + Tarea2P1 + Tarea2P2 = 1
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8, 0 }, //M1 + DisponibleM1 = 8
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8 }, //M2 + DisponibleM2 = 8
+        { 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, //ColaP1 + LimiteColaP1 = 4
+        { 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, //ColaP2 + LimiteColaP2 = 4
+        { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, //P0 + ColaProcesos = 1
+        { 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0 }, //Procesador1 + ProcesandoP1 + Tarea2P1 + ListoP1 = 1
+        { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0 }, //Procesador2 + ProcesandoP2 + Tarea2P2 + ListoP2 = 1
+        { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 }  //RecursoTarea + ProcesandoP1 + ProcesandoP2 + Tarea2P1 + Tarea2P2 = 1
     };
 
-    private static ArrayList<Matrix> threadPaths; //Arreglo que contiene los caminos de cada hilo.
+    private static ArrayList<Matrix> threadPaths; //Arreglo que contiene los "caminos" de cada hilo (secuencia de transiciones a ejecutar).
 
     private static double[] p0 = { 1, 3, 5, 9, 15 };
     private static double[] p1 = { 1, 3, 5, 10, 16 };
@@ -98,11 +119,10 @@ public class MainLauncher {
     private static Matrix path8 = new Matrix(p7, 1);
     private static Matrix path9 = new Matrix(p8, 1);
 
-    // Los betas los tomamos como infinitos para que no se desensibilicen las transiciones.
-    private static double[] alphaTimesA = { 2, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 7, 7, 4, 4 }; // Alfas de las transiciones.
-    // private static double[] alphaTimes = { 100, 0, 0, 0, 0, 80, 80, 80, 80, 0, 0, 0, 0, 170, 170, 250, 250 };
+    //Los betas los tomamos como infinitos para que no se desensibilicen las transiciones.
+    private static double[] alphaTimesA = { 2, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 7, 7, 4, 4 }; //Alfas de las transiciones.
 
-    private static double[] iMark = { 1, 0, 0, 4, 0, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8 }; // Marcado inicial de la red.
+    private static double[] iMark = { 1, 0, 0, 4, 0, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8 }; //Marcado inicial de la red.
 
     private static PetriNet pNet;   //Red de petri representativa del sistema.
     private static Monitor monitor; //Monitor que controlará la red de Petri que modela el sistema.
@@ -143,12 +163,13 @@ public class MainLauncher {
         
         pNet.setEnabledTransitions(); //Seteo de las transiciones sensibilizadas dado el marcado inicial de la red.
         
+        //Creación de hilos de ejecución.
         for(int i = 0; i < threadQuantity; i++) {
             threads[i] = new MyThread(threadPaths.get(i), monitor,pNet);
             threads[i].start();
         }
 
-        //Creación y ejecución del hilo Log.
+        //Creación y ejecución del hilo logger.
         try {
             MyLogger log = new MyLogger("ReportMonitor.txt", pNet, monitor);
             log.start();

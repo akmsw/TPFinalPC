@@ -32,9 +32,9 @@ public class ConditionQueues {
             conditionQueues.add(new Semaphore(0));
     }
 
-    // ----------------------------------------Métodos públicos---------------------------------
+    //----------------------------------------Métodos públicos---------------------------------
 
-    // ----------------------------------------Getters------------------------------------------
+    //----------------------------------------Getters------------------------------------------
 
     /**
      * @return  El conjunto de colas de condición de las transiciones de la red.
@@ -59,7 +59,7 @@ public class ConditionQueues {
         return index;
     }
 
-    // ----------------------------------------Otros--------------------------------------------
+    //----------------------------------------Otros--------------------------------------------
 
     /**
      * En este método se calcula un vector que almacena las transiciones

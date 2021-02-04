@@ -14,7 +14,7 @@ import Jama.Matrix;
 
 public class Monitor {
 
-    // Campos privados.
+    //Campos privados.
     private HashMap<Long, Long> workingTime;
     private ConditionQueues conditionQueues;
     private Semaphore entry;
@@ -42,9 +42,9 @@ public class Monitor {
         workingTime = new HashMap<Long, Long>();
     }
 
-    // ----------------------------------------Métodos públicos---------------------------------
+    //----------------------------------------Métodos públicos---------------------------------
 
-    // ----------------------------------------Getters------------------------------------------
+    //----------------------------------------Getters------------------------------------------
 
     /**
      * Este método retorna el tiempo de espera correspondiente al hilo que lo solicita.
@@ -78,7 +78,7 @@ public class Monitor {
         return entry;
     }
 
-    // ----------------------------------------Setters------------------------------------------
+    //----------------------------------------Setters------------------------------------------
 
     /**
      * Este método almacena el tiempo de espera correspondiente a cada hilo.
@@ -86,17 +86,17 @@ public class Monitor {
      * @param   id      Identificador del hilo.
      * @param   time    El tiempo de espera para disparar una transición.
      */
-    public synchronized void setWorkingTime(Long id, Long time){
+    public synchronized void setWorkingTime(Long id, Long time) {
         workingTime.put(id, time);
     }
 
-    // ----------------------------------------Otros--------------------------------------------
+    //----------------------------------------Otros--------------------------------------------
 
     /**
      * En este método se toma el mutex del monitor.
      * 
-     * @throws  InterruptedException    Si el hilo que quiso hacer el acquire fue
-     *                                  interrumpido en el proceso.
+     * @throws  InterruptedException    Si el hilo que quiso hacer el acquire
+     *                                  fue interrumpido en el proceso.
      */
     public void catchMonitor() throws InterruptedException {
         //System.out.println(Thread.currentThread().getId() + ": Intento Cachear monitor");
@@ -109,15 +109,17 @@ public class Monitor {
      * la ecuación de estado da un resultado correcto y si además no hay nadie
      * trabajando en la transición que el hilo que entró quiere disparar. Si se dan las
      * condiciones, se chequea el tiempo 'alfa' de la transición para ver si el
-     * hilo debería ir a dormir o no, y luego se dispara la transición. Si el hilo
+     * hilo debería ir a dormir (simulación de ejecución de una tarea) o no,
+     * y luego se dispara la transición (cambio de estado de la red). Si el hilo
      * se debe ir a dormir, entonces se toma el índice i de la transición y se setea
      * en '1' el i-ésimo elemento del vector de trabajo para indicar que ya hay
      * alguien trabajando en esa transición y no debe meterse otro hilo. Luego de esto,
      * el hilo libera el mutex para ir a dormir fuera del monitor.
-     * Antes de que el hilo libere el mutex del monitor, se chequea si hay algún hilo
-     * esperando en la cola de alguna transición sensibilizada. Si es así, se le pasa
-     * el mutex (si hay más de un hilo en estas condiciones se llama al objeto de tipo
-     * Policy y se decide de manera aleatoria uniforme). Si no hay nadie en esas condiciones,
+     * Luego de esperar el tiempo necesario (terminar la tarea) y antes de que el hilo
+     * libere el mutex del monitor, se chequea si hay algún hilo esperando en la cola
+     * de alguna transición sensibilizada. Si es así, se le pasa el mutex
+     * (si hay más de un hilo en estas condiciones se llama al objeto de tipo Policy y
+     * se decide de manera aleatoria uniforme). Si no hay nadie en esas condiciones,
      * se libera el mutex del monitor.
      * Cabe aclarar que antes de hacer el disparo de alguna transición se chequea nuevamente
      * si se llegó a la condición de corte del programa, dado que puede darse el caso en el que
@@ -157,7 +159,6 @@ public class Monitor {
 
         if(alphaTimeCheck(firingVector)) {
             pNet.fireTransition(firingVector);
-
             //System.out.println(Thread.currentThread().getId() + ": Se disparó exitosamente T" + getIndex(firingVector));
         } else {
             //System.out.println(Thread.currentThread().getId() + ": No pasó alfa, salgo para trabajar");
@@ -169,6 +170,7 @@ public class Monitor {
             return false;
         }
 
+        //Chequeo de hilos encolados en transiciones sensibilizadas para despertarlos con la política establecida.
         Matrix sensibilized = pNet.getEnabledTransitions();
         Matrix queued = conditionQueues.whoAreQueued();
         Matrix and = and(sensibilized, queued);
@@ -183,9 +185,9 @@ public class Monitor {
         return true;
     }
 
-    // ----------------------------------------Métodos privados---------------------------------
+    //----------------------------------------Métodos privados---------------------------------
 
-    // ----------------------------------------Getters------------------------------------------
+    //----------------------------------------Getters------------------------------------------
 
     /**
      * Este método devuelve el índice donde está el '1' en el
@@ -208,7 +210,7 @@ public class Monitor {
         return index;
     }
 
-    // ----------------------------------------Otros------------------------------------------
+    //----------------------------------------Otros------------------------------------------
 
     /**
      * En este método se libera el mutex del monitor.
@@ -218,22 +220,18 @@ public class Monitor {
     }
 
     /**
-     * En este método se calcula el resultado de la operación 'AND' entre el vector
-     * de transiciones sensibilizadas y el vector de transiciones con hilos
-     * encolados.
+     * @param   sensibilized    Vector de transiciones sensibilizadas.
+     * @param   queued          Vector de transiciones con hilos encolados.
      * 
      * @return  El vector que almacena las transiciones sensibilizadas con al menos
      *          un hilo encolado en ellas.
      */
-    private Matrix and(Matrix a, Matrix b) {
-        return a.arrayTimes(b);
+    private Matrix and(Matrix sensibilized, Matrix queued) {
+        return sensibilized.arrayTimes(queued);
     }
 
     /**
-     * Este método calcula la cantidad de transiciones sensibilizadas que tienen
-     * hilos esperando en sus colas.
-     * 
-     * @param   and El vector resultado de la operación 'and'.
+     * @param   and El vector resultado de la operación 'AND'.
      * 
      * @return  La cantidad de transiciones sensibilizadas en la red con hilos
      *          encolados.
@@ -259,8 +257,8 @@ public class Monitor {
      * @return  Si el tiempo alfa ya ha transcurrido o no.
      */
     private boolean alphaTimeCheck(Matrix firingVector) {
-        long alpha = (long)pNet.getAlphaVector().get(0, getIndex(firingVector));    //Tiempo 'alfa' asignado a la transición.
-        long currentTime = System.currentTimeMillis();  //Tiempo actual del sistema.
+        long alpha = (long)pNet.getAlphaVector().get(0, getIndex(firingVector)); //Tiempo 'alfa' asignado a la transición.
+        long currentTime = System.currentTimeMillis(); //Tiempo actual del sistema.
         long enabledAtTime = (long)pNet.getEnabledAtTime().get(0, getIndex(firingVector)); //Momento en el que la transición se sensibilizó.
 
         if(alpha < (currentTime - enabledAtTime)) return true;

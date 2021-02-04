@@ -20,12 +20,12 @@ import java.io.IOException;
 
 public class MyLogger extends Thread {
 
-    // Campos privados
-    PetriNet pNet;
-    Monitor monitor;
-    private File f;
-    private FileHandler FH;
-    private Logger logger;
+    //Campos privados
+    private PetriNet pNet; //Red de Petri del sistema.
+    private Monitor monitor; //Monitor que controla la red de Petri.
+    private File f;         //v
+    private FileHandler FH; //Archivos necesarios para loggear.
+    private Logger logger;  //^
 
     /**
      * Constructor.
@@ -46,8 +46,7 @@ public class MyLogger extends Thread {
 
         f = new File(fileName);
 
-        if (!f.exists())
-            f.createNewFile();
+        if (!f.exists()) f.createNewFile();
 
         SimpleFormatter formatter = new SimpleFormatter();
 

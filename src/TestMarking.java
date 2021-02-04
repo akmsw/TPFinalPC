@@ -11,6 +11,7 @@ import Jama.Matrix;
 
 public class TestMarking {
 
+    //Campos privados.
     private static double[][] incidenceArray = { //Matriz de incidencia de la red de Petri.
         {-1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 1,-1,-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },

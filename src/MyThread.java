@@ -13,12 +13,12 @@ import Jama.Matrix;
 
 public class MyThread extends Thread {
 
-    // Campos privados.
-    private ArrayList<Matrix> myTransitions;
-    private Matrix firingVector; // Este vector indica la transicion que se disparará o que se intentó disparar.
-    private Monitor monitor;
-    private PetriNet pNet;
-    private int transition;
+    //Campos privados.
+    private ArrayList<Matrix> myTransitions; //Arreglo de transiciones asociadas al hilo.
+    private Matrix firingVector; //Este vector indica la transicion que se disparará o que se intentó disparar.
+    private Monitor monitor; //Monitor que controla la red de Petri.
+    private PetriNet pNet; //Red de Petri que modela el sistema.
+    private int transition; //Transición que se quiere disparar.
 
     /**
      * Constructor.
@@ -36,9 +36,9 @@ public class MyThread extends Thread {
             myTransitions.add(getTransitionVector((int)sequence.get(0, i)));
     }
 
-    // ----------------------------------------Métodos públicos---------------------------------
+    //----------------------------------------Métodos públicos---------------------------------
 
-    // ----------------------------------------Getters------------------------------------------
+    //----------------------------------------Getters------------------------------------------
 
     /**
      * @return  El vector de disparo del hilo.
@@ -55,7 +55,7 @@ public class MyThread extends Thread {
     }
 
     /**
-     * En este método se crea un vector de una fila y con tantas columnas como transiciones
+     * En este método se crea un vector de una fila y tantas columnas como transiciones
      * tenga la red. Luego, en base al índice que se recibe como parámetro, se setea un '1'
      * en esa posición, logrando así cualquier vector de disparo deseado.
      * 
@@ -71,28 +71,30 @@ public class MyThread extends Thread {
         return vector;
     }
 
-     /**
-     * Este metodo cambia a la siguiente transicion
+    /**
+     * Este método actualiza el valor del índice de la transición a disparar.
+     * Si el valor del índice incrementado es mayor o igual a la cantidad de
+     * transiciones asociadas significa que ya completamos la secuencia y se
+     * debe comenzar de nuevo con la misma, por lo que se resetea el contador.
      */
     public void nextTransition() {
         transition++;
         if(transition >= myTransitions.size()) transition = 0;
     }
 
-
-
-    // ----------------------------------------Overrides----------------------------------------
+    //----------------------------------------Overrides----------------------------------------
 
     /**
      * En este método, cada hilo tiene un índice que comienza en '0' e itera entre
      * la cantidad de transiciones asociadas al hilo. Mientras no se haya concretado
      * la condición de corte del programa, se arma un vector de disparo con el
-     * índice que indique el i-ésimo elemento obtenido del arreglo 'myTransitions'.
-     * Luego, se intenta disparar la misma por medio del monitor.
+     * índice que indique el i-ésimo elemento obtenido del arreglo 'myTransitions' y
+     * se intenta disparar la misma por medio del monitor. Luego de disparar la
+     * transición, se actualiza el valor del índice para armar el siguiente vector
+     * de disparo.
      */
     @Override
     public void run() {
-
         while(!pNet.hasCompleted()) {
             firingVector = myTransitions.get(transition);
             
@@ -103,7 +105,6 @@ public class MyThread extends Thread {
             } else {
                 try {
                     //System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime(Thread.currentThread().getId()));
-                    
                     sleep(monitor.getWorkingTime(Thread.currentThread().getId()));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
