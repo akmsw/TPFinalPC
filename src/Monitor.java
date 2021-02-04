@@ -104,17 +104,10 @@ public class Monitor {
     }
 
     /**
-     * @return  Si se ha llegado a la condición de corte del programa o no.
-     */
-    public boolean hasCompleted() {
-        return pNet.hasCompleted();
-    }
-
-    /**
      * En este método se comienza tomando el mutex del monitor. Luego, mientras
      * no se haya llegado a la condición de corte del programa, se chequea si
      * la ecuación de estado da un resultado correcto y si además no hay nadie
-     * trabajando en la transición que el hilo quiere disparar. Si se dan las
+     * trabajando en la transición que el hilo que entró quiere disparar. Si se dan las
      * condiciones, se chequea el tiempo 'alfa' de la transición para ver si el
      * hilo debería ir a dormir o no, y luego se dispara la transición. Si el hilo
      * se debe ir a dormir, entonces se toma el índice i de la transición y se setea
@@ -137,7 +130,7 @@ public class Monitor {
      */
     public boolean tryFiring(Matrix firingVector) {
         try {
-            catchMonitor(); //A partir de este punto, sólo un hilo continúa con la ejecución de este método porque catchMonitor() es synchronized.
+            catchMonitor();
             //System.out.println(Thread.currentThread().getId() + ": Cachie el monitor");
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -152,8 +145,7 @@ public class Monitor {
             
             try {
                 conditionQueues.getSemaphore().get(queue).acquire();
-
-                if(pNet.hasCompleted()) return false; //Si me despierto del acquire y ya se completaron 1000 tareas, tengo que salir.
+                if(pNet.hasCompleted()) return false; //Si un hilo se despierta en este punto y ya se completaron 1000 tareas, debe salir sin disparar nada.
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -267,9 +259,9 @@ public class Monitor {
      * @return  Si el tiempo alfa ya ha transcurrido o no.
      */
     private boolean alphaTimeCheck(Matrix firingVector) {
-        long alpha = (long)pNet.getAlphaVector().get(0, getIndex(firingVector));
-        long currentTime = System.currentTimeMillis();
-        long enabledAtTime = (long)pNet.getEnabledAtTime().get(0, getIndex(firingVector));
+        long alpha = (long)pNet.getAlphaVector().get(0, getIndex(firingVector));    //Tiempo 'alfa' asignado a la transición.
+        long currentTime = System.currentTimeMillis();  //Tiempo actual del sistema.
+        long enabledAtTime = (long)pNet.getEnabledAtTime().get(0, getIndex(firingVector)); //Momento en el que la transición se sensibilizó.
 
         if(alpha < (currentTime - enabledAtTime)) return true;
         else {

@@ -14,16 +14,19 @@ import Jama.Matrix;
 
 public class PetriNet {
 
-    //Campos privados.
-    private int lastFiredTransition, totalFired, stopCondition;
-    private double[] auxVector = {};
-    private Matrix incidence, incidenceBackwards; //Matrices a utilizar.
-    private Matrix initialMarking, currentMarking; //Vectores relativos al marcado de la red.
-    private Matrix enabledTransitions, enabledAtTime; //Vectores relativos a la sensibilización de transiciones.
+    // Campos privados.
+    private int lastFiredTransition; //Última transición disparada.
+    private int totalFired; //Cantidad total de transiciones disparadas.
+    private int stopCondition; //Condición de corte del programa.
+    private double[] auxVector = {}; //Vector auxiliar para cálculos.
+    private Matrix incidence, incidenceBackwards; //Matrices de incidencia (+ y -) a utilizar.
+    private Matrix initialMarking, currentMarking; //Vectores relativos al marcado de la red (inicial y actual).
+    private Matrix enabledTransitions; //Vector que contiene el estado de sensibilización de las transiciones.
+    private Matrix enabledAtTime; //Vector que contiene el instante de tiempo en el que una transición fue sensibilizada.
     private Matrix placesInvariants; //Vectores relativos a los invariantes de la red.
     private Matrix aux; //Vector auxiliar para el cálculo de la ecuación de estado de la red.
     private Matrix alphaTimes; //Vector con los alfas de cada transición.
-    private Matrix workingVector; //Vector que indica los hilos que están trabajando en las transiciones.
+    private Matrix workingVector; //Vector que almacena la ID de los hilos que están trabajando en cada transición.
     private Matrix firedTransitions; //Vectores que almacena el número de veces que se disparó cada transición.
     private ArrayList<String> transitionsSequence;
 
@@ -36,8 +39,6 @@ public class PetriNet {
      * @param   placesInvariants    Los invariantes de plaza de la red.
      * @param   alphaTimes          Los tiempos 'alfa' asociados a cada transición.
      * @param   stopCondition       La condición de corte del programa (cuántas tareas se deben finalizar para terminar el programa).
-     * @param   lock                El lock para sincronizar la escritura en el Log con el disparo de transiciones
-     * @param   stepToLog           Cada cuántas transiciones disparadas se debe dar permiso al hilo Log para tomar registro de las estadísticas de la red.
      */
     public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes, int stopCondition) {
         this.incidence = incidence;
