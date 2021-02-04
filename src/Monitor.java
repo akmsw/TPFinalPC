@@ -99,7 +99,6 @@ public class Monitor {
      *                                  fue interrumpido en el proceso.
      */
     public void catchMonitor() throws InterruptedException {
-        //System.out.println(Thread.currentThread().getId() + ": Intento Cachear monitor");
         entry.acquire();
     }
 
@@ -133,14 +132,11 @@ public class Monitor {
     public boolean tryFiring(Matrix firingVector) {
         try {
             catchMonitor();
-            //System.out.println(Thread.currentThread().getId() + ": Cachie el monitor");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         if(!pNet.stateEquationTest(firingVector) || pNet.somebodyIsWorkingOn(firingVector)) {
-            //System.out.println(Thread.currentThread().getId() + ": No están dadas las condiciones para disparar, me voy a la cola de T" + getIndex(firingVector));
-            
             exitMonitor();
             
             int queue = conditionQueues.getQueue(firingVector);
@@ -151,18 +147,11 @@ public class Monitor {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            //System.out.println(Thread.currentThread().getId() + ": Me despertaron, voy a disparar T" + getIndex(firingVector));
         }
-
-        //System.out.println(Thread.currentThread().getId() + ": T" + getIndex(firingVector) + " está sensibilizada");
 
         if(alphaTimeCheck(firingVector)) {
             pNet.fireTransition(firingVector);
-            //System.out.println(Thread.currentThread().getId() + ": Se disparó exitosamente T" + getIndex(firingVector));
         } else {
-            //System.out.println(Thread.currentThread().getId() + ": No pasó alfa, salgo para trabajar");
-            
             pNet.setWorkingVector(firingVector, (double)Thread.currentThread().getId());
             
             exitMonitor();

@@ -98,13 +98,10 @@ public class MyThread extends Thread {
         while(!pNet.hasCompleted()) {
             firingVector = myTransitions.get(transition);
             
-            //System.out.println(Thread.currentThread().getId() + ": Quiero disparar T" + monitor.getIndex(firingVector));
-            
-            if(monitor.tryFiring(firingVector)) {
+            if(monitor.tryFiring(firingVector))
                 nextTransition();
-            } else {
+            else {
                 try {
-                    //System.out.println(Thread.currentThread().getId() + ": Me voy a dormir " + monitor.getWorkingTime(Thread.currentThread().getId()));
                     sleep(monitor.getWorkingTime(Thread.currentThread().getId()));
                 } catch (InterruptedException e) {
                     e.printStackTrace();

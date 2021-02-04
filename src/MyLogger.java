@@ -46,7 +46,7 @@ public class MyLogger extends Thread {
 
         f = new File(fileName);
 
-        if (!f.exists()) f.createNewFile();
+        if(!f.exists()) f.createNewFile();
 
         SimpleFormatter formatter = new SimpleFormatter();
 

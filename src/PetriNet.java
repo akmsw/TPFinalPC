@@ -365,10 +365,8 @@ public class PetriNet {
         int tokensAmount; //La cantidad de tokens que se van contando en las plazas.
 
         //Validacion de tamaños
-        if(placesInvariants.getColumnDimension() != currentMarking.getColumnDimension()) {
-            //System.out.println("Error. Dimensiones no coincidentes para validación de invariantes de plaza.");
+        if(placesInvariants.getColumnDimension() != currentMarking.getColumnDimension())
             return;
-        }
         
         for(int j = 0; j < placesInvariants.getRowDimension(); j++) {
             invariantAmount = 0;

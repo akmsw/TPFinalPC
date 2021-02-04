@@ -175,7 +175,7 @@ public class MainLauncher {
             log.start();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error al crear el log.");
+            System.out.println("Error al crear el hilo logger.");
         }
     }
 }
