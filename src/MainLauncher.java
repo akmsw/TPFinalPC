@@ -153,7 +153,9 @@ public class MainLauncher {
         threadPaths.add(path8);
         threadPaths.add(path9);
 
-        pNet = new PetriNet(incidence, incidenceBackwards, initialMarking, placesInvariants, alphaTimes, stopCondition);
+        pNet = new PetriNet(incidence, incidenceBackwards, placesInvariants, alphaTimes, stopCondition);
+
+        pNet.setCurrentMarkingVector(initialMarking);
 
         monitor = new Monitor(pNet);
 

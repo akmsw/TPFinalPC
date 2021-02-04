@@ -16,12 +16,11 @@ public class PetriNet {
 
     //Campos privados.
     private int lastFiredTransition; //Última transición disparada.
-    private int totalFired; //Cantidad total de transiciones disparadas.
     private int stopCondition; //Condición de corte del programa.
     private double[] auxVector = {}; //Vector auxiliar para cálculos.
     private ArrayList<String> transitionsSequence; //Arreglo con la secuencia de transiciones disparadas en orden.
     private Matrix incidence, incidenceBackwards; //Matrices de incidencia (+ y -) a utilizar.
-    private Matrix initialMarking, currentMarking; //Vectores relativos al marcado de la red (inicial y actual).
+    private Matrix currentMarking; //Vectores relativos al marcado de la red (inicial y actual).
     private Matrix enabledTransitions; //Vector que contiene el estado de sensibilización de las transiciones.
     private Matrix enabledAtTime; //Vector que contiene el instante de tiempo en el que una transición fue sensibilizada.
     private Matrix placesInvariants; //Vectores relativos a los invariantes de la red.
@@ -40,10 +39,9 @@ public class PetriNet {
      * @param   alphaTimes          Los tiempos 'alfa' asociados a cada transición.
      * @param   stopCondition       La condición de corte del programa (cuántas tareas se deben finalizar para terminar el programa).
      */
-    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes, int stopCondition) {
+    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix placesInvariants, Matrix alphaTimes, int stopCondition) {
         this.incidence = incidence;
         this.incidenceBackwards = incidenceBackwards;
-        this.initialMarking = initialMarking;
         this.placesInvariants = placesInvariants;
         this.alphaTimes = alphaTimes;
         this.stopCondition = stopCondition;
@@ -59,8 +57,6 @@ public class PetriNet {
         workingVector = new Matrix(1, incidence.getColumnDimension());
 
         transitionsSequence = new ArrayList<String>();
-
-        setCurrentMarkingVector(initialMarking);
     }
 
     //----------------------------------------Métodos públicos---------------------------------
@@ -75,13 +71,6 @@ public class PetriNet {
     }
 
     /**
-     * @return  El vector de marcado inicial de la red de Petri.
-     */
-    public Matrix getInitialMarkingVector() {
-        return initialMarking;
-    }
-
-    /**
      * @return  El vector de marcado actual de la red de Petri.
      */
     public Matrix getCurrentMarkingVector() {
@@ -93,13 +82,6 @@ public class PetriNet {
      */
     public Matrix getEnabledTransitions() {
         return enabledTransitions;
-    }
-
-    /**
-     * @return  El vector con la cantidad de veces que fue disparada cada transición.
-     */
-    public Matrix getTransitionsFired() {
-        return firedTransitions;
     }
 
     /**
@@ -121,13 +103,6 @@ public class PetriNet {
      */
     public Matrix getEnabledAtTime() {
         return enabledAtTime;
-    }
-
-    /**
-     * @return  El vector que indica si las transiciones tienen un hilo trabajando en ellas.
-     */
-    public Matrix getWorkingVector() {
-        return workingVector;
     }
 
     /**
@@ -175,28 +150,6 @@ public class PetriNet {
         }
         
         return index;
-    }
-
-    /**
-     * @return  El índice de la última transición disparada.
-     */
-    public int getLastFiredTransition() {
-        return lastFiredTransition;
-    }
-
-    /**
-     * @return  La cantidad total de transiciones disparadas hasta el momento.
-     */
-    public int getTotalFired() {
-        return totalFired;
-    }
-
-    /**
-     * @return  La condición de corte del programa (cuántas tareas
-     *          deben completarse para finalizar la ejecución).
-     */
-    public int getStopCondition() {
-        return stopCondition;
     }
 
     //----------------------------------------Setters------------------------------------------
@@ -321,15 +274,13 @@ public class PetriNet {
 
         lastFiredTransition = getIndex(firingVector);
 
-        transitionsSequence.add("T" + getLastFiredTransition() + "");
+        transitionsSequence.add("T" + lastFiredTransition + "");
 
         setWorkingVector(firingVector, 0);
 
         checkPlacesInvariants();
         
         setEnabledTransitions();
-
-        totalFired++;
     }
 
     /**
