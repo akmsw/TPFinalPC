@@ -131,8 +131,8 @@ public class MainLauncher {
      * Método principal.
      * 
      * Aquí se instancian y ejecutan los hilos con sus caminos asociados.
-     * También se inicializan tanto la red de Petri como el monitor y el
-     * hilo logger.
+     * También se inicializan tanto la red de Petri con su marcado inicial
+     * como el monitor y el hilo logger.
      */
     public static void main(String args[]) {
         Matrix incidence = new Matrix(incidenceArray);

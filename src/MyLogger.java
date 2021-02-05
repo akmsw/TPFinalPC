@@ -88,7 +88,7 @@ public class MyLogger extends Thread {
                     "\n" + pNet.getProcessorsLoad() + 
                     "\n" + pNet.getProcessorsTasks());
 
-        Matrix finalMarkingVector = monitor.getPetriNet().getCurrentMarkingVector();
+        Matrix finalMarkingVector = pNet.getCurrentMarkingVector();
 
         String finalMarking = "[ ";
 

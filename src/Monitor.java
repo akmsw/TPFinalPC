@@ -58,13 +58,6 @@ public class Monitor {
     }
 
     /**
-     * @return  La red de Petri controlada por el monitor.
-     */
-    public PetriNet getPetriNet() {
-        return pNet;
-    }
-
-    /**
      * @return  El conjunto de colas correspondientes a las transiciones de la red.
      */
     public ConditionQueues getConditionQueues() {

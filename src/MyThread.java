@@ -41,20 +41,6 @@ public class MyThread extends Thread {
     //----------------------------------------Getters------------------------------------------
 
     /**
-     * @return  El vector de disparo del hilo.
-     */
-    public Matrix getFiringVector() {
-        return firingVector;
-    }
-
-    /**
-     * @return  El vector de transiciones asociadas al hilo.
-     */
-    public ArrayList<Matrix> getAssociatedTransitions() {
-        return myTransitions;
-    }
-
-    /**
      * En este método se crea un vector de una fila y tantas columnas como transiciones
      * tenga la red. Luego, en base al índice que se recibe como parámetro, se setea un '1'
      * en esa posición, logrando así cualquier vector de disparo deseado.
@@ -64,7 +50,7 @@ public class MyThread extends Thread {
      * @return  El vector con ceros y un '1' en la i-ésima transición.
      */
     public Matrix getTransitionVector(int i) {
-        Matrix vector = new Matrix(1, monitor.getPetriNet().getIncidenceMatrix().getColumnDimension());
+        Matrix vector = new Matrix(1, pNet.getIncidenceMatrix().getColumnDimension());
         
         vector.set(0, i, 1);
         
