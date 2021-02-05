@@ -16,8 +16,6 @@ public class MainLauncher {
     //Campos constantes privados.
     private static final int stopCondition = 200; //Cantidad de tareas que se tienen que finalizar para terminar la ejecución del programa.
 
-    //Campos privados.
-
     //Matriz I
     private static double[][] incidenceArray = {
             { -1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
