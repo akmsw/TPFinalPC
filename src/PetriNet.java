@@ -262,8 +262,7 @@ public class PetriNet {
     /**
      * Este método se encarga de actualizar el estado de la red en general,
      * considerando el nuevo vector de marcado y las transiciones sensibilizadas
-     * en base al mismo. Además, chequea los invariantes de plaza e incrementa
-     * los contadores de transiciones disparadas.
+     * en base al mismo. Además, chequea los invariantes de plaza.
      * 
      * @param   firingVector    El vector de disparo del hilo.
      */
