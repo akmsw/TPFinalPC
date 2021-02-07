@@ -18,7 +18,7 @@ public class Policy {
     
     //Campos privados.
     private ArrayList<Integer> indexes;
-    private Random randomGenerator;
+    private Random randomGenerator; //Generador aleatorio de números.
 
     //Constructor.
     public Policy() {
@@ -26,7 +26,7 @@ public class Policy {
         randomGenerator = new Random();
     }
 
-    // ----------------------------------------Métodos públicos---------------------------------
+    //----------------------------------------Métodos públicos---------------------------------
     
     /**
      * En este método se decide qué transición será elegida para despertar a los hilos
@@ -35,14 +35,12 @@ public class Policy {
      * Se almacena el índice de estas transiciones en un arreglo y se hace una
      * elección aleatoria con distribución uniforme entre todos los índices que se hayan guardado.
      * 
-     * @see Monitor#getAnd()
+     * @param   and El vector con más de una transición sensibilizada que tienen al menos un hilo encolado.
      * 
-     * @param and El vector con más de una transición sensibilizada que tienen al menos un hilo encolado.
-     * 
-     * @return El índice de la transición elegida para disparar.
+     * @return  El índice de la transición elegida para disparar.
      */
     public int decide(Matrix and) {
-        indexes.clear();
+        indexes.clear(); //Vaciar el arreglo.
         
         for(int i = 0; i < and.getColumnDimension(); i++)
             if(and.get(0, i) > 0) indexes.add(i);

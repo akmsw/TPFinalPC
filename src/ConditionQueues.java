@@ -15,8 +15,8 @@ import Jama.Matrix;
 public class ConditionQueues {
 
     //Campos privados.
-    private int quantity;
-    private ArrayList<Semaphore> conditionQueues;
+    private int quantity; //Cantidad de colas a crear.
+    private ArrayList<Semaphore> conditionQueues; //Arreglo de colas de transiciones.
 
     /**
      * Constructor.
@@ -29,12 +29,12 @@ public class ConditionQueues {
         this.quantity = quantity;
         
         for(int i = 0; i < quantity; i++)
-            conditionQueues.add(new Semaphore(0));
+            conditionQueues.add(new Semaphore(0)); //Inicializamos los semáforos de las colas de condición en 0 para que todo aquel que quiera hacer acquire se quede esperando la condición.
     }
 
-    // ----------------------------------------Métodos públicos---------------------------------
+    //----------------------------------------Métodos públicos---------------------------------
 
-    // ----------------------------------------Getters------------------------------------------
+    //----------------------------------------Getters------------------------------------------
 
     /**
      * @return  El conjunto de colas de condición de las transiciones de la red.
@@ -46,7 +46,7 @@ public class ConditionQueues {
     /** 
      * @param   firingVector    El vector de disparo del hilo.
      * 
-     * @return  La cola correspondiente a la transición que se quiso disparar.
+     * @return  El índice de cola correspondiente a la transición que se quiso disparar.
      */
     public int getQueue(Matrix firingVector) {
         int index = 0;
@@ -59,7 +59,7 @@ public class ConditionQueues {
         return index;
     }
 
-    // ----------------------------------------Otros--------------------------------------------
+    //----------------------------------------Otros--------------------------------------------
 
     /**
      * En este método se calcula un vector que almacena las transiciones

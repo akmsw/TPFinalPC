@@ -1,3 +1,4 @@
+
 /**
  * @author  Luna,       Lihué       Leandro
  * @author  Coronati,   Federico    Joaquín
@@ -7,72 +8,65 @@
  * @since 01/07/2020
  */
 
+import java.util.ArrayList;
+
 import Jama.Matrix;
 
 public class PetriNet {
 
     //Campos privados.
-    private Object lock;
-    private int lastFiredTransition, totalFired, stopCondition;
-    private double[] auxVector = {};
-    private Matrix incidence, incidenceBackwards; //Matrices a utilizar.
-    private Matrix initialMarking, currentMarking; //Vectores relativos al marcado de la red.
-    private Matrix enabledTransitions, enabledAtTime; //Vectores relativos a la sensibilización de transiciones.
+    private int stopCondition; //Condición de corte del programa.
+    private double[] auxVector = {}; //Vector auxiliar para cálculos.
+    private ArrayList<String> transitionsSequence; //Arreglo con la secuencia de transiciones disparadas en orden.
+    private Matrix incidence, incidenceBackwards; //Matrices de incidencia (+ y -) a utilizar.
+    private Matrix currentMarking; //Vector relativo al marcado actual de la red.
+    private Matrix enabledTransitions; //Vector que contiene el estado de sensibilización de las transiciones.
+    private Matrix enabledAtTime; //Vector que contiene el instante de tiempo en el que una transición fue sensibilizada.
     private Matrix placesInvariants; //Vectores relativos a los invariantes de la red.
     private Matrix aux; //Vector auxiliar para el cálculo de la ecuación de estado de la red.
     private Matrix alphaTimes; //Vector con los alfas de cada transición.
-    private Matrix workingVector; //Vector que indica los hilos que están trabajando en las transiciones.
-    private Matrix firedTransitions; //Vectores que almacena el número de veces que se disparó cada transición.
+    private Matrix workingVector; //Vector que almacena la ID de los hilos que están trabajando en cada transición.
+    private Matrix firedTransitions; //Vector que almacena el número de veces que se disparó cada transición.
 
     /**
 	 * Constructor.
 	 * 
-     * @param   incidence           La matriz de incidencia de la red.
-     * @param   incidenceBackwards  La matriz 'backwards' de incidencia de la red.
+     * @param   incidence           La matriz de incidencia de la red (I).
+     * @param   incidenceBackwards  La matriz 'backwards' de incidencia de la red (I-).
      * @param   initialMarking      El vector de marcado inicial de la red.
      * @param   placesInvariants    Los invariantes de plaza de la red.
      * @param   alphaTimes          Los tiempos 'alfa' asociados a cada transición.
      * @param   stopCondition       La condición de corte del programa (cuántas tareas se deben finalizar para terminar el programa).
-     * @param   lock                El lock para sincronizar la escritura en el Log con el disparo de transiciones
      */
-    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix initialMarking, Matrix placesInvariants, Matrix alphaTimes, int stopCondition, Object lock) {
+    public PetriNet(Matrix incidence, Matrix incidenceBackwards, Matrix placesInvariants, Matrix alphaTimes, int stopCondition) {
         this.incidence = incidence;
         this.incidenceBackwards = incidenceBackwards;
-        this.initialMarking = initialMarking;
         this.placesInvariants = placesInvariants;
         this.alphaTimes = alphaTimes;
         this.stopCondition = stopCondition;
-        this.lock = lock;
 
         firedTransitions = new Matrix(1, incidence.getColumnDimension());
 
         enabledTransitions = new Matrix(1, incidence.getColumnDimension());
-        
-        aux = new Matrix(auxVector,1);
 
-        enabledAtTime = new Matrix(1, incidence.getColumnDimension()); //Vector que almacena los instantes de sensiblizado de cada transición.
+        aux = new Matrix(auxVector, 1);
+
+        enabledAtTime = new Matrix(1, incidence.getColumnDimension());
 
         workingVector = new Matrix(1, incidence.getColumnDimension());
 
-        setCurrentMarkingVector(initialMarking);
+        transitionsSequence = new ArrayList<String>();
     }
 
-    // ----------------------------------------Métodos públicos---------------------------------
+    //----------------------------------------Métodos públicos---------------------------------
 
-    // ----------------------------------------Getters------------------------------------------
+    //----------------------------------------Getters------------------------------------------
 
     /**
      * @return  La matriz de incidencia de la red de Petri.
      */
     public Matrix getIncidenceMatrix() {
         return incidence;
-    }
-
-    /**
-     * @return  El vector de marcado inicial de la red de Petri.
-     */
-    public Matrix getInitialMarkingVector() {
-        return initialMarking;
     }
 
     /**
@@ -90,10 +84,10 @@ public class PetriNet {
     }
 
     /**
-     * @return  El vector con la cantidad de veces que fue disparada cada transición.
+     * @return  La secuencia de transiciones disparadas.
      */
-    public Matrix getTransitionsFired() {
-        return firedTransitions;
+    public ArrayList<String> getTransitionsSequence() {
+        return transitionsSequence;
     }
 
     /**
@@ -111,32 +105,29 @@ public class PetriNet {
     }
 
     /**
-     * @return  El vector que indica si las transiciones tienen un hilo trabajando en ellas.
-     */
-    public Matrix getWorkingVector() {
-        return workingVector;
-    }
-
-    /**
      * @return  La carga de las memorias.
      */
     public String getMemoriesLoad() {
-        return "Cantidad de escrituras en memoria 1: " + (firedTransitions.get(0, 9) + firedTransitions.get(0, 11)) + "\nCantidad de escrituras en memoria 2: " + (firedTransitions.get(0, 10) + firedTransitions.get(0, 12));
+        return "Cantidad de escrituras en memoria 1: " + (firedTransitions.get(0, 9) + firedTransitions.get(0, 11)) + 
+               "\nCantidad de escrituras en memoria 2: " + (firedTransitions.get(0, 10) + firedTransitions.get(0, 12));
     }
     
     /**
      * @return  La carga de los procesadores (AsignarP1 y AsignarP2).
      */
     public String getProcessorsLoad() {
-        return "Carga del procesador 1: " + firedTransitions.get(0, 1) + "\nCarga del procesador 2: " + firedTransitions.get(0,2);
+        return "Carga del procesador 1: " + firedTransitions.get(0, 1) + 
+               "\nCarga del procesador 2: " + firedTransitions.get(0, 2);
     }
 
     /**
      * @return  La cantidad de tareas ejecutadas en cada procesador individualmente (FinalizarTXPX).
      */
     public String getProcessorsTasks() {
-        return "Cantidad de ejecuciones de T1 en procesador 1: " + firedTransitions.get(0, 5) + "\nCantidad de ejecuciones de T2 en procesador 1: " + firedTransitions.get(0, 7) +
-               "\nCantidad de ejecuciones de T1 en procesador 2: " + firedTransitions.get(0, 6) + "\nCantidad de ejecuciones de T2 en procesador 2: " + firedTransitions.get(0, 8);
+        return "Cantidad de ejecuciones de T1 en procesador 1: " + firedTransitions.get(0, 5) + 
+               "\nCantidad de ejecuciones de T2 en procesador 1: " + firedTransitions.get(0, 7) + 
+               "\nCantidad de ejecuciones de T1 en procesador 2: " + firedTransitions.get(0, 6) + 
+               "\nCantidad de ejecuciones de T2 en procesador 2: " + firedTransitions.get(0, 8);
     }
 
     /**
@@ -160,29 +151,7 @@ public class PetriNet {
         return index;
     }
 
-    /**
-     * @return  El índice de la última transición disparada.
-     */
-    public int getLastFiredTransition() {
-        return lastFiredTransition;
-    }
-
-    /**
-     * @return  La cantidad total de transiciones disparadas hasta el momento.
-     */
-    public int getTotalFired() {
-        return totalFired;
-    }
-
-    /**
-     * @return  La condición de corte del programa (cuántas tareas
-     *          deben completarse para finalizar la ejecución).
-     */
-    public int getStopCondition() {
-        return stopCondition;
-    }
-
-    // ----------------------------------------Setters------------------------------------------
+    //----------------------------------------Setters------------------------------------------
 
     /**
      * Este método cambia el vector de marcado actual de la red de Petri.
@@ -212,14 +181,17 @@ public class PetriNet {
      * 
      * @param   firingVector    El vecto de disparo del hilo.
      * @param   value           El valor a almacenar en dicha posición.
+     *                          Si no hay nadie, se almacena un '0'.
+     *                          Si algún hilo está trabajando en dicha
+     *                          transición, se almacena su ID.
      */
     public void setWorkingVector(Matrix firingVector, double value) {
-        this.workingVector.set(0, getIndex(firingVector), value); //Se setea un "1" que indica que se está trabajando (tiempo alfa) en esa transicion
+        this.workingVector.set(0, getIndex(firingVector), value);
     }
 
     /**
      * Este método recorre la matriz de incidencia 'backwards' chequeando si
-     * la columna (transición) está sensibilizada (el peso de cada arco es menor
+     * la columna (transición) está sensibilizada (si el peso de cada arco es menor
      * o igual a la cantidad de tokens de la plaza). Seteamos un '1' en el índice
      * de la transición en el vector 'enabledTransitions' si la misma está sensibilizada;
      * si no lo está, se setea un '0' en dicha posición.
@@ -245,15 +217,20 @@ public class PetriNet {
         }
     }
 
-    // ----------------------------------------Otros--------------------------------------------
+    //----------------------------------------Otros--------------------------------------------
 
     /**
      * Este método chequea si hay alguien trabajando en la transición que
-     * el hilo quiere disparar.
+     * el hilo quiere disparar. Si hay alguien y sus IDs no coinciden,
+     * significa que hay otro hilo trabajando. Si las IDs coinciden significa
+     * que el hilo que estaba trabajando es el mismo que se acaba de despertar.
      * 
      * @param   firingVector    El vector de firing actual del hilo.
      * 
      * @return  Si hay algún hilo trabajando su tiempo alfa en una transición.
+     *          Pueden suceder tres casos:  1) No hay nadie (0).
+     *                                      2) Hay alguien que no es el hilo solicitante (IDs no coincidentes)
+     *                                      3) Quien estaba trabajando es el hilo solicitante.
      */
     public boolean somebodyIsWorkingOn(Matrix firingVector) {
         int index = getIndex(firingVector);
@@ -282,13 +259,10 @@ public class PetriNet {
     }
     
     /**
-     * Este método actualiza el vector de marcado de la red, aumenta en 1
-     * la cantidad de veces que fue disparada la transición indicada en
-     * el vector de disparo del hilo, actualiza el valor de la última transición
-     * disparada, avisa al hilo Log para tomar nota del disparo y registrarlo, y
-     * finalmente incrementa la cantidad total de transiciones disparadas hasta
-     * el momento.
-     *  
+     * Este método se encarga de actualizar el estado de la red en general,
+     * considerando el nuevo vector de marcado y las transiciones sensibilizadas
+     * en base al mismo. Además, chequea los invariantes de plaza.
+     * 
      * @param   firingVector    El vector de disparo del hilo.
      */
     public void fireTransition(Matrix firingVector) {
@@ -296,30 +270,17 @@ public class PetriNet {
         
         firedTransitions = firedTransitions.plus(firingVector); //Aumento las transiciones disparadas.
 
-        lastFiredTransition = getIndex(firingVector);
+        transitionsSequence.add("T" + getIndex(firingVector) + "");
 
         setWorkingVector(firingVector, 0);
-
-        synchronized(lock) {
-            lock.notify();
-
-            try {
-                lock.wait();
-            } catch(InterruptedException e) {
-                e.printStackTrace();
-                System.out.println("Interrupción en la espera del hilo Log.");
-            }
-        }
 
         checkPlacesInvariants();
         
         setEnabledTransitions();
-
-        totalFired++;
     }
 
     /**
-     * Este método calcula la ecuación de estado.
+     * Este método calcula la ecuación de estado de la red.
      * 
      * @param   firingVector    El vector de disparo del hilo.
      * 
@@ -335,6 +296,7 @@ public class PetriNet {
     public boolean hasCompleted() {
         double aux = 0;
 
+        //Las transiciones 5, 6, 7, y 8 son las tareas que nos interesa contar y monitorear.
         aux += firedTransitions.get(0, 5) + firedTransitions.get(0, 6) + firedTransitions.get(0, 7) + firedTransitions.get(0, 8);
         
         return aux >= stopCondition;
@@ -349,12 +311,6 @@ public class PetriNet {
     public void checkPlacesInvariants() {
         int invariantAmount; //La cantidad de tokens que se mantiene invariante.
         int tokensAmount; //La cantidad de tokens que se van contando en las plazas.
-
-        //Validacion de tamaños
-        if(placesInvariants.getColumnDimension() != currentMarking.getColumnDimension()) {
-            System.out.println("Error. Dimensiones no coincidentes para validación de invariantes de plaza.");
-            return;
-        }
         
         for(int j = 0; j < placesInvariants.getRowDimension(); j++) {
             invariantAmount = 0;
