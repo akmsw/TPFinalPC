@@ -15,11 +15,11 @@ import Jama.Matrix;
 public class Monitor {
 
     //Campos privados.
-    private HashMap<Long, Long> workingTime;
-    private ConditionQueues conditionQueues;
-    private Semaphore entry;
-    private PetriNet pNet;
-    private Policy policy;
+    private HashMap<Long, Long> workingTime; //El vector que almacena el tiempo de espera correspondiente a cada hilo.
+    private ConditionQueues conditionQueues; //Colas de cada transición de la red.
+    private Semaphore entry; //La cola que representa la entrada al monitor.
+    private PetriNet pNet; //Red de Petri que modela el sistema.
+    private Policy policy; //Política utilizada para resolver conflictos.
 
     /**
      * Constructor.
@@ -33,7 +33,7 @@ public class Monitor {
     public Monitor(PetriNet pNet) {
         this.pNet = pNet;
 
-        entry = new Semaphore(1, true);
+        entry = new Semaphore(1, true); //Semáforo con 1 permit y con fairness true, osea que respeta el orden de llegada.
 
         policy = new Policy();
 
@@ -71,16 +71,11 @@ public class Monitor {
         return entry;
     }
 
-    //----------------------------------------Setters------------------------------------------
-
     /**
-     * Este método almacena el tiempo de espera correspondiente a cada hilo.
-     * 
-     * @param   id      Identificador del hilo.
-     * @param   time    El tiempo de espera para disparar una transición.
+     * @return  La red de Petri que modela el sistema.
      */
-    public synchronized void setWorkingTime(Long id, Long time) {
-        workingTime.put(id, time);
+    public PetriNet getPetriNet() {
+        return pNet;
     }
 
     //----------------------------------------Otros--------------------------------------------
@@ -96,6 +91,13 @@ public class Monitor {
     }
 
     /**
+     * @return  Si se llegó a la condición de corte del programa.
+     */
+    public boolean hasCompleted() {
+        return pNet.hasCompleted();
+    }
+
+    /**
      * En este método se comienza tomando el mutex del monitor. Luego, mientras
      * no se haya llegado a la condición de corte del programa, se chequea si
      * la ecuación de estado da un resultado correcto y si además no hay nadie
@@ -106,7 +108,7 @@ public class Monitor {
      * se debe ir a dormir, entonces se toma el índice i de la transición y se setea
      * en '1' el i-ésimo elemento del vector de trabajo para indicar que ya hay
      * alguien trabajando en esa transición y no debe meterse otro hilo. Luego de esto,
-     * el hilo libera el mutex para ir a dormir fuera del monitor.
+     * el hilo libera el mutex para ir a dormir FUERA DEL MONITOR.
      * Luego de esperar el tiempo necesario (terminar la tarea) y antes de que el hilo
      * libere el mutex del monitor, se chequea si hay algún hilo esperando en la cola
      * de alguna transición sensibilizada. Si es así, se le pasa el mutex
@@ -157,9 +159,13 @@ public class Monitor {
         Matrix queued = conditionQueues.whoAreQueued();
         Matrix and = and(sensibilized, queued);
 
-        if(enabledAndQueued(and) > 0) {
+        int result = enabledAndQueued(and);
+
+        if(result > 1) {
             int choice = policy.decide(and);
             conditionQueues.getSemaphore().get(choice).release();
+        } else if(result == 1) {
+            conditionQueues.getSemaphore().get(getIndex(and)).release();
         } else {
             exitMonitor();
         }
@@ -190,6 +196,18 @@ public class Monitor {
         }
 
         return index;
+    }
+
+    //----------------------------------------Setters------------------------------------------
+
+    /**
+     * Este método almacena el tiempo de espera correspondiente a cada hilo.
+     * 
+     * @param   id      Identificador del hilo.
+     * @param   time    El tiempo de espera para disparar una transición.
+     */
+    private synchronized void setWorkingTime(Long id, Long time) {
+        workingTime.put(id, time);
     }
 
     //----------------------------------------Otros------------------------------------------

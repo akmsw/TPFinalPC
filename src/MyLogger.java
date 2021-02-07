@@ -95,13 +95,15 @@ public class MyLogger extends Thread {
         for(int i = 0; i < finalMarkingVector.getColumnDimension(); i++)
             finalMarking += (int)finalMarkingVector.get(0, i) + " ";
 
-        finalMarking += "]";        
+        finalMarking += "]";
 
+        //Despierta a los hilos encolados en las colas de condición de la red.
 		for(Semaphore queue : monitor.getConditionQueues().getSemaphore())
             if(queue.hasQueuedThreads())
                 queue.release(queue.getQueueLength());
         
-        if(monitor.getEntryQueue().hasQueuedThreads()) //Chequeo de hilos encolados en ArrivalRate.
+        //Chequeo de hilos encolados en ArrivalRate.
+        if(monitor.getEntryQueue().hasQueuedThreads())
             monitor.getEntryQueue().release(monitor.getEntryQueue().getQueueLength());
         
         logger.info("Secuencia de transiciones disparadas: \"" + pNet.getTransitionsSequence().toString() + "\"");

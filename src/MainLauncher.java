@@ -14,7 +14,7 @@ import Jama.Matrix;
 public class MainLauncher {
 
     //Campos constantes privados.
-    private static final int stopCondition = 200; //Cantidad de tareas que se tienen que finalizar para terminar la ejecución del programa.
+    private static final int stopCondition = 1000; //Cantidad de tareas que se tienen que finalizar para terminar la ejecución del programa.
 
     //Matriz I
     private static double[][] incidenceArray = {
@@ -118,7 +118,7 @@ public class MainLauncher {
     private static Matrix path9 = new Matrix(p8, 1);
 
     //Los betas los tomamos como infinitos para que no se desensibilicen las transiciones.
-    private static double[] alphaTimesA = { 2, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 7, 7, 4, 4 }; //Alfas de las transiciones.
+    private static double[] alphaTimesA = { 20, 0, 0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 70, 70, 40, 40 }; //Alfas de las transiciones.
 
     private static double[] iMark = { 1, 0, 0, 4, 0, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8 }; //Marcado inicial de la red.
 
@@ -157,17 +157,11 @@ public class MainLauncher {
 
         monitor = new Monitor(pNet);
 
-        int threadQuantity = threadPaths.size(); //Cantidad de hilos a crear: uno por cada invariante de transicion (sin las transiciones del vaciado) + 2 hilos extra para vaciar memorias.
+        int threadQuantity = threadPaths.size(); //Un hilo por cada invariante y uno dedicado exclusivamente a la transición ArrivalRate.
         
         MyThread[] threads = new MyThread[threadQuantity];
         
         pNet.setEnabledTransitions(); //Seteo de las transiciones sensibilizadas dado el marcado inicial de la red.
-        
-        //Creación de hilos de ejecución.
-        for(int i = 0; i < threadQuantity; i++) {
-            threads[i] = new MyThread(threadPaths.get(i), monitor,pNet);
-            threads[i].start();
-        }
 
         //Creación y ejecución del hilo logger.
         try {
@@ -176,6 +170,12 @@ public class MainLauncher {
         } catch(Exception e) {
             e.printStackTrace();
             System.out.println("Error al crear el hilo logger.");
+        }
+        
+        //Creación de hilos de ejecución.
+        for(int i = 0; i < threadQuantity; i++) {
+            threads[i] = new MyThread(threadPaths.get(i), monitor);
+            threads[i].start();
         }
     }
 }

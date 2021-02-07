@@ -15,12 +15,11 @@ import Jama.Matrix;
 public class PetriNet {
 
     //Campos privados.
-    private int lastFiredTransition; //Última transición disparada.
     private int stopCondition; //Condición de corte del programa.
     private double[] auxVector = {}; //Vector auxiliar para cálculos.
     private ArrayList<String> transitionsSequence; //Arreglo con la secuencia de transiciones disparadas en orden.
     private Matrix incidence, incidenceBackwards; //Matrices de incidencia (+ y -) a utilizar.
-    private Matrix currentMarking; //Vectores relativos al marcado de la red (inicial y actual).
+    private Matrix currentMarking; //Vector relativo al marcado actual de la red.
     private Matrix enabledTransitions; //Vector que contiene el estado de sensibilización de las transiciones.
     private Matrix enabledAtTime; //Vector que contiene el instante de tiempo en el que una transición fue sensibilizada.
     private Matrix placesInvariants; //Vectores relativos a los invariantes de la red.
@@ -271,9 +270,7 @@ public class PetriNet {
         
         firedTransitions = firedTransitions.plus(firingVector); //Aumento las transiciones disparadas.
 
-        lastFiredTransition = getIndex(firingVector);
-
-        transitionsSequence.add("T" + lastFiredTransition + "");
+        transitionsSequence.add("T" + getIndex(firingVector) + "");
 
         setWorkingVector(firingVector, 0);
 
@@ -299,6 +296,7 @@ public class PetriNet {
     public boolean hasCompleted() {
         double aux = 0;
 
+        //Las transiciones 5, 6, 7, y 8 son las tareas que nos interesa contar y monitorear.
         aux += firedTransitions.get(0, 5) + firedTransitions.get(0, 6) + firedTransitions.get(0, 7) + firedTransitions.get(0, 8);
         
         return aux >= stopCondition;
@@ -313,10 +311,6 @@ public class PetriNet {
     public void checkPlacesInvariants() {
         int invariantAmount; //La cantidad de tokens que se mantiene invariante.
         int tokensAmount; //La cantidad de tokens que se van contando en las plazas.
-
-        //Validacion de tamaños
-        if(placesInvariants.getColumnDimension() != currentMarking.getColumnDimension())
-            return;
         
         for(int j = 0; j < placesInvariants.getRowDimension(); j++) {
             invariantAmount = 0;

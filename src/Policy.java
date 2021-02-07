@@ -18,7 +18,7 @@ public class Policy {
     
     //Campos privados.
     private ArrayList<Integer> indexes;
-    private Random randomGenerator;
+    private Random randomGenerator; //Generador aleatorio de números.
 
     //Constructor.
     public Policy() {
@@ -40,7 +40,7 @@ public class Policy {
      * @return  El índice de la transición elegida para disparar.
      */
     public int decide(Matrix and) {
-        indexes.clear();
+        indexes.clear(); //Vaciar el arreglo.
         
         for(int i = 0; i < and.getColumnDimension(); i++)
             if(and.get(0, i) > 0) indexes.add(i);

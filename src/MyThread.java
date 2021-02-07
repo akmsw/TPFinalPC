@@ -17,7 +17,6 @@ public class MyThread extends Thread {
     private ArrayList<Matrix> myTransitions; //Arreglo de transiciones asociadas al hilo.
     private Matrix firingVector; //Este vector indica la transicion que se disparará o que se intentó disparar.
     private Monitor monitor; //Monitor que controla la red de Petri.
-    private PetriNet pNet; //Red de Petri que modela el sistema.
     private int transition; //Transición que se quiere disparar.
 
     /**
@@ -26,9 +25,10 @@ public class MyThread extends Thread {
      * @param   sequence    Secuencia de transiciones asociadas al hilo.
      * @param   monitor     Referencia al monitor que controla la red de Petri.
      */
-    public MyThread(Matrix sequence, Monitor monitor,PetriNet pNet) {
+    public MyThread(Matrix sequence, Monitor monitor) {
         this.monitor = monitor;
-        this.pNet = pNet;
+
+        transition = 0;
 
         myTransitions = new ArrayList<Matrix>();
 
@@ -50,7 +50,7 @@ public class MyThread extends Thread {
      * @return  El vector con ceros y un '1' en la i-ésima transición.
      */
     public Matrix getTransitionVector(int i) {
-        Matrix vector = new Matrix(1, pNet.getIncidenceMatrix().getColumnDimension());
+        Matrix vector = new Matrix(1, monitor.getPetriNet().getIncidenceMatrix().getColumnDimension());
         
         vector.set(0, i, 1);
         
@@ -81,7 +81,7 @@ public class MyThread extends Thread {
      */
     @Override
     public void run() {
-        while(!pNet.hasCompleted()) {
+        while(!monitor.hasCompleted()) {
             firingVector = myTransitions.get(transition);
             
             if(monitor.tryFiring(firingVector))
