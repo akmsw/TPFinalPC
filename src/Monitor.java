@@ -131,7 +131,7 @@ public class Monitor {
             e.printStackTrace();
         }
 
-        if(!pNet.stateEquationTest(firingVector) || pNet.somebodyIsWorkingOn(firingVector)) {
+        if(!pNet.stateEquationTest(firingVector)) {
             exitMonitor();
             
             int queue = conditionQueues.getQueue(firingVector);
@@ -147,8 +147,6 @@ public class Monitor {
         if(alphaTimeCheck(firingVector)) {
             pNet.fireTransition(firingVector);
         } else {
-            pNet.setWorkingVector(firingVector, (double)Thread.currentThread().getId());
-            
             exitMonitor();
             
             return false;

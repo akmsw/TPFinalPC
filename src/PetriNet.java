@@ -25,7 +25,6 @@ public class PetriNet {
     private Matrix placesInvariants; //Vector relativo a los invariantes de plaza de la red.
     private Matrix aux; //Vector auxiliar para el cálculo de la ecuación de estado de la red.
     private Matrix alphaTimes; //Vector con los alfas de cada transición.
-    private Matrix workingVector; //Vector que almacena la ID de los hilos que están trabajando en cada transición.
     private Matrix firedTransitions; //Vector que almacena el número de veces que se disparó cada transición.
 
     /**
@@ -51,8 +50,6 @@ public class PetriNet {
         aux = new Matrix(auxVector, 1);
 
         enabledAtTime = new Matrix(1, incidence.getColumnDimension());
-
-        workingVector = new Matrix(1, incidence.getColumnDimension());
 
         transitionsSequence = new ArrayList<String>();
     }
@@ -173,22 +170,6 @@ public class PetriNet {
     }
 
     /**
-     * En este método se setea si hay alguien trabajando (y su ID)
-     * en la posición correspondiente a la transición en la que el hilo
-     * está trabajando para evitar que hayan dos o más hilos trabajando
-     * en una misma transición.
-     * 
-     * @param   firingVector    El vecto de disparo del hilo.
-     * @param   value           El valor a almacenar en dicha posición.
-     *                          Si no hay nadie, se almacena un '0'.
-     *                          Si algún hilo está trabajando en dicha
-     *                          transición, se almacena su ID.
-     */
-    public void setWorkingVector(Matrix firingVector, double value) {
-        this.workingVector.set(0, getIndex(firingVector), value);
-    }
-
-    /**
      * Este método recorre la matriz de incidencia 'backwards' chequeando si
      * la columna (transición) está sensibilizada (si el peso de cada arco es menor
      * o igual a la cantidad de tokens de la plaza). Seteamos un '1' en el índice
@@ -217,28 +198,6 @@ public class PetriNet {
     }
 
     //----------------------------------------Otros--------------------------------------------
-
-    /**
-     * Este método chequea si hay alguien trabajando en la transición que
-     * el hilo quiere disparar. Si hay alguien y sus IDs no coinciden,
-     * significa que hay otro hilo trabajando. Si las IDs coinciden significa
-     * que el hilo que estaba trabajando es el mismo que se acaba de despertar.
-     * 
-     * @param   firingVector    El vector de firing actual del hilo.
-     * 
-     * @return  Si hay algún hilo trabajando su tiempo alfa en una transición.
-     *          Pueden suceder tres casos:  1) No hay nadie (0).
-     *                                      2) Hay alguien que no es el hilo solicitante (IDs no coincidentes)
-     *                                      3) Quien estaba trabajando es el hilo solicitante.
-     */
-    public boolean somebodyIsWorkingOn(Matrix firingVector) {
-        int index = getIndex(firingVector);
-
-        if(workingVector.get(0, index) == 0) return false;
-        else if(workingVector.get(0, index) != Thread.currentThread().getId()) return true;
-        else return false;
-    }
-
     /**
      * Este método testea si es posible realizar el disparo de la transición
      * con el vector de firing del hilo.
@@ -270,8 +229,6 @@ public class PetriNet {
         firedTransitions = firedTransitions.plus(firingVector); //Aumento las transiciones disparadas.
 
         transitionsSequence.add("T" + getIndex(firingVector) + "");
-
-        setWorkingVector(firingVector, 0);
 
         checkPlacesInvariants();
         
