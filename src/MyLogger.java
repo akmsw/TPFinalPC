@@ -24,7 +24,7 @@ public class MyLogger extends Thread {
     private PetriNet pNet; //Red de Petri del sistema.
     private Monitor monitor; //Monitor que controla la red de Petri.
     private File f;         //v
-    private FileHandler FH; //Archivos necesarios para loggear.
+    private FileHandler FH; //Campos necesarios para loggear.
     private Logger logger;  //^
 
     /**

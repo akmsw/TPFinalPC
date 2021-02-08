@@ -22,7 +22,7 @@ public class PetriNet {
     private Matrix currentMarking; //Vector relativo al marcado actual de la red.
     private Matrix enabledTransitions; //Vector que contiene el estado de sensibilización de las transiciones.
     private Matrix enabledAtTime; //Vector que contiene el instante de tiempo en el que una transición fue sensibilizada.
-    private Matrix placesInvariants; //Vectores relativos a los invariantes de la red.
+    private Matrix placesInvariants; //Vector relativo a los invariantes de plaza de la red.
     private Matrix aux; //Vector auxiliar para el cálculo de la ecuación de estado de la red.
     private Matrix alphaTimes; //Vector con los alfas de cada transición.
     private Matrix workingVector; //Vector que almacena la ID de los hilos que están trabajando en cada transición.
@@ -33,7 +33,6 @@ public class PetriNet {
 	 * 
      * @param   incidence           La matriz de incidencia de la red (I).
      * @param   incidenceBackwards  La matriz 'backwards' de incidencia de la red (I-).
-     * @param   initialMarking      El vector de marcado inicial de la red.
      * @param   placesInvariants    Los invariantes de plaza de la red.
      * @param   alphaTimes          Los tiempos 'alfa' asociados a cada transición.
      * @param   stopCondition       La condición de corte del programa (cuántas tareas se deben finalizar para terminar el programa).
