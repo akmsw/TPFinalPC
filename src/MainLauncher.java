@@ -120,7 +120,7 @@ public class MainLauncher {
     private static Matrix path9 = new Matrix(p8, 1);
 
     //Los betas los tomamos como infinitos para que no se desensibilicen las transiciones.
-    private static double[] alphaTimesA = { 20, 0, 0, 0, 0, 50, 50, 50, 50, 0, 0, 0, 0, 70, 70, 40, 40 }; //Alfas de las transiciones.
+    private static double[] alphaTimesA = { 2, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 7, 7, 4, 4 }; //Alfas de las transiciones.
 
     private static double[] iMark = { 1, 0, 0, 4, 0, 4, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 8 }; //Marcado inicial de la red.
 
