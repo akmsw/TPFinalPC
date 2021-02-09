@@ -100,20 +100,16 @@ public class Monitor {
     /**
      * En este método se comienza tomando el mutex del monitor. Luego, mientras
      * no se haya llegado a la condición de corte del programa, se chequea si
-     * la ecuación de estado da un resultado correcto y si además no hay nadie
-     * trabajando en la transición que el hilo que entró quiere disparar. Si se dan las
-     * condiciones, se chequea el tiempo 'alfa' de la transición para ver si el
+     * la ecuación de estado da un resultado correcto. Si es así (la transición está
+     * sensibilizada para este hilo), se chequea el tiempo 'alfa' de la transición para ver si el
      * hilo debería ir a dormir (simulación de ejecución de una tarea) o no,
      * y luego se dispara la transición (cambio de estado de la red). Si el hilo
-     * se debe ir a dormir, entonces se toma el índice i de la transición y se setea
-     * en '1' el i-ésimo elemento del vector de trabajo para indicar que ya hay
-     * alguien trabajando en esa transición y no debe meterse otro hilo. Luego de esto,
-     * el hilo libera el mutex para ir a dormir FUERA DEL MONITOR.
-     * Luego de esperar el tiempo necesario (terminar la tarea) y antes de que el hilo
-     * libere el mutex del monitor, se chequea si hay algún hilo esperando en la cola
-     * de alguna transición sensibilizada. Si es así, se le pasa el mutex
-     * (si hay más de un hilo en estas condiciones se llama al objeto de tipo Policy y
-     * se decide de manera aleatoria uniforme). Si no hay nadie en esas condiciones,
+     * se debe ir a dormir, entonces se libera el mutex para ir a dormir FUERA DEL MONITOR.
+     * Luego de esperar el tiempo necesario (terminar la tarea), y luego de que el hilo retome
+     * el mutex y cambie el estado de la red, antes de que el hilo libere el mutex del monitor
+     * se chequea si hay algún hilo esperando en la cola de alguna transición sensibilizada.
+     * Si es así, se le pasa el mutex (si hay más de un hilo en estas condiciones se llama al objeto
+     * de tipo Policy y se decide de manera aleatoria uniforme). Si no hay nadie en esas condiciones,
      * se libera el mutex del monitor.
      * Cabe aclarar que antes de hacer el disparo de alguna transición se chequea nuevamente
      * si se llegó a la condición de corte del programa, dado que puede darse el caso en el que

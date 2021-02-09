@@ -31,13 +31,13 @@ public class Policy {
     /**
      * En este método se decide qué transición será elegida para despertar a los hilos
      * que tenga encolados. Para esto, se recorre el vector resultado de la operación 'AND'
-     * para ver cuántas transiciones con hilos esperando hay.
+     * para ver cuántas transiciones sensibilizadas con hilos esperando hay.
      * Se almacena el índice de estas transiciones en un arreglo y se hace una
      * elección aleatoria con distribución uniforme entre todos los índices que se hayan guardado.
      * 
      * @param   and El vector con más de una transición sensibilizada que tienen al menos un hilo encolado.
      * 
-     * @return  El índice de la transición elegida para disparar.
+     * @return  El índice de la transición elegida para despertar.
      */
     public int decide(Matrix and) {
         indexes.clear(); //Vaciar el arreglo.

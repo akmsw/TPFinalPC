@@ -35,7 +35,7 @@ public class MyLogger extends Thread {
      * se haya llegado a la condición de corte para evitar deadlocks.
      * 
      * @param fileName  Nombre del archivo log a crear.
-     * @param pNet      Red de Petri del sistema para chequear la condición de corte del programa.
+     * @param pNet      Red de Petri del sistema.
      * @param monitor   Monitor controlador del sistema
      * 
      * @throws IOException  En caso de ocurrir un error en la creación del archivo donde se escribirá la información.

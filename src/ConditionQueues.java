@@ -29,7 +29,7 @@ public class ConditionQueues {
         this.quantity = quantity;
         
         for(int i = 0; i < quantity; i++)
-            conditionQueues.add(new Semaphore(0)); //Inicializamos los semáforos de las colas de condición en 0 para que todo aquel que quiera hacer acquire se quede esperando la condición.
+            conditionQueues.add(new Semaphore(0)); //Inicializamos los semáforos de las colas de condición en 0 para que todo aquel que quiera hacer acquire se quede esperando.
     }
 
     //----------------------------------------Métodos públicos---------------------------------
@@ -62,9 +62,6 @@ public class ConditionQueues {
     //----------------------------------------Otros--------------------------------------------
 
     /**
-     * En este método se calcula un vector que almacena las transiciones
-     * que tienen hilos encolados.
-     * 
      * @return  El vector de transiciones con hilos encolados.
      */
     public Matrix whoAreQueued() {

@@ -78,6 +78,10 @@ public class MyThread extends Thread {
      * se intenta disparar la misma por medio del monitor. Luego de disparar la
      * transición, se actualiza el valor del índice para armar el siguiente vector
      * de disparo.
+     * Si no se pudo disparar la transición por tener que esperar un tiempo alpha,
+     * entonces el hilo duerme fuera del monitor el tiempo necesario. Al finalizar
+     * esta espera, el hilo vuelve a entrar al monitor para intentar disparar
+     * nuevamente la transición cuyo alpha ya pasó.
      */
     @Override
     public void run() {
