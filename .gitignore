@@ -1,3 +1,5 @@
 ReportMonitor.txt
 ReportMonitor.txt.lck
 .gitignore
+.vscode/settings.json
+.gitignore

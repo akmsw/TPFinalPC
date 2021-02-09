@@ -6,7 +6,6 @@
  * 
  * @since 03/02/2021
  */
-
 import java.util.concurrent.Semaphore;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -68,6 +67,8 @@ public class MyLogger extends Thread {
      */
     @Override
     public void run() {
+        long startTime = System.currentTimeMillis();
+        
         logger = Logger.getLogger("ReportTest");
 
         logger.addHandler(FH);
@@ -84,9 +85,13 @@ public class MyLogger extends Thread {
             }
         }
 
+        long finishTime = System.currentTimeMillis();
+
         logger.info("\n" + pNet.getMemoriesLoad() + 
                     "\n" + pNet.getProcessorsLoad() + 
                     "\n" + pNet.getProcessorsTasks());
+                    
+        logger.info("\nEl tiempo de ejecucion fue de: " + (int)((finishTime - startTime) / 1000) + " segundos.");
 
         Matrix finalMarkingVector = pNet.getCurrentMarkingVector();
 
