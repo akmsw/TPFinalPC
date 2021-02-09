@@ -1,3 +1,3 @@
-ReportMonitor.txt
-ReportMonitor.txt.lck
+*.txt
+*.lck
 .gitignore
